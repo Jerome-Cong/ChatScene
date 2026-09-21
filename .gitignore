@@ -1,7 +1,23 @@
 # Ignore all Jupyter notebooks
 *.ipynb
+!/workbench.ipynb
+
+# Local P0 human-review checkpoints and finalized gold (external custody)
+/benchmark_artifacts/human_review/workbench_assignment/
+/benchmark_artifacts/human_review/workbench_assignment_v0_2/
 
 # Ignore Jupyter notebook checkpoints
 .ipynb_checkpoints/
 
 __pycache__/
+
+# Local uv virtual environment
+chatscene/
+
+# Local CARLA runtime and downloaded artifacts
+.carla-runtime/
+CARLA_0.9.13/
+CARLA_0.9.13_safebench.tar.gz
+CARLA_0.9.13_safebench.single.partial
+CARLA.download.parts/
+*.egg-info

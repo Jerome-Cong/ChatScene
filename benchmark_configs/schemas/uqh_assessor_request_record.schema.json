@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/uqh_assessor_request_record.schema.json",
+  "title": "Replayable UQH assessor request record",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "query_id",
+    "assessor_id",
+    "assessor_request_sha256",
+    "raw_assessor_request"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "run_id": {"type": "string", "minLength": 1},
+    "query_id": {"type": "string", "minLength": 1},
+    "assessor_id": {"type": "string", "minLength": 1},
+    "assessor_request_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "raw_assessor_request": {
+      "type": "object",
+      "required": ["path", "sha256", "bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "bytes": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

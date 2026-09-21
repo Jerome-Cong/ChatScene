@@ -1,0 +1,48 @@
+{
+  "platform": "metadrive",
+  "rollout_seconds": 30.0,
+  "runtime_dependencies": {
+    "environment_manifest": {
+      "bytes": 19567,
+      "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/platforms/metadrive_runtime_environment_draft.json",
+      "sha256": "e68ad96196bd1fb4acae8511ff5e74709d1083d34744035b98a06730cfc1a7b7"
+    },
+    "metadrive_module": {
+      "bytes": 419,
+      "path": "/home/shijie20/CodeSpace/mdsn/metadrive/metadrive/__init__.py",
+      "sha256": "ca707531ce36f05447e5c89f4507398bfcb11c907b8f613f5849212ba3b50524"
+    },
+    "source_tree": {
+      "policy": "git_tracked_worktree_bytes_v0.1",
+      "repository_path": "/home/shijie20/CodeSpace/mdsn/metadrive",
+      "revision": "85e5dadc6c7436d324348f6e3d8f8e680c06b4db",
+      "tracked_bytes": 72607504,
+      "tracked_file_count": 1371,
+      "tracked_subpath": "metadrive",
+      "tracked_tree_sha256": "2f3feca22ca46c33221c0fa943b76b232d1e3814ae3250b83716dca0fda942c6"
+    }
+  },
+  "schema_version": "0.1",
+  "status": "draft",
+  "sv_max_iterations": 2000,
+  "sv_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "token_registry": {
+    "bytes": 5689,
+    "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/methods/metadrive_pg_token_registry_draft.json",
+    "sha256": "0b0dea11bf337284338659b58790a4b89dbfb8849f6f83562509a3e7301fef24"
+  },
+  "worker": {
+    "environment": {},
+    "interpreter": "/home/shijie20/micromamba/envs/scenarionet/bin/python3.9",
+    "interpreter_sha256": "b40c868cc8e8e6d13db940136a7dd681f8fcfdf9fa2dbeeeca52821828e65fa7",
+    "timeout_seconds": 120,
+    "worker": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/runtime_worker.py",
+    "worker_sha256": "a7a11f14ed9c08d42afb5128ff9d94216154873cbc21caf88ff28c2a328d1273"
+  }
+}

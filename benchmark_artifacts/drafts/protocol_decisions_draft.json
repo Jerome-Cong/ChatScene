@@ -1,0 +1,99 @@
+{
+  "decision_status": "draft",
+  "benchmark_version": "0.1",
+  "current_human_truth_state": {
+    "completed_admissible_human_gold_records": 0,
+    "synthetic_records_scope": "formal_contract_tests_only",
+    "synthetic_records_are_admissible_as_benchmark_gold": false
+  },
+  "fixed_corpus_sizes": {
+    "development_reference_outputs_per_platform": 240,
+    "development_reference_outputs_total": 480,
+    "judge_calibration_items_per_platform": 90,
+    "judge_calibration_items_total": 180,
+    "deterministic_fixture_cases": 76,
+    "cross_platform_fixture_cases": 15,
+    "count_policy": "exact"
+  },
+  "decisions": [
+    {
+      "id": "BENCHMARK_SUITE_VISIBILITY",
+      "decision_status": "draft",
+      "draft_decision": "treat_the_252_query_suite_as_design_visible_and_locked_after_freeze; do_not_claim_held_out_generalization",
+      "reason": "The suite was available during evaluator development; immutability after freeze cannot recreate historical blindness."
+    },
+    {
+      "id": "DEV_TEST_OVERLAP",
+      "decision_status": "draft",
+      "draft_decision": "accept_all_16_development_intents_as_non_overlapping",
+      "evidence": "No exact canonical, operation, topology, actor-role, rule-hook, or complete core-signature overlap was found; all 16 novelty notes still require human confirmation."
+    },
+    {
+      "id": "TEST_DUPLICATE_CLUSTERS",
+      "decision_status": "draft",
+      "draft_decision": "keep_all_frozen_suite_queries_and_collapse_A07_E03_and_B09_E06_only_for_macro_statistics",
+      "evidence_asset": "statistical_clusters_draft.json"
+    },
+    {
+      "id": "B08_SUPPORTED_REJECTION",
+      "decision_status": "draft",
+      "draft_decision": "only_flagged_generation_counts_as_supported_acceptance; strict_rejection_lowers_A_s; freeze_an_independent_uqh_assessor_registry_and_public_key; keep_private_key_external_to_method_runner; require_one_raw-response-bound_and_signed_assessment_for_every_reject_or_clarification; missing_assessment_is_a_pipeline_error; controlled_degradation_always_scores_zero_in_v0_1",
+      "reason": "UQH defines A_s as the supported-query generation disposition even though B08 metadata also lists strict rejection as acceptable. Raw response bindings make the assessment reproducible, while the independently custodied signature authenticates its source; hashes or provider IDs alone do not.",
+      "draft_asset": "uqh_assessor_registry_draft.json"
+    },
+    {
+      "id": "ACTOR_CARDINALITY",
+      "decision_status": "draft",
+      "draft_decision": "integer_is_exact; multiple_means_at_least_2; optional_is_permitted_min_0; zero_is_forbidden",
+      "reason": "This preserves open cardinality without turning optional actors into required actors."
+    },
+    {
+      "id": "LANE_TRISTATE",
+      "decision_status": "draft",
+      "draft_decision": "missing_is_unknown; optional_is_permitted; false_is_not_forbidden_without_explicit_surface_text",
+      "reason": "Sparse lane metadata does not justify closed-world absence."
+    },
+    {
+      "id": "RISK_METADATA",
+      "decision_status": "draft",
+      "draft_decision": "score_risk_only_when_the_presented_surface_expresses_it; otherwise_keep_as_analysis_tag",
+      "reason": "Every record has risk_level metadata, but not every query asks for a risk level."
+    },
+    {
+      "id": "CPD_ELIGIBILITY",
+      "decision_status": "draft",
+      "draft_decision": "freeze_the_16_concept_development_only_common_ontology; mark_test_only_dimensions_ineligible; review_all_152_candidates_against_exactly_76_routing_conformance_and_15_cross_platform_fixtures_with_all_7_registered_cpd_values_covered_on_both_platforms",
+      "reason": "The draft yields 34 eligible test queries and coverage 34/152 (17 partial and 17 vague); eight otherwise common-dimension queries are fail-closed because their minimum required same-class actors make the anonymous actor target intrinsically ambiguous, and test-only dimensions reduce coverage rather than extending the evaluator."
+    },
+    {
+      "id": "EVENT_ONTOLOGY",
+      "decision_status": "draft",
+      "draft_decision": "classify_each_interaction_events_label_as_event_state_trigger_constraint_or_outcome_then_review_edges_and_actor_bindings",
+      "reason": "Raw interaction_events labels are not homogeneous IEC atoms and list order is not universally a temporal edge."
+    },
+    {
+      "id": "JUDGE_CALIBRATION_ROSTER",
+      "decision_status": "draft",
+      "draft_decision": "freeze_one_48x5_reference_grid_per_platform_exactly_240_outputs_each_480_total_then_use_fixed_seed_bus_judge_calibration_v0_1_to_precommit_exactly_90_judge_routed_atoms_per_platform_180_total_before_labels_or_predictions_cover_every_observed_judge_eligible_category_and_supported_query_blind_the_assigned_reviewer_to_judge_predictions_report_actual_gold_support_and_forbid_adaptive_reselection_or_seed_search",
+      "reason": "Platform-balanced, hash-bound source corpora and precommitted calibration rosters prevent a small, single-platform, selectively labeled, or verdict-balanced-by-selection sample from self-certifying the semantic judge; gold support is an observed property to disclose, not a quota available before labels exist, and predictions must be strictly parsed from exact raw judge responses."
+    },
+    {
+      "id": "RUNTIME_VALIDATION_CARLA",
+      "decision_status": "draft",
+      "draft_decision": "accept_native_scenic_compile_plus_five_seed_static_sv_now; require_pre_and_post_proc_identity_for_the_frozen_shipping_elf_plus_exact_live_world_town_and_opendrive_evidence_before_reporting_ne",
+      "reason": "CARLA 0.9.13 and its Python API are present and native Scenic compile/static-SV checks pass. The current host has no unique loopback LISTEN process that can be bound to the frozen CarlaUE4-Linux-Shipping ELF, so no live-world map evidence or CARLA NE success is claimed."
+    },
+    {
+      "id": "RUNTIME_VALIDATION_METADRIVE",
+      "decision_status": "draft",
+      "draft_decision": "require_native_metadriveenv_pgmap_single_token_materialization_plus_xl_ego_reset_and_one_zero_action_step_with_source_environment_runner_observer_bindings",
+      "reason": "The replayable platform gate proves the 13 admitted single tokens, three normalized expected native failures, and one XLVehicle reset-step fixture only; it does not prove long sequences, 30-second NE, IEC execution, or a tested-method result."
+    },
+    {
+      "id": "EGO_PROXY_AND_CONTROLLERS",
+      "decision_status": "draft",
+      "draft_decision": "approve_5_33_by_2_10_meter_bus_proxy_and_one_fixed_query_blind_controller_configuration_per_platform",
+      "reason": "The user permits ego blueprint and footprint changes, while generator architecture and query-conditioned policy changes remain out of scope."
+    }
+  ]
+}

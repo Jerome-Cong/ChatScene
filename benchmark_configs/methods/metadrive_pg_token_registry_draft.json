@@ -1,0 +1,117 @@
+{
+  "schema_version": "0.1",
+  "decision_status": "draft",
+  "registry_id": "metadrive-pg-token-registry-v0.1",
+  "artifact_type": "metadrive_pg_block_scene_v0.1",
+  "metadrive_version": "MetaDrive-0.4.3-32-g85e5dadc",
+  "constructor_contract": {
+    "generation_type": "block_sequence",
+    "map_config_type": "block_sequence",
+    "config_value_type": "string",
+    "implicit_first_token": "I",
+    "class_list_allowed": false,
+    "path_input_allowed": false
+  },
+  "source_files": [
+    {
+      "path": "/home/shijie20/CodeSpace/mdsn/metadrive/metadrive/component/algorithm/BIG.py",
+      "sha256": "3a2934e069478376b2645c9b4f28c04fc74e6a0c42f32b8e1f8441f1d04a5286",
+      "bytes": 7129
+    },
+    {
+      "path": "/home/shijie20/CodeSpace/mdsn/metadrive/metadrive/component/algorithm/blocks_prob_dist.py",
+      "sha256": "aab0118706f821a75f17c21c744ba5b07b2e3d3a134d29cdf5026d134a2204fa",
+      "bytes": 2147
+    },
+    {
+      "path": "/home/shijie20/CodeSpace/mdsn/metadrive/metadrive/component/map/pg_map.py",
+      "sha256": "fccc165ea6c606ca8e06f41efd30f259ed37a6fd8cc1c471a315f65514971eb1",
+      "bytes": 7743
+    },
+    {
+      "path": "/home/shijie20/CodeSpace/mdsn/metadrive/metadrive/component/pgblock/bidirection.py",
+      "sha256": "81adf89392da07780dc9c14eb72f1485e94382b58145a87106939bb6770c4fa3",
+      "bytes": 4940
+    },
+    {
+      "path": "/home/shijie20/CodeSpace/mdsn/metadrive/metadrive/component/pgblock/bottleneck.py",
+      "sha256": "861858636b46562d6037a094108fe4579aabb9a51f7ada3af46d804e9d556f58",
+      "bytes": 13037
+    },
+    {
+      "path": "/home/shijie20/CodeSpace/mdsn/metadrive/metadrive/component/pgblock/curve.py",
+      "sha256": "9ac83be0be461a5888b95aa6b7fe8ee54c60139a08f5db9ae97791f78594c2b5",
+      "bytes": 3262
+    },
+    {
+      "path": "/home/shijie20/CodeSpace/mdsn/metadrive/metadrive/component/pgblock/first_block.py",
+      "sha256": "f5b5b1a0080afe0a17a6fceb6d2f78533b1b71fad227f21399ef6adb18c62e7c",
+      "bytes": 4784
+    },
+    {
+      "path": "/home/shijie20/CodeSpace/mdsn/metadrive/metadrive/component/pgblock/intersection.py",
+      "sha256": "a7bbea7eb9d2d8d03d0ca2119d00e842e28b7ef7243bedccb43c47b688b8b220",
+      "bytes": 11791
+    },
+    {
+      "path": "/home/shijie20/CodeSpace/mdsn/metadrive/metadrive/component/pgblock/parking_lot.py",
+      "sha256": "2245cdd893d01fe8bdf3012bdfa5a39669dfdd110d5aa8aa3e1e83b93b646c5c",
+      "bytes": 16097
+    },
+    {
+      "path": "/home/shijie20/CodeSpace/mdsn/metadrive/metadrive/component/pgblock/ramp.py",
+      "sha256": "2af625eadf9ca03989f3093a4db17b7b7c523066872d0f3738d44c7394889f5e",
+      "bytes": 15769
+    },
+    {
+      "path": "/home/shijie20/CodeSpace/mdsn/metadrive/metadrive/component/pgblock/roundabout.py",
+      "sha256": "9133056b328be063f80c9b37484a2654f988eba5bb8079aa2ef24f9c4bd57101",
+      "bytes": 8445
+    },
+    {
+      "path": "/home/shijie20/CodeSpace/mdsn/metadrive/metadrive/component/pgblock/std_intersection.py",
+      "sha256": "fb887f396e5afe46be06a7a2a9b64eb01ca994ba8042891ac69360967aabad8b",
+      "bytes": 659
+    },
+    {
+      "path": "/home/shijie20/CodeSpace/mdsn/metadrive/metadrive/component/pgblock/std_t_intersection.py",
+      "sha256": "344b78c336cd02dcebe50abafb9c3bfd4f8970993d0bdaa65957d2c182402fa1",
+      "bytes": 369
+    },
+    {
+      "path": "/home/shijie20/CodeSpace/mdsn/metadrive/metadrive/component/pgblock/straight.py",
+      "sha256": "86f7939312118429b74cdb5c19841e27b0fca70468b848364e2438281a29b5bc",
+      "bytes": 2270
+    },
+    {
+      "path": "/home/shijie20/CodeSpace/mdsn/metadrive/metadrive/component/pgblock/t_intersection.py",
+      "sha256": "76893e40157df3de89020d0d62964d6137a93df044db07a2edc6721d352ce900",
+      "bytes": 5343
+    },
+    {
+      "path": "/home/shijie20/CodeSpace/mdsn/metadrive/metadrive/component/pgblock/tollgate.py",
+      "sha256": "36c470c4653c17db77dc41bd7b58982a0931e05af2b7e4fbfef9a921909abaf7",
+      "bytes": 3130
+    },
+    {
+      "path": "/home/shijie20/CodeSpace/mdsn/metadrive/metadrive/utils/registry.py",
+      "sha256": "48fd71c251f2861e5b0320ffcf5772c3b816698ed41d9f49a338146348993b11",
+      "bytes": 1707
+    }
+  ],
+  "tokens": [
+    {"token": "$", "class_name": "TollGate", "map_parameter_constraints": {"lane_num_allowed": [1, 2, 3, 4, 5]}},
+    {"token": "B", "class_name": "Bidirection", "map_parameter_constraints": {"lane_num_allowed": [1, 2, 3, 4, 5]}},
+    {"token": "C", "class_name": "Curve", "map_parameter_constraints": {"lane_num_allowed": [1, 2, 3, 4, 5]}},
+    {"token": "O", "class_name": "Roundabout", "map_parameter_constraints": {"lane_num_allowed": [1, 2, 3, 4, 5]}},
+    {"token": "P", "class_name": "ParkingLot", "map_parameter_constraints": {"lane_num_allowed": [1]}},
+    {"token": "R", "class_name": "OutRampOnStraight", "map_parameter_constraints": {"lane_num_allowed": [1, 2, 3, 4, 5]}},
+    {"token": "S", "class_name": "Straight", "map_parameter_constraints": {"lane_num_allowed": [1, 2, 3, 4, 5]}},
+    {"token": "T", "class_name": "StdTInterSection", "map_parameter_constraints": {"lane_num_allowed": [1, 2, 3, 4, 5]}},
+    {"token": "U", "class_name": "StdInterSectionWithUTurn", "map_parameter_constraints": {"lane_num_allowed": [1, 2, 3, 4, 5]}},
+    {"token": "X", "class_name": "StdInterSection", "map_parameter_constraints": {"lane_num_allowed": [1, 2, 3, 4, 5]}},
+    {"token": "Y", "class_name": "Split", "map_parameter_constraints": {"lane_num_allowed": [1, 2, 3, 4, 5]}},
+    {"token": "r", "class_name": "InRampOnStraight", "map_parameter_constraints": {"lane_num_allowed": [1, 2, 3, 4, 5]}},
+    {"token": "y", "class_name": "Merge", "map_parameter_constraints": {"lane_num_allowed": [1, 2, 3, 4, 5]}}
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "decision_status": "draft",
+  "default_rule": "Each intent_group_id is its own statistical cluster unless listed below.",
+  "clusters": [
+    {
+      "cluster_id": "BSG_v0_2_DUP_A07_E03",
+      "members": [
+        "BSG_v0_2_A07",
+        "BSG_v0_2_E03"
+      ],
+      "decision_status": "draft",
+      "draft_decision": "collapse_for_macro_aggregation_and_bootstrap",
+      "reason": "Operation, topology, actor role, events, temporal structure, risk, rule mode, lane configuration, and stop type are identical."
+    },
+    {
+      "cluster_id": "BSG_v0_2_DUP_B09_E06",
+      "members": [
+        "BSG_v0_2_B09",
+        "BSG_v0_2_E06"
+      ],
+      "decision_status": "draft",
+      "draft_decision": "collapse_for_macro_aggregation_and_bootstrap",
+      "reason": "Core operation, topology, events, risk, and rule semantics match; actor roles appear synonymous."
+    }
+  ],
+  "effect_if_confirmed": "All queries and five repetitions remain in the benchmark, but duplicated intents share one macro/statistical cluster.",
+  "effect_if_rejected": "Record a semantic distinction rationale and keep the original intent_group_id clusters."
+}

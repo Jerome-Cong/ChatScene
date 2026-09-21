@@ -1,0 +1,161 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/oracle_record.schema.json",
+  "title": "Layered query oracle record",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "query_id",
+    "intent_group_id",
+    "surface_style",
+    "expected_support",
+    "acceptable_response",
+    "unsupported_reasons",
+    "ego_gate",
+    "atoms",
+    "cpd_policy",
+    "decision_status"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "query_id": {"type": "string", "minLength": 1},
+    "intent_group_id": {"type": "string", "minLength": 1},
+    "statistical_intent_cluster_id": {"type": "string", "minLength": 1},
+    "surface_style": {"enum": ["precise", "partial", "vague"]},
+    "expected_support": {"enum": ["supported", "unsupported"]},
+    "acceptable_response": {"type": "array", "items": {"type": "string"}},
+    "unsupported_reasons": {"type": "array", "items": {"type": "string"}},
+    "ego_gate": {
+      "type": "object",
+      "required": ["semantic_role", "count", "approved_proxy_allowed", "length_m", "width_m"],
+      "properties": {
+        "semantic_role": {"const": "ego_bus"},
+        "count": {"const": 1},
+        "approved_proxy_allowed": {"const": true},
+        "length_m": {"const": 5.33},
+        "width_m": {"const": 2.1}
+      },
+      "additionalProperties": false
+    },
+    "atoms": {
+      "type": "array",
+      "items": {"$ref": "requirement_atom.schema.json"}
+    },
+    "cpd_policy": {
+      "type": "object",
+      "required": ["candidate", "eligible", "dimensions", "decision_status", "cross_platform_judgeable"],
+      "properties": {
+        "candidate": {"type": "boolean"},
+        "eligible": {"type": "boolean"},
+        "dimensions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "common_semantic", "cardinality", "allowed_values"],
+            "properties": {
+              "name": {"type": "string", "minLength": 1},
+              "common_semantic": {"const": true},
+              "cardinality": {"const": "exactly_one"},
+              "allowed_values": {"type": "array", "minItems": 1, "uniqueItems": true},
+              "reason": {"type": "string", "minLength": 1},
+              "bin_definition_m": {
+                "type": "object",
+                "additionalProperties": {"type": "number", "minimum": 0}
+              },
+              "target_selector": {
+                "type": "object",
+                "required": [
+                  "selector_id",
+                  "query_blind",
+                  "candidate_scope",
+                  "ranking",
+                  "supported_platforms",
+                  "missing_target",
+                  "target_signature"
+                ],
+                "properties": {
+                  "selector_id": {"type": "string", "minLength": 1},
+                  "query_blind": {"const": true},
+                  "candidate_scope": {"type": "string", "minLength": 1},
+                  "ranking": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {"type": "string", "minLength": 1}
+                  },
+                  "supported_platforms": {
+                    "const": ["carla", "metadrive"]
+                  },
+                  "missing_target": {"const": "fail_closed_dimension_unavailable"},
+                  "target_signature": {
+                    "type": "object",
+                    "required": ["actor_class"],
+                    "properties": {
+                      "actor_class": {
+                        "enum": ["ego_bus", "motor_vehicle", "cyclist", "pedestrian"]
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "name": {
+                      "enum": [
+                        "actor_longitudinal_distance_bin",
+                        "yield_realization_mode",
+                        "merge_gap_relation"
+                      ]
+                    }
+                  },
+                  "required": ["name"]
+                },
+                "then": {"required": ["target_selector"]},
+                "else": {"not": {"required": ["target_selector"]}}
+              }
+            ],
+            "additionalProperties": false
+          }
+        },
+        "decision_status": {"enum": ["draft", "confirmed", "rejected"]},
+        "cross_platform_judgeable": {"type": ["boolean", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "decision_status": {"enum": ["draft", "confirmed", "rejected"]},
+    "draft_source": {"type": "string"},
+    "review_warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"expected_support": {"const": "unsupported"}},
+        "required": ["expected_support"]
+      },
+      "then": {
+        "properties": {
+          "acceptable_response": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "enum": ["reject", "ask_for_clarification", "controlled_degradation"]
+            }
+          },
+          "unsupported_reasons": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

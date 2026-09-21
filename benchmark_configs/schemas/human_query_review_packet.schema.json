@@ -1,0 +1,226 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/human_query_review_packet.schema.json",
+  "title": "Source-bound single-reviewer query-oracle packet",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "workflow_type",
+    "packet_id",
+    "reviewer_id",
+    "decision_status",
+    "source_binding",
+    "tasks",
+    "submission_template"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "workflow_type": {"const": "query_oracle_review"},
+    "packet_id": {"$ref": "#/definitions/sha256"},
+    "reviewer_id": {"type": "string", "minLength": 1},
+    "decision_status": {"const": "pending"},
+    "source_binding": {"$ref": "#/definitions/source_binding"},
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/definitions/task"}
+    },
+    "submission_template": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "workflow_type",
+        "packet_id",
+        "reviewer_id",
+        "source_binding",
+        "review_assignment_policy",
+        "submission_status",
+        "responses"
+      ],
+      "properties": {
+        "schema_version": {"const": "0.1"},
+        "workflow_type": {"const": "query_oracle_review"},
+        "packet_id": {"$ref": "#/definitions/sha256"},
+        "reviewer_id": {"type": "string", "minLength": 1},
+        "source_binding": {"$ref": "#/definitions/source_binding"},
+        "review_assignment_policy": {"const": "single_reviewer_final"},
+        "submission_status": {"const": "pending"},
+        "responses": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["task_id", "subject_id", "subject_sha256", "response"],
+            "properties": {
+              "task_id": {"$ref": "#/definitions/sha256"},
+              "subject_id": {"type": "string", "minLength": 1},
+              "subject_sha256": {"$ref": "#/definitions/sha256"},
+              "response": {"type": "null"}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_binding": {
+      "type": "object",
+      "required": [
+        "library_sha256",
+        "library_hash_scope",
+        "oracle_sha256",
+        "oracle_hash_scope",
+        "record_count"
+      ],
+      "properties": {
+        "library_sha256": {"$ref": "#/definitions/sha256"},
+        "library_hash_scope": {"enum": ["file_bytes", "canonical_records"]},
+        "oracle_sha256": {"$ref": "#/definitions/sha256"},
+        "oracle_hash_scope": {"enum": ["file_bytes", "canonical_records"]},
+        "record_count": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "response_template": {
+      "type": "object",
+      "required": [
+        "required_check_decisions",
+        "atom_decisions",
+        "cpd_decision",
+        "proposed_oracle",
+        "notes"
+      ],
+      "properties": {
+        "required_check_decisions": {"type": "object"},
+        "atom_decisions": {"type": "array"},
+        "cpd_decision": {"type": "object"},
+        "proposed_oracle": {"type": "null"},
+        "notes": {"const": ""}
+      },
+      "additionalProperties": false
+    },
+    "machine_decision": {
+      "type": "object",
+      "required": ["verdict", "reason"],
+      "properties": {
+        "verdict": {"const": "accept"},
+        "reason": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "machine_atom_decision": {
+      "type": "object",
+      "required": ["atom_id", "verdict", "reason", "replacement_atoms"],
+      "properties": {
+        "atom_id": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
+        "verdict": {"const": "accept"},
+        "reason": {"type": "string", "minLength": 1},
+        "replacement_atoms": {"type": "array", "maxItems": 0}
+      },
+      "additionalProperties": false
+    },
+    "machine_recommended_response": {
+      "type": "object",
+      "required": [
+        "required_check_decisions",
+        "atom_decisions",
+        "cpd_decision",
+        "proposed_oracle",
+        "notes"
+      ],
+      "properties": {
+        "required_check_decisions": {
+          "type": "object",
+          "required": [
+            "support_and_response_disposition",
+            "cardinality_and_polarity",
+            "road_and_spatial_decomposition",
+            "event_graph_and_actor_binding",
+            "surface_layering",
+            "cpd_common_eligibility"
+          ],
+          "properties": {
+            "support_and_response_disposition": {"$ref": "#/definitions/machine_decision"},
+            "cardinality_and_polarity": {"$ref": "#/definitions/machine_decision"},
+            "road_and_spatial_decomposition": {"$ref": "#/definitions/machine_decision"},
+            "event_graph_and_actor_binding": {"$ref": "#/definitions/machine_decision"},
+            "surface_layering": {"$ref": "#/definitions/machine_decision"},
+            "cpd_common_eligibility": {"$ref": "#/definitions/machine_decision"}
+          },
+          "additionalProperties": false
+        },
+        "atom_decisions": {
+          "type": "array",
+          "items": {"$ref": "#/definitions/machine_atom_decision"}
+        },
+        "cpd_decision": {
+          "type": "object",
+          "required": ["verdict", "reason", "replacement_policy"],
+          "properties": {
+            "verdict": {"const": "accept"},
+            "reason": {"type": "string", "minLength": 1},
+            "replacement_policy": {"type": "null"}
+          },
+          "additionalProperties": false
+        },
+        "proposed_oracle": {"type": "object", "minProperties": 1},
+        "notes": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "machine_recommendation": {
+      "type": "object",
+      "required": [
+        "recommendation_status",
+        "machine_generated",
+        "human_gold",
+        "human_submission_populated",
+        "human_review_required",
+        "explicit_verdict_entries",
+        "recommended_response"
+      ],
+      "properties": {
+        "recommendation_status": {"const": "machine_only_non_gold"},
+        "machine_generated": {"const": true},
+        "human_gold": {"const": false},
+        "human_submission_populated": {"const": false},
+        "human_review_required": {"const": true},
+        "explicit_verdict_entries": {"type": "integer", "minimum": 7},
+        "recommended_response": {"$ref": "#/definitions/machine_recommended_response"}
+      },
+      "additionalProperties": false
+    },
+    "task": {
+      "type": "object",
+      "required": [
+        "task_id",
+        "subject_id",
+        "subject_sha256",
+        "source_query_sha256",
+        "source_oracle_sha256",
+        "query_text",
+        "query_record",
+        "oracle_draft",
+        "response_template",
+        "machine_recommendation"
+      ],
+      "properties": {
+        "task_id": {"$ref": "#/definitions/sha256"},
+        "subject_id": {"type": "string", "minLength": 1},
+        "subject_sha256": {"$ref": "#/definitions/sha256"},
+        "source_query_sha256": {"$ref": "#/definitions/sha256"},
+        "source_oracle_sha256": {"$ref": "#/definitions/sha256"},
+        "query_text": {"type": "string", "minLength": 1},
+        "query_record": {"type": "object", "minProperties": 1},
+        "oracle_draft": {"type": "object", "minProperties": 1},
+        "response_template": {"$ref": "#/definitions/response_template"},
+        "machine_recommendation": {"$ref": "#/definitions/machine_recommendation"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

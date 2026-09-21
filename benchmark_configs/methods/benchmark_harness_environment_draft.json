@@ -1,0 +1,1043 @@
+{
+  "decision_status": "draft",
+  "executable": {
+    "bytes": 5490456,
+    "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/bin/python-frozen",
+    "sha256": "298a9e830ed52f36c299427565485d717d1ce0179c0597cc16560513eb780b06"
+  },
+  "locked_dependencies": [
+    {
+      "name": "annotated-types",
+      "version": "0.7.0"
+    },
+    {
+      "name": "antlr4-python3-runtime",
+      "version": "4.13.2"
+    },
+    {
+      "name": "anyio",
+      "version": "4.5.2"
+    },
+    {
+      "name": "argon2-cffi",
+      "version": "25.1.0"
+    },
+    {
+      "name": "argon2-cffi-bindings",
+      "version": "21.2.0"
+    },
+    {
+      "name": "arrow",
+      "version": "1.4.0"
+    },
+    {
+      "name": "asttokens",
+      "version": "3.0.2"
+    },
+    {
+      "name": "async-lru",
+      "version": "2.0.4"
+    },
+    {
+      "name": "attrs",
+      "version": "25.3.0"
+    },
+    {
+      "name": "babel",
+      "version": "2.18.0"
+    },
+    {
+      "name": "backcall",
+      "version": "0.2.0"
+    },
+    {
+      "name": "backports-zoneinfo",
+      "version": "0.2.1"
+    },
+    {
+      "name": "beautifulsoup4",
+      "version": "4.15.0"
+    },
+    {
+      "name": "bleach",
+      "version": "6.1.0"
+    },
+    {
+      "name": "blessed",
+      "version": "1.47.0"
+    },
+    {
+      "name": "certifi",
+      "version": "2026.6.17"
+    },
+    {
+      "name": "cffi",
+      "version": "1.17.1"
+    },
+    {
+      "name": "charset-normalizer",
+      "version": "3.4.9"
+    },
+    {
+      "name": "click",
+      "version": "8.1.8"
+    },
+    {
+      "name": "cloudpickle",
+      "version": "3.1.2"
+    },
+    {
+      "name": "comm",
+      "version": "0.2.3"
+    },
+    {
+      "name": "contourpy",
+      "version": "1.1.1"
+    },
+    {
+      "name": "cpprb",
+      "version": "10.7.0"
+    },
+    {
+      "name": "cycler",
+      "version": "0.12.1"
+    },
+    {
+      "name": "cython",
+      "version": "0.29.37"
+    },
+    {
+      "name": "debugpy",
+      "version": "1.8.21"
+    },
+    {
+      "name": "decorator",
+      "version": "5.1.1"
+    },
+    {
+      "name": "defusedxml",
+      "version": "0.7.1"
+    },
+    {
+      "name": "distro",
+      "version": "1.9.0"
+    },
+    {
+      "name": "dotmap",
+      "version": "1.3.30"
+    },
+    {
+      "name": "ephem",
+      "version": "4.1.4"
+    },
+    {
+      "name": "exceptiongroup",
+      "version": "1.3.1"
+    },
+    {
+      "name": "executing",
+      "version": "2.2.1"
+    },
+    {
+      "name": "fastjsonschema",
+      "version": "2.21.2"
+    },
+    {
+      "name": "filelock",
+      "version": "3.16.1"
+    },
+    {
+      "name": "fonttools",
+      "version": "4.57.0"
+    },
+    {
+      "name": "fqdn",
+      "version": "1.5.1"
+    },
+    {
+      "name": "fsspec",
+      "version": "2025.3.0"
+    },
+    {
+      "name": "gpustat",
+      "version": "1.1.1"
+    },
+    {
+      "name": "gym",
+      "version": "0.23.1"
+    },
+    {
+      "name": "gym-notices",
+      "version": "0.1.0"
+    },
+    {
+      "name": "h11",
+      "version": "0.16.0"
+    },
+    {
+      "name": "hf-xet",
+      "version": "1.5.1"
+    },
+    {
+      "name": "httpcore",
+      "version": "1.0.9"
+    },
+    {
+      "name": "httpx",
+      "version": "0.28.1"
+    },
+    {
+      "name": "huggingface-hub",
+      "version": "0.25.2"
+    },
+    {
+      "name": "idna",
+      "version": "3.15"
+    },
+    {
+      "name": "imageio",
+      "version": "2.35.1"
+    },
+    {
+      "name": "imageio-ffmpeg",
+      "version": "0.5.1"
+    },
+    {
+      "name": "importlib-metadata",
+      "version": "8.5.0"
+    },
+    {
+      "name": "importlib-resources",
+      "version": "6.4.5"
+    },
+    {
+      "name": "iniconfig",
+      "version": "2.1.0"
+    },
+    {
+      "name": "ipykernel",
+      "version": "6.29.5"
+    },
+    {
+      "name": "ipython",
+      "version": "8.12.3"
+    },
+    {
+      "name": "ipywidgets",
+      "version": "8.1.8"
+    },
+    {
+      "name": "isoduration",
+      "version": "20.11.0"
+    },
+    {
+      "name": "jedi",
+      "version": "0.19.2"
+    },
+    {
+      "name": "jinja2",
+      "version": "3.1.6"
+    },
+    {
+      "name": "jinxed",
+      "version": "2.1.0"
+    },
+    {
+      "name": "jiter",
+      "version": "0.9.1"
+    },
+    {
+      "name": "joblib",
+      "version": "1.2.0"
+    },
+    {
+      "name": "json5",
+      "version": "0.15.0"
+    },
+    {
+      "name": "jsonpointer",
+      "version": "3.0.0"
+    },
+    {
+      "name": "jsonschema",
+      "version": "4.23.0"
+    },
+    {
+      "name": "jsonschema-specifications",
+      "version": "2023.12.1"
+    },
+    {
+      "name": "jupyter",
+      "version": "1.1.1"
+    },
+    {
+      "name": "jupyter-client",
+      "version": "8.6.3"
+    },
+    {
+      "name": "jupyter-console",
+      "version": "6.6.3"
+    },
+    {
+      "name": "jupyter-core",
+      "version": "5.8.1"
+    },
+    {
+      "name": "jupyter-events",
+      "version": "0.10.0"
+    },
+    {
+      "name": "jupyter-lsp",
+      "version": "2.3.1"
+    },
+    {
+      "name": "jupyter-server",
+      "version": "2.14.2"
+    },
+    {
+      "name": "jupyter-server-terminals",
+      "version": "0.5.4"
+    },
+    {
+      "name": "jupyterlab",
+      "version": "4.3.8"
+    },
+    {
+      "name": "jupyterlab-pygments",
+      "version": "0.3.0"
+    },
+    {
+      "name": "jupyterlab-server",
+      "version": "2.28.0"
+    },
+    {
+      "name": "jupyterlab-widgets",
+      "version": "3.0.16"
+    },
+    {
+      "name": "kiwisolver",
+      "version": "1.4.7"
+    },
+    {
+      "name": "mapbox-earcut",
+      "version": "1.0.1"
+    },
+    {
+      "name": "markupsafe",
+      "version": "2.1.5"
+    },
+    {
+      "name": "matplotlib",
+      "version": "3.5.3"
+    },
+    {
+      "name": "matplotlib-inline",
+      "version": "0.1.7"
+    },
+    {
+      "name": "mistune",
+      "version": "3.3.3"
+    },
+    {
+      "name": "moviepy",
+      "version": "1.0.3"
+    },
+    {
+      "name": "nbclient",
+      "version": "0.10.1"
+    },
+    {
+      "name": "nbconvert",
+      "version": "7.16.6"
+    },
+    {
+      "name": "nbformat",
+      "version": "5.10.4"
+    },
+    {
+      "name": "nest-asyncio",
+      "version": "1.6.0"
+    },
+    {
+      "name": "networkx",
+      "version": "3.1"
+    },
+    {
+      "name": "nltk",
+      "version": "3.9.1"
+    },
+    {
+      "name": "notebook",
+      "version": "7.3.3"
+    },
+    {
+      "name": "notebook-shim",
+      "version": "0.2.4"
+    },
+    {
+      "name": "numpy",
+      "version": "1.21.6"
+    },
+    {
+      "name": "nvidia-ml-py",
+      "version": "13.610.43"
+    },
+    {
+      "name": "openai",
+      "version": "2.2.0"
+    },
+    {
+      "name": "opencv-python",
+      "version": "4.7.0.72"
+    },
+    {
+      "name": "overrides",
+      "version": "7.7.0"
+    },
+    {
+      "name": "packaging",
+      "version": "26.2"
+    },
+    {
+      "name": "pandas",
+      "version": "1.5.3"
+    },
+    {
+      "name": "pandocfilters",
+      "version": "1.5.1"
+    },
+    {
+      "name": "parso",
+      "version": "0.8.7"
+    },
+    {
+      "name": "pexpect",
+      "version": "4.9.0"
+    },
+    {
+      "name": "pickleshare",
+      "version": "0.7.5"
+    },
+    {
+      "name": "pillow",
+      "version": "9.5.0"
+    },
+    {
+      "name": "pkgutil-resolve-name",
+      "version": "1.3.10"
+    },
+    {
+      "name": "platformdirs",
+      "version": "4.3.6"
+    },
+    {
+      "name": "pluggy",
+      "version": "1.5.0"
+    },
+    {
+      "name": "proglog",
+      "version": "0.1.12"
+    },
+    {
+      "name": "prometheus-client",
+      "version": "0.21.1"
+    },
+    {
+      "name": "prompt-toolkit",
+      "version": "3.0.52"
+    },
+    {
+      "name": "psutil",
+      "version": "7.2.2"
+    },
+    {
+      "name": "ptyprocess",
+      "version": "0.7.0"
+    },
+    {
+      "name": "pure-eval",
+      "version": "0.2.3"
+    },
+    {
+      "name": "pycocotools",
+      "version": "2.0.6"
+    },
+    {
+      "name": "pycparser",
+      "version": "2.23"
+    },
+    {
+      "name": "pydantic",
+      "version": "2.10.6"
+    },
+    {
+      "name": "pydantic-core",
+      "version": "2.27.2"
+    },
+    {
+      "name": "pygame",
+      "version": "2.3.0"
+    },
+    {
+      "name": "pygments",
+      "version": "2.19.2"
+    },
+    {
+      "name": "pyparsing",
+      "version": "3.1.4"
+    },
+    {
+      "name": "pytest",
+      "version": "8.3.5"
+    },
+    {
+      "name": "python-dateutil",
+      "version": "2.9.0.post0"
+    },
+    {
+      "name": "python-json-logger",
+      "version": "4.0.0"
+    },
+    {
+      "name": "pytz",
+      "version": "2026.2"
+    },
+    {
+      "name": "pywavelets",
+      "version": "1.4.1"
+    },
+    {
+      "name": "pyyaml",
+      "version": "6.0"
+    },
+    {
+      "name": "pyzmq",
+      "version": "27.1.0"
+    },
+    {
+      "name": "referencing",
+      "version": "0.35.1"
+    },
+    {
+      "name": "regex",
+      "version": "2024.11.6"
+    },
+    {
+      "name": "requests",
+      "version": "2.32.4"
+    },
+    {
+      "name": "rfc3339-validator",
+      "version": "0.1.4"
+    },
+    {
+      "name": "rfc3986-validator",
+      "version": "0.1.1"
+    },
+    {
+      "name": "rpds-py",
+      "version": "0.20.1"
+    },
+    {
+      "name": "safebench",
+      "version": "1.0.0"
+    },
+    {
+      "name": "safetensors",
+      "version": "0.5.3"
+    },
+    {
+      "name": "scenic",
+      "version": "2.1.0b4"
+    },
+    {
+      "name": "scikit-image",
+      "version": "0.19.3"
+    },
+    {
+      "name": "scikit-learn",
+      "version": "1.3.2"
+    },
+    {
+      "name": "scipy",
+      "version": "1.10.1"
+    },
+    {
+      "name": "seaborn",
+      "version": "0.12.2"
+    },
+    {
+      "name": "send2trash",
+      "version": "2.1.0"
+    },
+    {
+      "name": "sentence-transformers",
+      "version": "2.2.1"
+    },
+    {
+      "name": "sentencepiece",
+      "version": "0.2.0"
+    },
+    {
+      "name": "setgpu",
+      "version": "0.0.7"
+    },
+    {
+      "name": "setuptools",
+      "version": "75.3.4"
+    },
+    {
+      "name": "shapely",
+      "version": "1.8.5"
+    },
+    {
+      "name": "six",
+      "version": "1.17.0"
+    },
+    {
+      "name": "sniffio",
+      "version": "1.3.1"
+    },
+    {
+      "name": "soupsieve",
+      "version": "2.7"
+    },
+    {
+      "name": "stack-data",
+      "version": "0.6.3"
+    },
+    {
+      "name": "terminado",
+      "version": "0.18.1"
+    },
+    {
+      "name": "threadpoolctl",
+      "version": "3.5.0"
+    },
+    {
+      "name": "tifffile",
+      "version": "2023.7.10"
+    },
+    {
+      "name": "tinycss2",
+      "version": "1.2.1"
+    },
+    {
+      "name": "tokenizers",
+      "version": "0.20.3"
+    },
+    {
+      "name": "tomli",
+      "version": "2.4.1"
+    },
+    {
+      "name": "torch",
+      "version": "1.13.1+cu117"
+    },
+    {
+      "name": "torchaudio",
+      "version": "0.13.1+cu117"
+    },
+    {
+      "name": "torchvision",
+      "version": "0.14.1+cu117"
+    },
+    {
+      "name": "tornado",
+      "version": "6.4.2"
+    },
+    {
+      "name": "tqdm",
+      "version": "4.65.0"
+    },
+    {
+      "name": "traitlets",
+      "version": "5.14.3"
+    },
+    {
+      "name": "transformers",
+      "version": "4.46.3"
+    },
+    {
+      "name": "typing-extensions",
+      "version": "4.13.2"
+    },
+    {
+      "name": "uri-template",
+      "version": "1.3.0"
+    },
+    {
+      "name": "urllib3",
+      "version": "2.2.3"
+    },
+    {
+      "name": "wcwidth",
+      "version": "0.8.2"
+    },
+    {
+      "name": "webcolors",
+      "version": "24.8.0"
+    },
+    {
+      "name": "webencodings",
+      "version": "0.5.1"
+    },
+    {
+      "name": "websocket-client",
+      "version": "1.8.0"
+    },
+    {
+      "name": "wheel",
+      "version": "0.45.1"
+    },
+    {
+      "name": "widgetsnbextension",
+      "version": "4.0.15"
+    },
+    {
+      "name": "zipp",
+      "version": "3.20.2"
+    }
+  ],
+  "python_environment_control_files": [
+    {
+      "bytes": 89,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/__editable__.safebench-1.0.0.pth",
+      "sha256": "783748d30d3e38f65bdfdac9bd86a3de4949f56e96d1854fe290d559cd8c8f69"
+    },
+    {
+      "bytes": 3460,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/__editable___safebench_1_0_0_finder.py",
+      "sha256": "95bae704e8aa22cfd0f0328c5f043762da77089fec2f1c8cbc4819de6837ea1a"
+    },
+    {
+      "bytes": 6754,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/_distutils_hack/__init__.py",
+      "sha256": "a325c4f62f92a19daaa558088e4339afd78e14df40c20a7d51c9dc3a714dc237"
+    },
+    {
+      "bytes": 44,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/_distutils_hack/override.py",
+      "sha256": "12efecf8d17a5486780aa774b5b6c0e70b56932d8864f35df1eb7a18bb759b3a"
+    },
+    {
+      "bytes": 18,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/_virtualenv.pth",
+      "sha256": "69ac3d8f27e679c81b94ab30b3b56e9cd138219b1ba94a1fa3606d5a76a1433d"
+    },
+    {
+      "bytes": 4342,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/_virtualenv.py",
+      "sha256": "6cf30c56faf2a55228914dbbd17f8088ed371ebb08f5e7fa6fd931f913fcaf1d"
+    },
+    {
+      "bytes": 151,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/distutils-precedence.pth",
+      "sha256": "2638ce9e2500e572a5e0de7faed6661eb569d1b696fcba07b0dd223da5f5d224"
+    },
+    {
+      "bytes": 569,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/matplotlib-3.5.3-py3.8-nspkg.pth",
+      "sha256": "1603bfdee834ef511710a4fc9a038f054872aecc0fb4f0988cea540b26aeed45"
+    },
+    {
+      "bytes": 504,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/__init__.py",
+      "sha256": "4ec2a7b0ff0059da37673e34430af5247182dd6a7dc0760457a418c18ce69b99"
+    },
+    {
+      "bytes": 291,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/anchored_artists.py",
+      "sha256": "fc5ebef6269c66275be49a49f2308e67d3dd899691e6aa5f0637fedd58d3ccd7"
+    },
+    {
+      "bytes": 51,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/angle_helper.py",
+      "sha256": "4dbe0c6ff3469147648ac79b7b676a7c17459946624a61b25277ed892792225b"
+    },
+    {
+      "bytes": 178,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/axes_divider.py",
+      "sha256": "b4994f89add9f312eaeae5de841c00943ff8cb032f4534e433bdea3670a9a3b4"
+    },
+    {
+      "bytes": 89,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/axes_grid.py",
+      "sha256": "50f9550f0b337bfc3669978b68c83859954adead84bd678f5d315916f8c2433e"
+    },
+    {
+      "bytes": 47,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/axes_rgb.py",
+      "sha256": "2c5a381445d333613ecf113c72e611145cc300374ba0acb39be54d3a4497ec05"
+    },
+    {
+      "bytes": 48,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/axes_size.py",
+      "sha256": "bf8361c5eec3569d4590a5f4dc3a8927569ebc36a70ef80a4fdaf4a2e0f34f1c"
+    },
+    {
+      "bytes": 50,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/axis_artist.py",
+      "sha256": "cd49491541ee783b0cb732e2fe62b6fd67fe9d20508224ec30e169a3f4a7819d"
+    },
+    {
+      "bytes": 53,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/axisline_style.py",
+      "sha256": "94d5475e415685258f5ce39f17ec255640cfce6cee4ad27227317e352e567ff8"
+    },
+    {
+      "bytes": 48,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/axislines.py",
+      "sha256": "915ca16fa95a8889a6b8d139dd04d0877920c73d2c3b599c48ca67a88763ca50"
+    },
+    {
+      "bytes": 48,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/clip_path.py",
+      "sha256": "b3e777ea1522cbd23d052afdc29c6382800008242b7331e3c34ef626f02b36f1"
+    },
+    {
+      "bytes": 52,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/floating_axes.py",
+      "sha256": "8b7e4e7d5d59305f8390ba386ca9b31593fa2e00b05df7432b16251aa8f228e3"
+    },
+    {
+      "bytes": 50,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/grid_finder.py",
+      "sha256": "636db573e261fc015ddcea25cefaf407566bcfd3285cf6ad50005074bb05769c"
+    },
+    {
+      "bytes": 62,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/grid_helper_curvelinear.py",
+      "sha256": "9d197f07eef9e57ed4a55aaa77092a73f23089398ce3ccf778e307baf253e472"
+    },
+    {
+      "bytes": 216,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/inset_locator.py",
+      "sha256": "aaa5e54fc256a243f4915fbc34792764320db4afa36d77e4bad1ffd6d7117bfa"
+    },
+    {
+      "bytes": 523,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/parasite_axes.py",
+      "sha256": "f19e65a1841182af5f22197ff41c56b363323036242bf16d95d96e02060348bf"
+    },
+    {
+      "bytes": 204,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid1/__init__.py",
+      "sha256": "fa5c3465f1b85d4a6e028942a57285c2d4b7c352c9d594e84840bd392981fb84"
+    },
+    {
+      "bytes": 19171,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid1/anchored_artists.py",
+      "sha256": "d72d56fdb37a46c067e94364cf869d6b996037834b6a97978c5938a288f0b45a"
+    },
+    {
+      "bytes": 26558,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid1/axes_divider.py",
+      "sha256": "35b0123d1a6a6401223575445930be11e512e792d8aee7b524e5479b1dec8ef4"
+    },
+    {
+      "bytes": 21404,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid1/axes_grid.py",
+      "sha256": "39da793b6753f46d86727cfd33e112b619f63193a58373f507c5bbedf895031d"
+    },
+    {
+      "bytes": 4149,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid1/axes_rgb.py",
+      "sha256": "dcb9c232beb002fd67dd9a8920301c4268dfa5828adcc88150550239fcf90ce7"
+    },
+    {
+      "bytes": 7541,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid1/axes_size.py",
+      "sha256": "7ea59fafad059622489b9997dcca60f3b5ec4a7c8c3dfcf42bb18e78040f8310"
+    },
+    {
+      "bytes": 22743,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid1/inset_locator.py",
+      "sha256": "9c113c24bb643df02a206ed5e2857c64026b70adbce379622da202529ff49815"
+    },
+    {
+      "bytes": 4372,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid1/mpl_axes.py",
+      "sha256": "81668118889359c8967dcb7149a4f4ded5b623aa10493b9aee1a76c6d035f286"
+    },
+    {
+      "bytes": 12601,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid1/parasite_axes.py",
+      "sha256": "1f9cf79e28de6d38e4bec3756ae601dcbfa94c36961965c808a6b6bc7b4e4631"
+    },
+    {
+      "bytes": 800,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/__init__.py",
+      "sha256": "9e1d919f78aa6f66800b83d888343090eef1f49d9b4368097485766946cce8b2"
+    },
+    {
+      "bytes": 12960,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/angle_helper.py",
+      "sha256": "a4226d497ef4f2bda56d4cae8740a9c0f55cb1ed9acaca44880c3004ca9d0031"
+    },
+    {
+      "bytes": 127,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/axes_divider.py",
+      "sha256": "6da3c2063336d12bc051e32386f952fdc71c452335cbb64ac9bb685bcba9a369"
+    },
+    {
+      "bytes": 362,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/axes_grid.py",
+      "sha256": "80434828a8866fe8c4dc60daca700188a09da6a5b1544383e22f0794206ba056"
+    },
+    {
+      "bytes": 164,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/axes_rgb.py",
+      "sha256": "20b53ef0391e4b08041827fc1e7f3e6611eaeff4e0150781f1cf66c58c98fadb"
+    },
+    {
+      "bytes": 37075,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/axis_artist.py",
+      "sha256": "3678c6c7d4fa22cb54e22c25aee02075fe93b758064834faa4bd545363737728"
+    },
+    {
+      "bytes": 4930,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/axisline_style.py",
+      "sha256": "45537465ea15c5ac16d193c4fd0d6f82c0ef041e769629fb330084b45ceb65d5"
+    },
+    {
+      "bytes": 20036,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/axislines.py",
+      "sha256": "4ae775a37136088548de610087ec820487457e530cd14abb681cf155fd21fbf7"
+    },
+    {
+      "bytes": 3838,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/clip_path.py",
+      "sha256": "76b07051b61626fc82b19989ea02d86f818a9a1fc9027e7be55aeacea7586399"
+    },
+    {
+      "bytes": 13000,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/floating_axes.py",
+      "sha256": "574f94111aad84227c9938dd053ba67b930f69ebc9c3cd0b6e85de9eacdae155"
+    },
+    {
+      "bytes": 12179,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/grid_finder.py",
+      "sha256": "aa479f5298098f05c158f24c8f45a810da30e1d045f634a4f62add3dcdd976b1"
+    },
+    {
+      "bytes": 13229,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/grid_helper_curvelinear.py",
+      "sha256": "0d6a9e17d1c6b84c8ff37af836731454db4f8d6ff8f66a59497ce5d2c66b97ef"
+    },
+    {
+      "bytes": 500,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/parasite_axes.py",
+      "sha256": "8990cb0a612ce8e1dfe8913923f9a8583f2ed0bba551968ae851fc14d2dd2a51"
+    },
+    {
+      "bytes": 27,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/mplot3d/__init__.py",
+      "sha256": "57688f20ff55c9186826c1569d07f90247f223519248ff47ea120211ef5e749a"
+    },
+    {
+      "bytes": 31526,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/mplot3d/art3d.py",
+      "sha256": "928c7b68b02562c3c9d4cd5dca9a52966378fae3f12e68979d9ffbb89915af04"
+    },
+    {
+      "bytes": 131314,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/mplot3d/axes3d.py",
+      "sha256": "c81458e0c1543175fdf0e72fd1eec5700ce4e39c1aadd7d4898c0235759bca5f"
+    },
+    {
+      "bytes": 20624,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/mplot3d/axis3d.py",
+      "sha256": "9a6c0b73037fa07686728ce92f0de624c8027f5eda2564be41055cf1706a6c15"
+    },
+    {
+      "bytes": 4415,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/mplot3d/proj3d.py",
+      "sha256": "aed9e6bdee2a1c4cf2f52e6eb92facb4af2a4d848fb86cf868673e2e1d6205ad"
+    },
+    {
+      "bytes": 365,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/__init__.py",
+      "sha256": "3b1e35cc4959b753e8fb8d65c75e3e80c16bf51d4310ae809adeb81e7e5deac6"
+    },
+    {
+      "bytes": 139,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/conftest.py",
+      "sha256": "44cf33f29caca3b5d105a107bcf25f3274f5fdc734d387d958681e8834abd6ec"
+    },
+    {
+      "bytes": 2100,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/test_axes_grid.py",
+      "sha256": "a8493fed54c57507abe1d4ec49a10cf9b9d98e38944d10c4523d34924e85c59d"
+    },
+    {
+      "bytes": 19020,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/test_axes_grid1.py",
+      "sha256": "7e1f720c764e4bd8ee376e09e469f82b8b37004db2b13647fae6f21db0c2db4e"
+    },
+    {
+      "bytes": 5670,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/test_axisartist_angle_helper.py",
+      "sha256": "3f0849c019b6924e2e33285d3b96ab42cf0896a497daf37486f53323b607aabc"
+    },
+    {
+      "bytes": 3008,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/test_axisartist_axis_artist.py",
+      "sha256": "3782a1c7c8d2c64a22333dcabee9a876614a1d952d770b63933c4b58f49dcaec"
+    },
+    {
+      "bytes": 2722,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/test_axisartist_axislines.py",
+      "sha256": "3653a426682dcbb1e94dacb668d5bf8bc281fa6b929b69de85a19bb19859c07b"
+    },
+    {
+      "bytes": 1090,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/test_axisartist_clip_path.py",
+      "sha256": "85cc5e4b5afdde62d3f2cfd0d9d98a81768cd6d5a7ce5b6426e62934ed833ebe"
+    },
+    {
+      "bytes": 4689,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/test_axisartist_floating_axes.py",
+      "sha256": "6f253f842c010d70b2c21ac6bf43eed084d1f3130a7508d944f9aa402e2f2d37"
+    },
+    {
+      "bytes": 1156,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/test_axisartist_grid_finder.py",
+      "sha256": "73040b0ce75c25b018d84eddafce7de72cee361d7f621f34aff3bc5864f684c6"
+    },
+    {
+      "bytes": 7388,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/test_axisartist_grid_helper_curvelinear.py",
+      "sha256": "d36ba3e16eb303f4e6b2fa7f45db8f87da52dc7e183da79c88cb47e256e3dc1a"
+    },
+    {
+      "bytes": 58216,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/test_mplot3d.py",
+      "sha256": "9c175474f4a85e608fc902590549c738b2153a80e0cb7f7909c9460ae81e936e"
+    },
+    {
+      "bytes": 80,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/safebench-1.0.0.dist-info/direct_url.json",
+      "sha256": "d212ff2037cff0e96d66ae0ba161a30c3c8d1ff2fcb502fdbc94bb98100adf31"
+    },
+    {
+      "bytes": 87,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/scenic-2.1.0b4.dist-info/direct_url.json",
+      "sha256": "7cad1d361445d3dccfe01a4b206ebfef358c4d19bbeecc8f51513398150058ec"
+    },
+    {
+      "bytes": 45,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/scenic.pth",
+      "sha256": "b4d56f9aebecdaffbe48faa8c02cfcda0d67ad9d7b902b1e8dfc7c5ee15933ff"
+    },
+    {
+      "bytes": 113,
+      "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/pyvenv.cfg",
+      "sha256": "9108cdd35da0562c871568ef61417125337b11651d9bdcac41579d4ba4ecd76a"
+    }
+  ],
+  "python_environment_root": "/home/shijie20/CodeSpace/ChatScene/chatscene",
+  "runtime_kind": "python",
+  "runtime_version": "3.8.10",
+  "schema_version": "0.1"
+}

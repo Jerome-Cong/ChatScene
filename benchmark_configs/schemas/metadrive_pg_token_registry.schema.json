@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/metadrive_pg_token_registry.schema.json",
+  "title": "Audited MetaDrive native PG token registry",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "decision_status",
+    "registry_id",
+    "artifact_type",
+    "metadrive_version",
+    "constructor_contract",
+    "source_files",
+    "tokens"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "decision_status": {"enum": ["draft", "frozen"]},
+    "registry_id": {"const": "metadrive-pg-token-registry-v0.1"},
+    "artifact_type": {"const": "metadrive_pg_block_scene_v0.1"},
+    "metadrive_version": {"type": "string", "minLength": 1},
+    "constructor_contract": {
+      "type": "object",
+      "required": [
+        "generation_type",
+        "map_config_type",
+        "config_value_type",
+        "implicit_first_token",
+        "class_list_allowed",
+        "path_input_allowed"
+      ],
+      "properties": {
+        "generation_type": {"const": "block_sequence"},
+        "map_config_type": {"const": "block_sequence"},
+        "config_value_type": {"const": "string"},
+        "implicit_first_token": {"const": "I"},
+        "class_list_allowed": {"const": false},
+        "path_input_allowed": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "source_files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/definitions/fileBinding"}
+    },
+    "tokens": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["token", "class_name", "map_parameter_constraints"],
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1,
+            "not": {"enum": ["I"]}
+          },
+          "class_name": {"type": "string", "minLength": 1},
+          "map_parameter_constraints": {
+            "type": "object",
+            "required": ["lane_num_allowed"],
+            "properties": {
+              "lane_num_allowed": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {"type": "integer", "minimum": 1, "maximum": 5}
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "fileBinding": {
+      "type": "object",
+      "required": ["path", "sha256", "bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "bytes": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    }
+  }
+}

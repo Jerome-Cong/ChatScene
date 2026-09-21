@@ -1,0 +1,298 @@
+{
+  "adjudicator_id": null,
+  "annotator_submissions": {
+    "annotator_a": null,
+    "annotator_b": null
+  },
+  "context": {
+    "asset_binding_status": "unbound_draft",
+    "formal_freeze_eligible": false
+  },
+  "formal_gold_created": false,
+  "packet_id": "0fd53fde076d94f5dab5bb062ddd2d96b0d42df4f9f7c2b542b51da57c90d07a",
+  "packet_status": "blocked_pending_independent_submissions",
+  "schema_version": "0.1",
+  "source_binding": {
+    "asset_binding_status": "unbound_draft",
+    "decision_count": 13,
+    "protocol_draft_sha256": "41678577291a649004d1e0de6429d507dd5be8a26707f608bf270f879a02ffcf",
+    "protocol_hash_scope": "file_bytes"
+  },
+  "tasks": [
+    {
+      "adjudication_response_template": {
+        "final_payload": null,
+        "rationale": "",
+        "status": "pending",
+        "verdict": null
+      },
+      "annotator_a_response": null,
+      "annotator_b_response": null,
+      "subject": {
+        "machine_proposal": {
+          "decision_status": "draft",
+          "draft_decision": "integer_is_exact; multiple_means_at_least_2; optional_is_permitted_min_0; zero_is_forbidden",
+          "id": "ACTOR_CARDINALITY",
+          "reason": "This preserves open cardinality without turning optional actors into required actors."
+        }
+      },
+      "subject_id": "ACTOR_CARDINALITY",
+      "subject_sha256": "55808b0c3f10c368d8348b017f3a0352d475f5f1a7845e16bb0309601907c65a",
+      "task_id": "24853360e1e9a6253a6d480cf92dd1af7f12b50608b125273ba941a9e85435eb"
+    },
+    {
+      "adjudication_response_template": {
+        "final_payload": null,
+        "rationale": "",
+        "status": "pending",
+        "verdict": null
+      },
+      "annotator_a_response": null,
+      "annotator_b_response": null,
+      "subject": {
+        "machine_proposal": {
+          "decision_status": "draft",
+          "draft_asset": "uqh_assessor_registry_draft.json",
+          "draft_decision": "only_flagged_generation_counts_as_supported_acceptance; strict_rejection_lowers_A_s; freeze_an_independent_uqh_assessor_registry; require_one_content_addressed_assessment_for_every_reject_or_clarification; missing_assessment_is_a_pipeline_error; controlled_degradation_always_scores_zero_in_v0_1",
+          "id": "B08_SUPPORTED_REJECTION",
+          "reason": "UQH defines A_s as the supported-query generation disposition even though B08 metadata also lists strict rejection as acceptable. Independent response-byte evidence prevents method self-report from certifying H_u."
+        }
+      },
+      "subject_id": "B08_SUPPORTED_REJECTION",
+      "subject_sha256": "42f213b1d9b820610ada2d8bff836ef72e38b7788f16ebf0448f76c598739a8b",
+      "task_id": "f59491aba4cc1e47ca644a5dc63a80060f9fa2a44d2cf8b08fd93dc6ff0f41d2"
+    },
+    {
+      "adjudication_response_template": {
+        "final_payload": null,
+        "rationale": "",
+        "status": "pending",
+        "verdict": null
+      },
+      "annotator_a_response": null,
+      "annotator_b_response": null,
+      "subject": {
+        "machine_proposal": {
+          "decision_status": "draft",
+          "draft_decision": "treat_the_252_query_suite_as_design_visible_and_locked_after_freeze; do_not_claim_held_out_generalization",
+          "id": "BENCHMARK_SUITE_VISIBILITY",
+          "reason": "The suite was available during evaluator development; immutability after freeze cannot recreate historical blindness."
+        }
+      },
+      "subject_id": "BENCHMARK_SUITE_VISIBILITY",
+      "subject_sha256": "2e773f7cb0ac717278866e86383756e243551c368af4b02fc60f22abab6a65f9",
+      "task_id": "eb1358b948cd54f7af91c7537217ab16effe19b51bc397066b6c94c6afff6e3e"
+    },
+    {
+      "adjudication_response_template": {
+        "final_payload": null,
+        "rationale": "",
+        "status": "pending",
+        "verdict": null
+      },
+      "annotator_a_response": null,
+      "annotator_b_response": null,
+      "subject": {
+        "machine_proposal": {
+          "decision_status": "draft",
+          "draft_decision": "freeze_the_16_concept_development_only_common_ontology; mark_test_only_dimensions_ineligible; review_all_152_candidates_against_exactly_76_routing_conformance_and_15_cross_platform_fixtures_with_all_7_registered_cpd_values_covered_on_both_platforms",
+          "id": "CPD_ELIGIBILITY",
+          "reason": "The draft yields 42 eligible test queries and coverage 42/152; test-only dimensions reduce coverage rather than extending the evaluator."
+        }
+      },
+      "subject_id": "CPD_ELIGIBILITY",
+      "subject_sha256": "31b6f6deb592f1977cece0eaf5a1c9e638d1da8b92374911ca4f9eeb32f676a1",
+      "task_id": "85b7afb26d6fb778479b81836f5ebaa09e0596e0fc4ee521e585d8b135794bea"
+    },
+    {
+      "adjudication_response_template": {
+        "final_payload": null,
+        "rationale": "",
+        "status": "pending",
+        "verdict": null
+      },
+      "annotator_a_response": null,
+      "annotator_b_response": null,
+      "subject": {
+        "machine_proposal": {
+          "decision_status": "draft",
+          "draft_decision": "accept_all_16_development_intents_as_non_overlapping",
+          "evidence": "No exact canonical, operation, topology, actor-role, rule-hook, or complete core-signature overlap was found; all 16 novelty notes still require human confirmation.",
+          "id": "DEV_TEST_OVERLAP"
+        }
+      },
+      "subject_id": "DEV_TEST_OVERLAP",
+      "subject_sha256": "c713d0f2735fdb67f4724fcdb5740c5a0a5964722772d93e36c9c05ad83ecc3f",
+      "task_id": "63066db028530c64d3110b2e79cbbc524db85ea78e41963583726d4694cee6e6"
+    },
+    {
+      "adjudication_response_template": {
+        "final_payload": null,
+        "rationale": "",
+        "status": "pending",
+        "verdict": null
+      },
+      "annotator_a_response": null,
+      "annotator_b_response": null,
+      "subject": {
+        "machine_proposal": {
+          "decision_status": "draft",
+          "draft_decision": "approve_5_33_by_2_10_meter_bus_proxy_and_one_fixed_query_blind_controller_configuration_per_platform",
+          "id": "EGO_PROXY_AND_CONTROLLERS",
+          "reason": "The user permits ego blueprint and footprint changes, while generator architecture and query-conditioned policy changes remain out of scope."
+        }
+      },
+      "subject_id": "EGO_PROXY_AND_CONTROLLERS",
+      "subject_sha256": "cf402c20da1f0d8d965619a70f9f65cdbabed01950f96964e99980a834f5e127",
+      "task_id": "2d5570d611894c16e5a9843a0c30e9deaabad0cf25183d72e8fa07f88e95aea1"
+    },
+    {
+      "adjudication_response_template": {
+        "final_payload": null,
+        "rationale": "",
+        "status": "pending",
+        "verdict": null
+      },
+      "annotator_a_response": null,
+      "annotator_b_response": null,
+      "subject": {
+        "machine_proposal": {
+          "decision_status": "draft",
+          "draft_decision": "classify_each_interaction_events_label_as_event_state_trigger_constraint_or_outcome_then_adjudicate_edges_and_actor_bindings",
+          "id": "EVENT_ONTOLOGY",
+          "reason": "Raw interaction_events labels are not homogeneous IEC atoms and list order is not universally a temporal edge."
+        }
+      },
+      "subject_id": "EVENT_ONTOLOGY",
+      "subject_sha256": "79e83e73db96245a6dd006e8455e6bd5a20f1067cd281219795e062c05177821",
+      "task_id": "62f4952914e693889f56f32757dd590ea8102e968aa76decad3aed6582dda069"
+    },
+    {
+      "adjudication_response_template": {
+        "final_payload": null,
+        "rationale": "",
+        "status": "pending",
+        "verdict": null
+      },
+      "annotator_a_response": null,
+      "annotator_b_response": null,
+      "subject": {
+        "machine_proposal": {
+          "decision_status": "draft",
+          "draft_decision": "freeze_one_48x5_reference_grid_per_platform_exactly_240_outputs_each_480_total_then_use_fixed_seed_bus_judge_calibration_v0_1_to_precommit_exactly_90_judge_routed_atoms_per_platform_180_total_before_labels_or_predictions_cover_every_observed_judge_eligible_category_and_supported_query_blind_annotators_to_judge_predictions_report_actual_gold_support_and_forbid_adaptive_reselection_or_seed_search",
+          "id": "JUDGE_CALIBRATION_ROSTER",
+          "reason": "Platform-balanced, hash-bound source corpora and precommitted calibration rosters prevent a small, single-platform, selectively labeled, or verdict-balanced-by-selection sample from self-certifying the semantic judge; gold support is an observed property to disclose, not a quota available before labels exist, and predictions must be strictly parsed from exact raw judge responses."
+        }
+      },
+      "subject_id": "JUDGE_CALIBRATION_ROSTER",
+      "subject_sha256": "fa2f748e517ae7cac449f15b8f981621815472d5e49b6270ebfd282ba0860cdd",
+      "task_id": "4a3017a42ab4b15cc5d3dc63504a61fbac8d130fe95141476fa3f5ea155c48ea"
+    },
+    {
+      "adjudication_response_template": {
+        "final_payload": null,
+        "rationale": "",
+        "status": "pending",
+        "verdict": null
+      },
+      "annotator_a_response": null,
+      "annotator_b_response": null,
+      "subject": {
+        "machine_proposal": {
+          "decision_status": "draft",
+          "draft_decision": "missing_is_unknown; optional_is_permitted; false_is_not_forbidden_without_explicit_surface_text",
+          "id": "LANE_TRISTATE",
+          "reason": "Sparse lane metadata does not justify closed-world absence."
+        }
+      },
+      "subject_id": "LANE_TRISTATE",
+      "subject_sha256": "4849763951280d15ac9b3fbe253d1c39360f4b8cea4d9d0e5c93fa560a606022",
+      "task_id": "6c5538ed316fd742bce11af88918eae9a27c8f8182b06fe41c61126a48351a21"
+    },
+    {
+      "adjudication_response_template": {
+        "final_payload": null,
+        "rationale": "",
+        "status": "pending",
+        "verdict": null
+      },
+      "annotator_a_response": null,
+      "annotator_b_response": null,
+      "subject": {
+        "machine_proposal": {
+          "decision_status": "draft",
+          "draft_decision": "score_risk_only_when_the_presented_surface_expresses_it; otherwise_keep_as_analysis_tag",
+          "id": "RISK_METADATA",
+          "reason": "Every record has risk_level metadata, but not every query asks for a risk level."
+        }
+      },
+      "subject_id": "RISK_METADATA",
+      "subject_sha256": "b27124d79035e3b97f87fb2a35db4da5bc05b398335aace1aa75d08642503cc5",
+      "task_id": "cd11f816403499072e2654a42b0e03d20f14445bd51603be8e34503b100b044d"
+    },
+    {
+      "adjudication_response_template": {
+        "final_payload": null,
+        "rationale": "",
+        "status": "pending",
+        "verdict": null
+      },
+      "annotator_a_response": null,
+      "annotator_b_response": null,
+      "subject": {
+        "machine_proposal": {
+          "decision_status": "draft",
+          "draft_decision": "accept_native_scenic_compile_plus_five_seed_static_sv_now; require_a_separately_recorded_successful_carla_server_probe_before_reporting_ne",
+          "id": "RUNTIME_VALIDATION_CARLA",
+          "reason": "CARLA 0.9.13 and its Python API are present and native Scenic compile/static-SV checks pass. In this environment the off-screen server process started but did not become API-responsive because usable GPU access was unavailable; therefore no CARLA NE success is claimed yet."
+        }
+      },
+      "subject_id": "RUNTIME_VALIDATION_CARLA",
+      "subject_sha256": "779848ad653dd30eaba846f0d7eea51d7b7f2b24db24813c1df51b321c3d55f7",
+      "task_id": "1b3fc641aba4d5d35afd71efca1512703041ae37fa4ab9cbe5cd7d43d549af8c"
+    },
+    {
+      "adjudication_response_template": {
+        "final_payload": null,
+        "rationale": "",
+        "status": "pending",
+        "verdict": null
+      },
+      "annotator_a_response": null,
+      "annotator_b_response": null,
+      "subject": {
+        "machine_proposal": {
+          "decision_status": "draft",
+          "draft_decision": "require_native_scenarioonlineenv_reset_and_one_step_with_the_frozen_xl_ego_proxy",
+          "id": "RUNTIME_VALIDATION_METADRIVE",
+          "reason": "The runtime is available and the freeze gate can rerun this evidence."
+        }
+      },
+      "subject_id": "RUNTIME_VALIDATION_METADRIVE",
+      "subject_sha256": "30fe5a1de6c50f759c20556de8ec49079cc5350a53b351f2f3b5555d5892af16",
+      "task_id": "342207e84f259573af83dd9dc4254fc2d53d48203c38adab51045c06e93c6978"
+    },
+    {
+      "adjudication_response_template": {
+        "final_payload": null,
+        "rationale": "",
+        "status": "pending",
+        "verdict": null
+      },
+      "annotator_a_response": null,
+      "annotator_b_response": null,
+      "subject": {
+        "machine_proposal": {
+          "decision_status": "draft",
+          "draft_decision": "keep_all_frozen_suite_queries_and_collapse_A07_E03_and_B09_E06_only_for_macro_statistics",
+          "evidence_asset": "statistical_clusters_draft.json",
+          "id": "TEST_DUPLICATE_CLUSTERS"
+        }
+      },
+      "subject_id": "TEST_DUPLICATE_CLUSTERS",
+      "subject_sha256": "7aa862413da46bdc241d2ff2225faee82b6225504b5f12f1ae7a1b7de215dd50",
+      "task_id": "de931f22b33cbfd581e0a10cd8736690b8ffe6e3924e56dfa3606ea3a32ad40b"
+    }
+  ],
+  "workflow_type": "protocol_proposal_adjudication"
+}

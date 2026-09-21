@@ -1,0 +1,242 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/human_machine_draft_registry.schema.json",
+  "title": "CARLA-stage machine drafts and single-reviewer packet registry",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "workflow_type",
+    "decision_status",
+    "stage_scope",
+    "review_policy",
+    "reviewer_assignment",
+    "human_gold",
+    "workload",
+    "query_agent_semantic_review",
+    "packets",
+    "dependency_order",
+    "metadrive_boundary",
+    "readiness"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "workflow_type": {"const": "carla_stage_machine_draft_registry"},
+    "decision_status": {"const": "draft"},
+    "stage_scope": {"const": "carla_first"},
+    "review_policy": {"const": "one_complete_human_gold_per_subject"},
+    "reviewer_assignment": {
+      "type": "object",
+      "required": [
+        "reviewer_id",
+        "identity_proof_provided",
+        "authorship_trust_boundary"
+      ],
+      "properties": {
+        "reviewer_id": {"type": "string", "minLength": 1},
+        "identity_proof_provided": {"const": false},
+        "authorship_trust_boundary": {"const": "external_human_custody_required"}
+      },
+      "additionalProperties": false
+    },
+    "human_gold": {
+      "type": "object",
+      "required": [
+        "admissible_records_created_by_export",
+        "completed_real_human_reviews_imported",
+        "submission_templates_are_gold",
+        "machine_recommendations_are_gold",
+        "machine_recommendations_populate_human_submissions"
+      ],
+      "properties": {
+        "admissible_records_created_by_export": {"const": 0},
+        "completed_real_human_reviews_imported": {"const": 0},
+        "submission_templates_are_gold": {"const": false},
+        "machine_recommendations_are_gold": {"const": false},
+        "machine_recommendations_populate_human_submissions": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "workload": {
+      "type": "object",
+      "required": [
+        "expected_subjects",
+        "packet_ready_subjects",
+        "blocked_subjects",
+        "query_subjects",
+        "carla_platform_subjects",
+        "carla_calibration_subjects",
+        "current_protocol_subjects",
+        "eventual_protocol_subjects",
+        "query_atom_verdict_entries",
+        "query_required_check_verdict_entries",
+        "query_cpd_verdict_entries",
+        "query_machine_recommendation_entries",
+        "expected_explicit_verdict_entries",
+        "packet_ready_explicit_verdict_entries",
+        "blocked_explicit_verdict_entries",
+        "minimum_post_test_subjects_per_method",
+        "optional_human_uqh_subjects_per_method_min",
+        "optional_human_uqh_subjects_per_method_max"
+      ],
+      "properties": {
+        "expected_subjects": {"const": 442},
+        "packet_ready_subjects": {"type": "integer", "minimum": 300, "maximum": 442},
+        "blocked_subjects": {"type": "integer", "minimum": 0, "maximum": 142},
+        "query_subjects": {"const": 300},
+        "carla_platform_subjects": {"const": 52},
+        "carla_calibration_subjects": {"const": 90},
+        "current_protocol_subjects": {"const": 0},
+        "eventual_protocol_subjects": {"const": 13},
+        "query_atom_verdict_entries": {"type": "integer", "minimum": 0},
+        "query_required_check_verdict_entries": {"const": 1800},
+        "query_cpd_verdict_entries": {"const": 300},
+        "query_machine_recommendation_entries": {"type": "integer", "minimum": 2100},
+        "expected_explicit_verdict_entries": {"type": "integer", "minimum": 2244},
+        "packet_ready_explicit_verdict_entries": {"type": "integer", "minimum": 0},
+        "blocked_explicit_verdict_entries": {"type": "integer", "minimum": 0, "maximum": 142},
+        "minimum_post_test_subjects_per_method": {"const": 126},
+        "optional_human_uqh_subjects_per_method_min": {"const": 0},
+        "optional_human_uqh_subjects_per_method_max": {"const": 120}
+      },
+      "additionalProperties": false
+    },
+    "query_agent_semantic_review": {
+      "type": "object",
+      "required": [
+        "artifact",
+        "reviewed_intent_groups",
+        "reviewed_subjects",
+        "draft_decision_entries",
+        "machine_only_non_gold",
+        "human_submission_populated",
+        "human_action_required"
+      ],
+      "properties": {
+        "artifact": {"$ref": "#/definitions/artifact"},
+        "reviewed_intent_groups": {"const": 100},
+        "reviewed_subjects": {"const": 300},
+        "draft_decision_entries": {"type": "integer", "minimum": 2100},
+        "machine_only_non_gold": {"const": true},
+        "human_submission_populated": {"const": false},
+        "human_action_required": {"const": true}
+      },
+      "additionalProperties": false
+    },
+    "packets": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {"$ref": "#/definitions/packet"}
+    },
+    "dependency_order": {
+      "type": "array",
+      "minItems": 5,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "metadrive_boundary": {
+      "type": "object",
+      "required": [
+        "token_only_runtime_observer",
+        "tested_method_adapter",
+        "real_tested_method_outputs",
+        "included_in_current_human_packets",
+        "machine_decision_crosswalk_entries",
+        "standalone_human_gold_subjects"
+      ],
+      "properties": {
+        "token_only_runtime_observer": {"const": "implemented_source_tested_independent_review_go"},
+        "tested_method_adapter": {"const": "not_provided"},
+        "real_tested_method_outputs": {"const": "not_provided"},
+        "included_in_current_human_packets": {"const": false},
+        "machine_decision_crosswalk_entries": {"const": 6},
+        "standalone_human_gold_subjects": {"const": 0}
+      },
+      "additionalProperties": false
+    },
+    "readiness": {
+      "type": "object",
+      "required": [
+        "query_human_review",
+        "carla_platform_human_review",
+        "carla_calibration_human_review",
+        "carla_stage_freeze",
+        "reason"
+      ],
+      "properties": {
+        "query_human_review": {"const": "GO"},
+        "carla_platform_human_review": {"enum": ["GO", "NO_GO"]},
+        "carla_calibration_human_review": {"enum": ["GO", "NO_GO"]},
+        "carla_stage_freeze": {"const": "NO_GO"},
+        "reason": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "artifact": {
+      "type": "object",
+      "required": ["path", "sha256", "bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/definitions/sha256"},
+        "bytes": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "packet": {
+      "type": "object",
+      "required": [
+        "packet_name",
+        "status",
+        "expected_subjects",
+        "packet_ready_subjects",
+        "expected_explicit_verdict_entries",
+        "packet_ready_explicit_verdict_entries",
+        "source_binding",
+        "bundle",
+        "submission_template",
+        "blockers"
+      ],
+      "properties": {
+        "packet_name": {
+          "enum": [
+            "test_query_review",
+            "dev_query_review",
+            "carla_platform_review",
+            "carla_calibration_review"
+          ]
+        },
+        "status": {"enum": ["packet_ready", "blocked_missing_inputs"]},
+        "expected_subjects": {"type": "integer", "minimum": 1},
+        "packet_ready_subjects": {"type": "integer", "minimum": 0},
+        "expected_explicit_verdict_entries": {"type": "integer", "minimum": 1},
+        "packet_ready_explicit_verdict_entries": {"type": "integer", "minimum": 0},
+        "source_binding": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "object", "minProperties": 1}
+          ]
+        },
+        "bundle": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/definitions/artifact"}
+          ]
+        },
+        "submission_template": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/definitions/artifact"}
+          ]
+        },
+        "blockers": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,48 @@
+{
+  "by_style": {
+    "partial": {
+      "candidate": 12,
+      "coverage": 0.9166666666666666,
+      "eligible": 11
+    },
+    "vague": {
+      "candidate": 12,
+      "coverage": 0.9166666666666666,
+      "eligible": 11
+    }
+  },
+  "candidate": 24,
+  "coverage": 0.9166666666666666,
+  "decision_status": "draft",
+  "eligible": 22,
+  "eligible_query_ids": [
+    "BSG_DEV_v0_2_S01_partial",
+    "BSG_DEV_v0_2_S01_vague",
+    "BSG_DEV_v0_2_S02_partial",
+    "BSG_DEV_v0_2_S02_vague",
+    "BSG_DEV_v0_2_S03_partial",
+    "BSG_DEV_v0_2_S03_vague",
+    "BSG_DEV_v0_2_S04_partial",
+    "BSG_DEV_v0_2_S04_vague",
+    "BSG_DEV_v0_2_S06_partial",
+    "BSG_DEV_v0_2_S06_vague",
+    "BSG_DEV_v0_2_S07_partial",
+    "BSG_DEV_v0_2_S07_vague",
+    "BSG_DEV_v0_2_S08_partial",
+    "BSG_DEV_v0_2_S08_vague",
+    "BSG_DEV_v0_2_S09_partial",
+    "BSG_DEV_v0_2_S09_vague",
+    "BSG_DEV_v0_2_S10_partial",
+    "BSG_DEV_v0_2_S10_vague",
+    "BSG_DEV_v0_2_S11_partial",
+    "BSG_DEV_v0_2_S11_vague",
+    "BSG_DEV_v0_2_S12_partial",
+    "BSG_DEV_v0_2_S12_vague"
+  ],
+  "eligible_query_ids_sha256": "312b6888fc8292e2daea9ddac16352b76b710f2b7a222dc785705818feaa7668",
+  "joint": {
+    "candidate": 24,
+    "coverage": 0.9166666666666666,
+    "eligible": 22
+  }
+}

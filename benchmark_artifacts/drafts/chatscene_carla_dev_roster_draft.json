@@ -1,0 +1,355 @@
+{
+  "decision_status": "draft",
+  "expected_response_count": 240,
+  "library_path": "/home/shijie20/CodeSpace/ChatScene/query_lib/bus_ego_topdown_2d_dev_query_library_v0_2.jsonl",
+  "library_sha256": "bb965d41c9cf21191b1a33d45be01e9ceb53d54d4216663a2f6578537bec62e5",
+  "method_id": "chatscene_carla_v0_1",
+  "platform": "carla",
+  "queries": [
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S01",
+      "query_id": "BSG_DEV_v0_2_S01_partial",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S01",
+      "surface_style": "partial"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S01",
+      "query_id": "BSG_DEV_v0_2_S01_precise",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S01",
+      "surface_style": "precise"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S01",
+      "query_id": "BSG_DEV_v0_2_S01_vague",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S01",
+      "surface_style": "vague"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S02",
+      "query_id": "BSG_DEV_v0_2_S02_partial",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S02",
+      "surface_style": "partial"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S02",
+      "query_id": "BSG_DEV_v0_2_S02_precise",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S02",
+      "surface_style": "precise"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S02",
+      "query_id": "BSG_DEV_v0_2_S02_vague",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S02",
+      "surface_style": "vague"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S03",
+      "query_id": "BSG_DEV_v0_2_S03_partial",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S03",
+      "surface_style": "partial"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S03",
+      "query_id": "BSG_DEV_v0_2_S03_precise",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S03",
+      "surface_style": "precise"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S03",
+      "query_id": "BSG_DEV_v0_2_S03_vague",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S03",
+      "surface_style": "vague"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S04",
+      "query_id": "BSG_DEV_v0_2_S04_partial",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S04",
+      "surface_style": "partial"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S04",
+      "query_id": "BSG_DEV_v0_2_S04_precise",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S04",
+      "surface_style": "precise"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S04",
+      "query_id": "BSG_DEV_v0_2_S04_vague",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S04",
+      "surface_style": "vague"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S05",
+      "query_id": "BSG_DEV_v0_2_S05_partial",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S05",
+      "surface_style": "partial"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S05",
+      "query_id": "BSG_DEV_v0_2_S05_precise",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S05",
+      "surface_style": "precise"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S05",
+      "query_id": "BSG_DEV_v0_2_S05_vague",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S05",
+      "surface_style": "vague"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S06",
+      "query_id": "BSG_DEV_v0_2_S06_partial",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S06",
+      "surface_style": "partial"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S06",
+      "query_id": "BSG_DEV_v0_2_S06_precise",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S06",
+      "surface_style": "precise"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S06",
+      "query_id": "BSG_DEV_v0_2_S06_vague",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S06",
+      "surface_style": "vague"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S07",
+      "query_id": "BSG_DEV_v0_2_S07_partial",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S07",
+      "surface_style": "partial"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S07",
+      "query_id": "BSG_DEV_v0_2_S07_precise",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S07",
+      "surface_style": "precise"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S07",
+      "query_id": "BSG_DEV_v0_2_S07_vague",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S07",
+      "surface_style": "vague"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S08",
+      "query_id": "BSG_DEV_v0_2_S08_partial",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S08",
+      "surface_style": "partial"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S08",
+      "query_id": "BSG_DEV_v0_2_S08_precise",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S08",
+      "surface_style": "precise"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S08",
+      "query_id": "BSG_DEV_v0_2_S08_vague",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S08",
+      "surface_style": "vague"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S09",
+      "query_id": "BSG_DEV_v0_2_S09_partial",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S09",
+      "surface_style": "partial"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S09",
+      "query_id": "BSG_DEV_v0_2_S09_precise",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S09",
+      "surface_style": "precise"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S09",
+      "query_id": "BSG_DEV_v0_2_S09_vague",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S09",
+      "surface_style": "vague"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S10",
+      "query_id": "BSG_DEV_v0_2_S10_partial",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S10",
+      "surface_style": "partial"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S10",
+      "query_id": "BSG_DEV_v0_2_S10_precise",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S10",
+      "surface_style": "precise"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S10",
+      "query_id": "BSG_DEV_v0_2_S10_vague",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S10",
+      "surface_style": "vague"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S11",
+      "query_id": "BSG_DEV_v0_2_S11_partial",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S11",
+      "surface_style": "partial"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S11",
+      "query_id": "BSG_DEV_v0_2_S11_precise",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S11",
+      "surface_style": "precise"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S11",
+      "query_id": "BSG_DEV_v0_2_S11_vague",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S11",
+      "surface_style": "vague"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S12",
+      "query_id": "BSG_DEV_v0_2_S12_partial",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S12",
+      "surface_style": "partial"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S12",
+      "query_id": "BSG_DEV_v0_2_S12_precise",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S12",
+      "surface_style": "precise"
+    },
+    {
+      "expected_support": "supported",
+      "intent_group_id": "BSG_DEV_v0_2_S12",
+      "query_id": "BSG_DEV_v0_2_S12_vague",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_S12",
+      "surface_style": "vague"
+    },
+    {
+      "expected_support": "unsupported",
+      "intent_group_id": "BSG_DEV_v0_2_U01",
+      "query_id": "BSG_DEV_v0_2_U01_partial",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_U01",
+      "surface_style": "partial"
+    },
+    {
+      "expected_support": "unsupported",
+      "intent_group_id": "BSG_DEV_v0_2_U01",
+      "query_id": "BSG_DEV_v0_2_U01_precise",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_U01",
+      "surface_style": "precise"
+    },
+    {
+      "expected_support": "unsupported",
+      "intent_group_id": "BSG_DEV_v0_2_U01",
+      "query_id": "BSG_DEV_v0_2_U01_vague",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_U01",
+      "surface_style": "vague"
+    },
+    {
+      "expected_support": "unsupported",
+      "intent_group_id": "BSG_DEV_v0_2_U02",
+      "query_id": "BSG_DEV_v0_2_U02_partial",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_U02",
+      "surface_style": "partial"
+    },
+    {
+      "expected_support": "unsupported",
+      "intent_group_id": "BSG_DEV_v0_2_U02",
+      "query_id": "BSG_DEV_v0_2_U02_precise",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_U02",
+      "surface_style": "precise"
+    },
+    {
+      "expected_support": "unsupported",
+      "intent_group_id": "BSG_DEV_v0_2_U02",
+      "query_id": "BSG_DEV_v0_2_U02_vague",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_U02",
+      "surface_style": "vague"
+    },
+    {
+      "expected_support": "unsupported",
+      "intent_group_id": "BSG_DEV_v0_2_U03",
+      "query_id": "BSG_DEV_v0_2_U03_partial",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_U03",
+      "surface_style": "partial"
+    },
+    {
+      "expected_support": "unsupported",
+      "intent_group_id": "BSG_DEV_v0_2_U03",
+      "query_id": "BSG_DEV_v0_2_U03_precise",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_U03",
+      "surface_style": "precise"
+    },
+    {
+      "expected_support": "unsupported",
+      "intent_group_id": "BSG_DEV_v0_2_U03",
+      "query_id": "BSG_DEV_v0_2_U03_vague",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_U03",
+      "surface_style": "vague"
+    },
+    {
+      "expected_support": "unsupported",
+      "intent_group_id": "BSG_DEV_v0_2_U04",
+      "query_id": "BSG_DEV_v0_2_U04_partial",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_U04",
+      "surface_style": "partial"
+    },
+    {
+      "expected_support": "unsupported",
+      "intent_group_id": "BSG_DEV_v0_2_U04",
+      "query_id": "BSG_DEV_v0_2_U04_precise",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_U04",
+      "surface_style": "precise"
+    },
+    {
+      "expected_support": "unsupported",
+      "intent_group_id": "BSG_DEV_v0_2_U04",
+      "query_id": "BSG_DEV_v0_2_U04_vague",
+      "statistical_intent_cluster_id": "BSG_DEV_v0_2_U04",
+      "surface_style": "vague"
+    }
+  ],
+  "query_count": 48,
+  "repetitions": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "schema_version": "0.1"
+}

@@ -1,0 +1,1622 @@
+{
+  "schema_version": "0.1",
+  "artifact_type": "agent_semantic_review_fragment",
+  "agent_generated": true,
+  "human_gold": false,
+  "scope": {
+    "split": "development",
+    "library_path": "query_lib/bus_ego_topdown_2d_dev_query_library_v0_2.jsonl",
+    "oracle_path": "benchmark_artifacts/drafts/dev_oracle_draft.jsonl",
+    "intent_range": "all 16 BSG_DEV_v0_2 intents"
+  },
+  "intent_reviews": [
+    {
+      "intent_group_id": "BSG_DEV_v0_2_S01",
+      "query_ids": [
+        "BSG_DEV_v0_2_S01_partial",
+        "BSG_DEV_v0_2_S01_precise",
+        "BSG_DEV_v0_2_S01_vague"
+      ],
+      "overall_disposition": "accept_with_attention",
+      "confidence": "medium",
+      "semantic_findings": [
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "support_and_response_disposition",
+          "recommendation": "accept",
+          "reason": "The v0.2 source explicitly declares supported support and its acceptable response; this is a machine projection, not human gold.",
+          "suggested_change": "Verify the declared support boundary and response disposition before finalizing the single human gold."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "cardinality_and_polarity",
+          "recommendation": "human_judgment",
+          "reason": "Cardinality and polarity must be justified by each current surface rather than inherited from v0.1.",
+          "suggested_change": "Review the counterpart actors and any explicit absence or minimum-count language for all three surfaces."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "road_and_spatial_decomposition",
+          "recommendation": "human_judgment",
+          "reason": "Road and spatial metadata can contain implementation detail not stated by partial or vague text.",
+          "suggested_change": "Separate required, permitted, and forbidden road or spatial detail per surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "event_graph_and_actor_binding",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 intentionally removes ego reaction from query and event requirements; only external interaction events remain.",
+          "suggested_change": "Confirm every event actor and temporal edge, and leave reactive ego behavior to the ego policy."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "surface_layering",
+          "recommendation": "human_judgment",
+          "reason": "The precise, partial, and vague surfaces share an intent but do not necessarily state the same implementation detail.",
+          "suggested_change": "Confirm core-required, surface-required, permitted, and forbidden layers without canonical-query leakage."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "cpd_policy",
+          "target": "cpd_policy",
+          "recommendation": "human_judgment",
+          "reason": "CPD eligibility must use only frozen platform-invariant dimensions and an unambiguous target.",
+          "suggested_change": "Confirm eligibility and selector uniqueness; keep precise surfaces ineligible for rewarded diversity."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_relative_region",
+          "recommendation": "human_judgment",
+          "reason": "The relative region is a heuristic projection from the counterpart role.",
+          "suggested_change": "Confirm or revise the region using the current v0.2 surface text."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_role_count",
+          "recommendation": "human_judgment",
+          "reason": "Counterpart cardinality is a scored requirement only when the surface text supports it.",
+          "suggested_change": "Confirm the count and polarity independently for this surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "event_spec",
+          "recommendation": "human_judgment",
+          "reason": "In v0.2 interaction events may describe only counterpart, environment, signal, or policy-independent trigger behavior; ego reaction is excluded.",
+          "suggested_change": "Confirm the actor binding and reject any inferred ego reaction or terminal policy outcome."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "risk_level",
+          "recommendation": "human_judgment",
+          "reason": "Risk is external exposure metadata in v0.2, not a realized ego-policy outcome.",
+          "suggested_change": "Confirm whether the surface makes it scoreable or whether it should remain permitted metadata."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "rule_hook",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 rule hooks have explicit scene, counterpart-rule, and counterpart-violation scopes.",
+          "suggested_change": "Confirm the preserved scope; do not reinterpret a counterpart rule as an ego reaction requirement."
+        },
+        {
+          "scope": "precise",
+          "target_type": "atom_predicate",
+          "target": "surface_numeric_constraint",
+          "recommendation": "human_judgment",
+          "reason": "Numeric constraints are surface-specific and must not leak from the precise form into partial or vague forms.",
+          "suggested_change": "Confirm the value and layer for this surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "temporal_structure",
+          "recommendation": "human_judgment",
+          "reason": "The v0.2 temporal structure orders external interaction events, not ego-policy reactions.",
+          "suggested_change": "Confirm that every ordered stage is external and expressed by the surface."
+        }
+      ]
+    },
+    {
+      "intent_group_id": "BSG_DEV_v0_2_S02",
+      "query_ids": [
+        "BSG_DEV_v0_2_S02_partial",
+        "BSG_DEV_v0_2_S02_precise",
+        "BSG_DEV_v0_2_S02_vague"
+      ],
+      "overall_disposition": "accept_with_attention",
+      "confidence": "medium",
+      "semantic_findings": [
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "support_and_response_disposition",
+          "recommendation": "accept",
+          "reason": "The v0.2 source explicitly declares supported support and its acceptable response; this is a machine projection, not human gold.",
+          "suggested_change": "Verify the declared support boundary and response disposition before finalizing the single human gold."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "cardinality_and_polarity",
+          "recommendation": "human_judgment",
+          "reason": "Cardinality and polarity must be justified by each current surface rather than inherited from v0.1.",
+          "suggested_change": "Review the counterpart actors and any explicit absence or minimum-count language for all three surfaces."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "road_and_spatial_decomposition",
+          "recommendation": "human_judgment",
+          "reason": "Road and spatial metadata can contain implementation detail not stated by partial or vague text.",
+          "suggested_change": "Separate required, permitted, and forbidden road or spatial detail per surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "event_graph_and_actor_binding",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 intentionally removes ego reaction from query and event requirements; only external interaction events remain.",
+          "suggested_change": "Confirm every event actor and temporal edge, and leave reactive ego behavior to the ego policy."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "surface_layering",
+          "recommendation": "human_judgment",
+          "reason": "The precise, partial, and vague surfaces share an intent but do not necessarily state the same implementation detail.",
+          "suggested_change": "Confirm core-required, surface-required, permitted, and forbidden layers without canonical-query leakage."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "cpd_policy",
+          "target": "cpd_policy",
+          "recommendation": "human_judgment",
+          "reason": "CPD eligibility must use only frozen platform-invariant dimensions and an unambiguous target.",
+          "suggested_change": "Confirm eligibility and selector uniqueness; keep precise surfaces ineligible for rewarded diversity."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_relative_region",
+          "recommendation": "human_judgment",
+          "reason": "The relative region is a heuristic projection from the counterpart role.",
+          "suggested_change": "Confirm or revise the region using the current v0.2 surface text."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_role_count",
+          "recommendation": "human_judgment",
+          "reason": "Counterpart cardinality is a scored requirement only when the surface text supports it.",
+          "suggested_change": "Confirm the count and polarity independently for this surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "event_spec",
+          "recommendation": "human_judgment",
+          "reason": "In v0.2 interaction events may describe only counterpart, environment, signal, or policy-independent trigger behavior; ego reaction is excluded.",
+          "suggested_change": "Confirm the actor binding and reject any inferred ego reaction or terminal policy outcome."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "risk_level",
+          "recommendation": "human_judgment",
+          "reason": "Risk is external exposure metadata in v0.2, not a realized ego-policy outcome.",
+          "suggested_change": "Confirm whether the surface makes it scoreable or whether it should remain permitted metadata."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "rule_hook",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 rule hooks have explicit scene, counterpart-rule, and counterpart-violation scopes.",
+          "suggested_change": "Confirm the preserved scope; do not reinterpret a counterpart rule as an ego reaction requirement."
+        },
+        {
+          "scope": "precise",
+          "target_type": "atom_predicate",
+          "target": "surface_numeric_constraint",
+          "recommendation": "human_judgment",
+          "reason": "Numeric constraints are surface-specific and must not leak from the precise form into partial or vague forms.",
+          "suggested_change": "Confirm the value and layer for this surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "temporal_structure",
+          "recommendation": "human_judgment",
+          "reason": "The v0.2 temporal structure orders external interaction events, not ego-policy reactions.",
+          "suggested_change": "Confirm that every ordered stage is external and expressed by the surface."
+        }
+      ]
+    },
+    {
+      "intent_group_id": "BSG_DEV_v0_2_S03",
+      "query_ids": [
+        "BSG_DEV_v0_2_S03_partial",
+        "BSG_DEV_v0_2_S03_precise",
+        "BSG_DEV_v0_2_S03_vague"
+      ],
+      "overall_disposition": "accept_with_attention",
+      "confidence": "medium",
+      "semantic_findings": [
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "support_and_response_disposition",
+          "recommendation": "accept",
+          "reason": "The v0.2 source explicitly declares supported support and its acceptable response; this is a machine projection, not human gold.",
+          "suggested_change": "Verify the declared support boundary and response disposition before finalizing the single human gold."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "cardinality_and_polarity",
+          "recommendation": "human_judgment",
+          "reason": "Cardinality and polarity must be justified by each current surface rather than inherited from v0.1.",
+          "suggested_change": "Review the counterpart actors and any explicit absence or minimum-count language for all three surfaces."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "road_and_spatial_decomposition",
+          "recommendation": "human_judgment",
+          "reason": "Road and spatial metadata can contain implementation detail not stated by partial or vague text.",
+          "suggested_change": "Separate required, permitted, and forbidden road or spatial detail per surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "event_graph_and_actor_binding",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 intentionally removes ego reaction from query and event requirements; only external interaction events remain.",
+          "suggested_change": "Confirm every event actor and temporal edge, and leave reactive ego behavior to the ego policy."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "surface_layering",
+          "recommendation": "human_judgment",
+          "reason": "The precise, partial, and vague surfaces share an intent but do not necessarily state the same implementation detail.",
+          "suggested_change": "Confirm core-required, surface-required, permitted, and forbidden layers without canonical-query leakage."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "cpd_policy",
+          "target": "cpd_policy",
+          "recommendation": "human_judgment",
+          "reason": "CPD eligibility must use only frozen platform-invariant dimensions and an unambiguous target.",
+          "suggested_change": "Confirm eligibility and selector uniqueness; keep precise surfaces ineligible for rewarded diversity."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_relative_region",
+          "recommendation": "human_judgment",
+          "reason": "The relative region is a heuristic projection from the counterpart role.",
+          "suggested_change": "Confirm or revise the region using the current v0.2 surface text."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_role_count",
+          "recommendation": "human_judgment",
+          "reason": "Counterpart cardinality is a scored requirement only when the surface text supports it.",
+          "suggested_change": "Confirm the count and polarity independently for this surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "before",
+          "recommendation": "human_judgment",
+          "reason": "Temporal edges in v0.2 must connect external events only.",
+          "suggested_change": "Confirm both endpoints and remove any edge that implicitly specifies ego reaction."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "event_spec",
+          "recommendation": "human_judgment",
+          "reason": "In v0.2 interaction events may describe only counterpart, environment, signal, or policy-independent trigger behavior; ego reaction is excluded.",
+          "suggested_change": "Confirm the actor binding and reject any inferred ego reaction or terminal policy outcome."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "risk_level",
+          "recommendation": "human_judgment",
+          "reason": "Risk is external exposure metadata in v0.2, not a realized ego-policy outcome.",
+          "suggested_change": "Confirm whether the surface makes it scoreable or whether it should remain permitted metadata."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "rule_hook",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 rule hooks have explicit scene, counterpart-rule, and counterpart-violation scopes.",
+          "suggested_change": "Confirm the preserved scope; do not reinterpret a counterpart rule as an ego reaction requirement."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "temporal_structure",
+          "recommendation": "human_judgment",
+          "reason": "The v0.2 temporal structure orders external interaction events, not ego-policy reactions.",
+          "suggested_change": "Confirm that every ordered stage is external and expressed by the surface."
+        }
+      ]
+    },
+    {
+      "intent_group_id": "BSG_DEV_v0_2_S04",
+      "query_ids": [
+        "BSG_DEV_v0_2_S04_partial",
+        "BSG_DEV_v0_2_S04_precise",
+        "BSG_DEV_v0_2_S04_vague"
+      ],
+      "overall_disposition": "accept_with_attention",
+      "confidence": "medium",
+      "semantic_findings": [
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "support_and_response_disposition",
+          "recommendation": "accept",
+          "reason": "The v0.2 source explicitly declares supported support and its acceptable response; this is a machine projection, not human gold.",
+          "suggested_change": "Verify the declared support boundary and response disposition before finalizing the single human gold."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "cardinality_and_polarity",
+          "recommendation": "human_judgment",
+          "reason": "Cardinality and polarity must be justified by each current surface rather than inherited from v0.1.",
+          "suggested_change": "Review the counterpart actors and any explicit absence or minimum-count language for all three surfaces."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "road_and_spatial_decomposition",
+          "recommendation": "human_judgment",
+          "reason": "Road and spatial metadata can contain implementation detail not stated by partial or vague text.",
+          "suggested_change": "Separate required, permitted, and forbidden road or spatial detail per surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "event_graph_and_actor_binding",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 intentionally removes ego reaction from query and event requirements; only external interaction events remain.",
+          "suggested_change": "Confirm every event actor and temporal edge, and leave reactive ego behavior to the ego policy."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "surface_layering",
+          "recommendation": "human_judgment",
+          "reason": "The precise, partial, and vague surfaces share an intent but do not necessarily state the same implementation detail.",
+          "suggested_change": "Confirm core-required, surface-required, permitted, and forbidden layers without canonical-query leakage."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "cpd_policy",
+          "target": "cpd_policy",
+          "recommendation": "human_judgment",
+          "reason": "CPD eligibility must use only frozen platform-invariant dimensions and an unambiguous target.",
+          "suggested_change": "Confirm eligibility and selector uniqueness; keep precise surfaces ineligible for rewarded diversity."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_role_count",
+          "recommendation": "human_judgment",
+          "reason": "Counterpart cardinality is a scored requirement only when the surface text supports it.",
+          "suggested_change": "Confirm the count and polarity independently for this surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "event_spec",
+          "recommendation": "human_judgment",
+          "reason": "In v0.2 interaction events may describe only counterpart, environment, signal, or policy-independent trigger behavior; ego reaction is excluded.",
+          "suggested_change": "Confirm the actor binding and reject any inferred ego reaction or terminal policy outcome."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "risk_level",
+          "recommendation": "human_judgment",
+          "reason": "Risk is external exposure metadata in v0.2, not a realized ego-policy outcome.",
+          "suggested_change": "Confirm whether the surface makes it scoreable or whether it should remain permitted metadata."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "rule_hook",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 rule hooks have explicit scene, counterpart-rule, and counterpart-violation scopes.",
+          "suggested_change": "Confirm the preserved scope; do not reinterpret a counterpart rule as an ego reaction requirement."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "temporal_structure",
+          "recommendation": "human_judgment",
+          "reason": "The v0.2 temporal structure orders external interaction events, not ego-policy reactions.",
+          "suggested_change": "Confirm that every ordered stage is external and expressed by the surface."
+        }
+      ]
+    },
+    {
+      "intent_group_id": "BSG_DEV_v0_2_S05",
+      "query_ids": [
+        "BSG_DEV_v0_2_S05_partial",
+        "BSG_DEV_v0_2_S05_precise",
+        "BSG_DEV_v0_2_S05_vague"
+      ],
+      "overall_disposition": "accept_with_attention",
+      "confidence": "medium",
+      "semantic_findings": [
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "support_and_response_disposition",
+          "recommendation": "accept",
+          "reason": "The v0.2 source explicitly declares supported support and its acceptable response; this is a machine projection, not human gold.",
+          "suggested_change": "Verify the declared support boundary and response disposition before finalizing the single human gold."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "cardinality_and_polarity",
+          "recommendation": "human_judgment",
+          "reason": "Cardinality and polarity must be justified by each current surface rather than inherited from v0.1.",
+          "suggested_change": "Review the counterpart actors and any explicit absence or minimum-count language for all three surfaces."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "road_and_spatial_decomposition",
+          "recommendation": "human_judgment",
+          "reason": "Road and spatial metadata can contain implementation detail not stated by partial or vague text.",
+          "suggested_change": "Separate required, permitted, and forbidden road or spatial detail per surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "event_graph_and_actor_binding",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 intentionally removes ego reaction from query and event requirements; only external interaction events remain.",
+          "suggested_change": "Confirm every event actor and temporal edge, and leave reactive ego behavior to the ego policy."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "surface_layering",
+          "recommendation": "human_judgment",
+          "reason": "The precise, partial, and vague surfaces share an intent but do not necessarily state the same implementation detail.",
+          "suggested_change": "Confirm core-required, surface-required, permitted, and forbidden layers without canonical-query leakage."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "cpd_policy",
+          "target": "cpd_policy",
+          "recommendation": "human_judgment",
+          "reason": "CPD eligibility must use only frozen platform-invariant dimensions and an unambiguous target.",
+          "suggested_change": "Confirm eligibility and selector uniqueness; keep precise surfaces ineligible for rewarded diversity."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_relative_region",
+          "recommendation": "human_judgment",
+          "reason": "The relative region is a heuristic projection from the counterpart role.",
+          "suggested_change": "Confirm or revise the region using the current v0.2 surface text."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_role_count",
+          "recommendation": "human_judgment",
+          "reason": "Counterpart cardinality is a scored requirement only when the surface text supports it.",
+          "suggested_change": "Confirm the count and polarity independently for this surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "event_spec",
+          "recommendation": "human_judgment",
+          "reason": "In v0.2 interaction events may describe only counterpart, environment, signal, or policy-independent trigger behavior; ego reaction is excluded.",
+          "suggested_change": "Confirm the actor binding and reject any inferred ego reaction or terminal policy outcome."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "parallel_group",
+          "recommendation": "human_judgment",
+          "reason": "Parallel groups in v0.2 cover simultaneous external events only.",
+          "suggested_change": "Confirm the group membership without adding ego-policy behavior."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "risk_level",
+          "recommendation": "human_judgment",
+          "reason": "Risk is external exposure metadata in v0.2, not a realized ego-policy outcome.",
+          "suggested_change": "Confirm whether the surface makes it scoreable or whether it should remain permitted metadata."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "rule_hook",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 rule hooks have explicit scene, counterpart-rule, and counterpart-violation scopes.",
+          "suggested_change": "Confirm the preserved scope; do not reinterpret a counterpart rule as an ego reaction requirement."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "temporal_structure",
+          "recommendation": "human_judgment",
+          "reason": "The v0.2 temporal structure orders external interaction events, not ego-policy reactions.",
+          "suggested_change": "Confirm that every ordered stage is external and expressed by the surface."
+        }
+      ]
+    },
+    {
+      "intent_group_id": "BSG_DEV_v0_2_S06",
+      "query_ids": [
+        "BSG_DEV_v0_2_S06_partial",
+        "BSG_DEV_v0_2_S06_precise",
+        "BSG_DEV_v0_2_S06_vague"
+      ],
+      "overall_disposition": "accept_with_attention",
+      "confidence": "medium",
+      "semantic_findings": [
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "support_and_response_disposition",
+          "recommendation": "accept",
+          "reason": "The v0.2 source explicitly declares supported support and its acceptable response; this is a machine projection, not human gold.",
+          "suggested_change": "Verify the declared support boundary and response disposition before finalizing the single human gold."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "cardinality_and_polarity",
+          "recommendation": "human_judgment",
+          "reason": "Cardinality and polarity must be justified by each current surface rather than inherited from v0.1.",
+          "suggested_change": "Review the counterpart actors and any explicit absence or minimum-count language for all three surfaces."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "road_and_spatial_decomposition",
+          "recommendation": "human_judgment",
+          "reason": "Road and spatial metadata can contain implementation detail not stated by partial or vague text.",
+          "suggested_change": "Separate required, permitted, and forbidden road or spatial detail per surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "event_graph_and_actor_binding",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 intentionally removes ego reaction from query and event requirements; only external interaction events remain.",
+          "suggested_change": "Confirm every event actor and temporal edge, and leave reactive ego behavior to the ego policy."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "surface_layering",
+          "recommendation": "human_judgment",
+          "reason": "The precise, partial, and vague surfaces share an intent but do not necessarily state the same implementation detail.",
+          "suggested_change": "Confirm core-required, surface-required, permitted, and forbidden layers without canonical-query leakage."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "cpd_policy",
+          "target": "cpd_policy",
+          "recommendation": "human_judgment",
+          "reason": "CPD eligibility must use only frozen platform-invariant dimensions and an unambiguous target.",
+          "suggested_change": "Confirm eligibility and selector uniqueness; keep precise surfaces ineligible for rewarded diversity."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_relative_region",
+          "recommendation": "human_judgment",
+          "reason": "The relative region is a heuristic projection from the counterpart role.",
+          "suggested_change": "Confirm or revise the region using the current v0.2 surface text."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_role_count",
+          "recommendation": "human_judgment",
+          "reason": "Counterpart cardinality is a scored requirement only when the surface text supports it.",
+          "suggested_change": "Confirm the count and polarity independently for this surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "event_spec",
+          "recommendation": "human_judgment",
+          "reason": "In v0.2 interaction events may describe only counterpart, environment, signal, or policy-independent trigger behavior; ego reaction is excluded.",
+          "suggested_change": "Confirm the actor binding and reject any inferred ego reaction or terminal policy outcome."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "risk_level",
+          "recommendation": "human_judgment",
+          "reason": "Risk is external exposure metadata in v0.2, not a realized ego-policy outcome.",
+          "suggested_change": "Confirm whether the surface makes it scoreable or whether it should remain permitted metadata."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "rule_hook",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 rule hooks have explicit scene, counterpart-rule, and counterpart-violation scopes.",
+          "suggested_change": "Confirm the preserved scope; do not reinterpret a counterpart rule as an ego reaction requirement."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "temporal_structure",
+          "recommendation": "human_judgment",
+          "reason": "The v0.2 temporal structure orders external interaction events, not ego-policy reactions.",
+          "suggested_change": "Confirm that every ordered stage is external and expressed by the surface."
+        }
+      ]
+    },
+    {
+      "intent_group_id": "BSG_DEV_v0_2_S07",
+      "query_ids": [
+        "BSG_DEV_v0_2_S07_partial",
+        "BSG_DEV_v0_2_S07_precise",
+        "BSG_DEV_v0_2_S07_vague"
+      ],
+      "overall_disposition": "accept_with_attention",
+      "confidence": "medium",
+      "semantic_findings": [
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "support_and_response_disposition",
+          "recommendation": "accept",
+          "reason": "The v0.2 source explicitly declares supported support and its acceptable response; this is a machine projection, not human gold.",
+          "suggested_change": "Verify the declared support boundary and response disposition before finalizing the single human gold."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "cardinality_and_polarity",
+          "recommendation": "human_judgment",
+          "reason": "Cardinality and polarity must be justified by each current surface rather than inherited from v0.1.",
+          "suggested_change": "Review the counterpart actors and any explicit absence or minimum-count language for all three surfaces."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "road_and_spatial_decomposition",
+          "recommendation": "human_judgment",
+          "reason": "Road and spatial metadata can contain implementation detail not stated by partial or vague text.",
+          "suggested_change": "Separate required, permitted, and forbidden road or spatial detail per surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "event_graph_and_actor_binding",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 intentionally removes ego reaction from query and event requirements; only external interaction events remain.",
+          "suggested_change": "Confirm every event actor and temporal edge, and leave reactive ego behavior to the ego policy."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "surface_layering",
+          "recommendation": "human_judgment",
+          "reason": "The precise, partial, and vague surfaces share an intent but do not necessarily state the same implementation detail.",
+          "suggested_change": "Confirm core-required, surface-required, permitted, and forbidden layers without canonical-query leakage."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "cpd_policy",
+          "target": "cpd_policy",
+          "recommendation": "human_judgment",
+          "reason": "CPD eligibility must use only frozen platform-invariant dimensions and an unambiguous target.",
+          "suggested_change": "Confirm eligibility and selector uniqueness; keep precise surfaces ineligible for rewarded diversity."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_role_count",
+          "recommendation": "human_judgment",
+          "reason": "Counterpart cardinality is a scored requirement only when the surface text supports it.",
+          "suggested_change": "Confirm the count and polarity independently for this surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "before",
+          "recommendation": "human_judgment",
+          "reason": "Temporal edges in v0.2 must connect external events only.",
+          "suggested_change": "Confirm both endpoints and remove any edge that implicitly specifies ego reaction."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "event_spec",
+          "recommendation": "human_judgment",
+          "reason": "In v0.2 interaction events may describe only counterpart, environment, signal, or policy-independent trigger behavior; ego reaction is excluded.",
+          "suggested_change": "Confirm the actor binding and reject any inferred ego reaction or terminal policy outcome."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "risk_level",
+          "recommendation": "human_judgment",
+          "reason": "Risk is external exposure metadata in v0.2, not a realized ego-policy outcome.",
+          "suggested_change": "Confirm whether the surface makes it scoreable or whether it should remain permitted metadata."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "rule_hook",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 rule hooks have explicit scene, counterpart-rule, and counterpart-violation scopes.",
+          "suggested_change": "Confirm the preserved scope; do not reinterpret a counterpart rule as an ego reaction requirement."
+        },
+        {
+          "scope": "precise",
+          "target_type": "atom_predicate",
+          "target": "surface_numeric_constraint",
+          "recommendation": "human_judgment",
+          "reason": "Numeric constraints are surface-specific and must not leak from the precise form into partial or vague forms.",
+          "suggested_change": "Confirm the value and layer for this surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "temporal_structure",
+          "recommendation": "human_judgment",
+          "reason": "The v0.2 temporal structure orders external interaction events, not ego-policy reactions.",
+          "suggested_change": "Confirm that every ordered stage is external and expressed by the surface."
+        }
+      ]
+    },
+    {
+      "intent_group_id": "BSG_DEV_v0_2_S08",
+      "query_ids": [
+        "BSG_DEV_v0_2_S08_partial",
+        "BSG_DEV_v0_2_S08_precise",
+        "BSG_DEV_v0_2_S08_vague"
+      ],
+      "overall_disposition": "accept_with_attention",
+      "confidence": "medium",
+      "semantic_findings": [
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "support_and_response_disposition",
+          "recommendation": "accept",
+          "reason": "The v0.2 source explicitly declares supported support and its acceptable response; this is a machine projection, not human gold.",
+          "suggested_change": "Verify the declared support boundary and response disposition before finalizing the single human gold."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "cardinality_and_polarity",
+          "recommendation": "human_judgment",
+          "reason": "Cardinality and polarity must be justified by each current surface rather than inherited from v0.1.",
+          "suggested_change": "Review the counterpart actors and any explicit absence or minimum-count language for all three surfaces."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "road_and_spatial_decomposition",
+          "recommendation": "human_judgment",
+          "reason": "Road and spatial metadata can contain implementation detail not stated by partial or vague text.",
+          "suggested_change": "Separate required, permitted, and forbidden road or spatial detail per surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "event_graph_and_actor_binding",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 intentionally removes ego reaction from query and event requirements; only external interaction events remain.",
+          "suggested_change": "Confirm every event actor and temporal edge, and leave reactive ego behavior to the ego policy."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "surface_layering",
+          "recommendation": "human_judgment",
+          "reason": "The precise, partial, and vague surfaces share an intent but do not necessarily state the same implementation detail.",
+          "suggested_change": "Confirm core-required, surface-required, permitted, and forbidden layers without canonical-query leakage."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "cpd_policy",
+          "target": "cpd_policy",
+          "recommendation": "human_judgment",
+          "reason": "CPD eligibility must use only frozen platform-invariant dimensions and an unambiguous target.",
+          "suggested_change": "Confirm eligibility and selector uniqueness; keep precise surfaces ineligible for rewarded diversity."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_relative_region",
+          "recommendation": "human_judgment",
+          "reason": "The relative region is a heuristic projection from the counterpart role.",
+          "suggested_change": "Confirm or revise the region using the current v0.2 surface text."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_role_count",
+          "recommendation": "human_judgment",
+          "reason": "Counterpart cardinality is a scored requirement only when the surface text supports it.",
+          "suggested_change": "Confirm the count and polarity independently for this surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "before",
+          "recommendation": "human_judgment",
+          "reason": "Temporal edges in v0.2 must connect external events only.",
+          "suggested_change": "Confirm both endpoints and remove any edge that implicitly specifies ego reaction."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "event_spec",
+          "recommendation": "human_judgment",
+          "reason": "In v0.2 interaction events may describe only counterpart, environment, signal, or policy-independent trigger behavior; ego reaction is excluded.",
+          "suggested_change": "Confirm the actor binding and reject any inferred ego reaction or terminal policy outcome."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "risk_level",
+          "recommendation": "human_judgment",
+          "reason": "Risk is external exposure metadata in v0.2, not a realized ego-policy outcome.",
+          "suggested_change": "Confirm whether the surface makes it scoreable or whether it should remain permitted metadata."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "rule_hook",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 rule hooks have explicit scene, counterpart-rule, and counterpart-violation scopes.",
+          "suggested_change": "Confirm the preserved scope; do not reinterpret a counterpart rule as an ego reaction requirement."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "temporal_structure",
+          "recommendation": "human_judgment",
+          "reason": "The v0.2 temporal structure orders external interaction events, not ego-policy reactions.",
+          "suggested_change": "Confirm that every ordered stage is external and expressed by the surface."
+        }
+      ]
+    },
+    {
+      "intent_group_id": "BSG_DEV_v0_2_S09",
+      "query_ids": [
+        "BSG_DEV_v0_2_S09_partial",
+        "BSG_DEV_v0_2_S09_precise",
+        "BSG_DEV_v0_2_S09_vague"
+      ],
+      "overall_disposition": "accept_with_attention",
+      "confidence": "medium",
+      "semantic_findings": [
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "support_and_response_disposition",
+          "recommendation": "accept",
+          "reason": "The v0.2 source explicitly declares supported support and its acceptable response; this is a machine projection, not human gold.",
+          "suggested_change": "Verify the declared support boundary and response disposition before finalizing the single human gold."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "cardinality_and_polarity",
+          "recommendation": "human_judgment",
+          "reason": "Cardinality and polarity must be justified by each current surface rather than inherited from v0.1.",
+          "suggested_change": "Review the counterpart actors and any explicit absence or minimum-count language for all three surfaces."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "road_and_spatial_decomposition",
+          "recommendation": "human_judgment",
+          "reason": "Road and spatial metadata can contain implementation detail not stated by partial or vague text.",
+          "suggested_change": "Separate required, permitted, and forbidden road or spatial detail per surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "event_graph_and_actor_binding",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 intentionally removes ego reaction from query and event requirements; only external interaction events remain.",
+          "suggested_change": "Confirm every event actor and temporal edge, and leave reactive ego behavior to the ego policy."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "surface_layering",
+          "recommendation": "human_judgment",
+          "reason": "The precise, partial, and vague surfaces share an intent but do not necessarily state the same implementation detail.",
+          "suggested_change": "Confirm core-required, surface-required, permitted, and forbidden layers without canonical-query leakage."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "cpd_policy",
+          "target": "cpd_policy",
+          "recommendation": "human_judgment",
+          "reason": "CPD eligibility must use only frozen platform-invariant dimensions and an unambiguous target.",
+          "suggested_change": "Confirm eligibility and selector uniqueness; keep precise surfaces ineligible for rewarded diversity."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_relative_region",
+          "recommendation": "human_judgment",
+          "reason": "The relative region is a heuristic projection from the counterpart role.",
+          "suggested_change": "Confirm or revise the region using the current v0.2 surface text."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_role_count",
+          "recommendation": "human_judgment",
+          "reason": "Counterpart cardinality is a scored requirement only when the surface text supports it.",
+          "suggested_change": "Confirm the count and polarity independently for this surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "event_spec",
+          "recommendation": "human_judgment",
+          "reason": "In v0.2 interaction events may describe only counterpart, environment, signal, or policy-independent trigger behavior; ego reaction is excluded.",
+          "suggested_change": "Confirm the actor binding and reject any inferred ego reaction or terminal policy outcome."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "risk_level",
+          "recommendation": "human_judgment",
+          "reason": "Risk is external exposure metadata in v0.2, not a realized ego-policy outcome.",
+          "suggested_change": "Confirm whether the surface makes it scoreable or whether it should remain permitted metadata."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "rule_hook",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 rule hooks have explicit scene, counterpart-rule, and counterpart-violation scopes.",
+          "suggested_change": "Confirm the preserved scope; do not reinterpret a counterpart rule as an ego reaction requirement."
+        },
+        {
+          "scope": "precise",
+          "target_type": "atom_predicate",
+          "target": "surface_numeric_constraint",
+          "recommendation": "human_judgment",
+          "reason": "Numeric constraints are surface-specific and must not leak from the precise form into partial or vague forms.",
+          "suggested_change": "Confirm the value and layer for this surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "temporal_structure",
+          "recommendation": "human_judgment",
+          "reason": "The v0.2 temporal structure orders external interaction events, not ego-policy reactions.",
+          "suggested_change": "Confirm that every ordered stage is external and expressed by the surface."
+        }
+      ]
+    },
+    {
+      "intent_group_id": "BSG_DEV_v0_2_S10",
+      "query_ids": [
+        "BSG_DEV_v0_2_S10_partial",
+        "BSG_DEV_v0_2_S10_precise",
+        "BSG_DEV_v0_2_S10_vague"
+      ],
+      "overall_disposition": "accept_with_attention",
+      "confidence": "medium",
+      "semantic_findings": [
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "support_and_response_disposition",
+          "recommendation": "accept",
+          "reason": "The v0.2 source explicitly declares supported support and its acceptable response; this is a machine projection, not human gold.",
+          "suggested_change": "Verify the declared support boundary and response disposition before finalizing the single human gold."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "cardinality_and_polarity",
+          "recommendation": "human_judgment",
+          "reason": "Cardinality and polarity must be justified by each current surface rather than inherited from v0.1.",
+          "suggested_change": "Review the counterpart actors and any explicit absence or minimum-count language for all three surfaces."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "road_and_spatial_decomposition",
+          "recommendation": "human_judgment",
+          "reason": "Road and spatial metadata can contain implementation detail not stated by partial or vague text.",
+          "suggested_change": "Separate required, permitted, and forbidden road or spatial detail per surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "event_graph_and_actor_binding",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 intentionally removes ego reaction from query and event requirements; only external interaction events remain.",
+          "suggested_change": "Confirm every event actor and temporal edge, and leave reactive ego behavior to the ego policy."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "surface_layering",
+          "recommendation": "human_judgment",
+          "reason": "The precise, partial, and vague surfaces share an intent but do not necessarily state the same implementation detail.",
+          "suggested_change": "Confirm core-required, surface-required, permitted, and forbidden layers without canonical-query leakage."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "cpd_policy",
+          "target": "cpd_policy",
+          "recommendation": "human_judgment",
+          "reason": "CPD eligibility must use only frozen platform-invariant dimensions and an unambiguous target.",
+          "suggested_change": "Confirm eligibility and selector uniqueness; keep precise surfaces ineligible for rewarded diversity."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_relative_region",
+          "recommendation": "human_judgment",
+          "reason": "The relative region is a heuristic projection from the counterpart role.",
+          "suggested_change": "Confirm or revise the region using the current v0.2 surface text."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_role_count",
+          "recommendation": "human_judgment",
+          "reason": "Counterpart cardinality is a scored requirement only when the surface text supports it.",
+          "suggested_change": "Confirm the count and polarity independently for this surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "before",
+          "recommendation": "human_judgment",
+          "reason": "Temporal edges in v0.2 must connect external events only.",
+          "suggested_change": "Confirm both endpoints and remove any edge that implicitly specifies ego reaction."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "event_spec",
+          "recommendation": "human_judgment",
+          "reason": "In v0.2 interaction events may describe only counterpart, environment, signal, or policy-independent trigger behavior; ego reaction is excluded.",
+          "suggested_change": "Confirm the actor binding and reject any inferred ego reaction or terminal policy outcome."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "risk_level",
+          "recommendation": "human_judgment",
+          "reason": "Risk is external exposure metadata in v0.2, not a realized ego-policy outcome.",
+          "suggested_change": "Confirm whether the surface makes it scoreable or whether it should remain permitted metadata."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "rule_hook",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 rule hooks have explicit scene, counterpart-rule, and counterpart-violation scopes.",
+          "suggested_change": "Confirm the preserved scope; do not reinterpret a counterpart rule as an ego reaction requirement."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "temporal_structure",
+          "recommendation": "human_judgment",
+          "reason": "The v0.2 temporal structure orders external interaction events, not ego-policy reactions.",
+          "suggested_change": "Confirm that every ordered stage is external and expressed by the surface."
+        }
+      ]
+    },
+    {
+      "intent_group_id": "BSG_DEV_v0_2_S11",
+      "query_ids": [
+        "BSG_DEV_v0_2_S11_partial",
+        "BSG_DEV_v0_2_S11_precise",
+        "BSG_DEV_v0_2_S11_vague"
+      ],
+      "overall_disposition": "accept_with_attention",
+      "confidence": "medium",
+      "semantic_findings": [
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "support_and_response_disposition",
+          "recommendation": "accept",
+          "reason": "The v0.2 source explicitly declares supported support and its acceptable response; this is a machine projection, not human gold.",
+          "suggested_change": "Verify the declared support boundary and response disposition before finalizing the single human gold."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "cardinality_and_polarity",
+          "recommendation": "human_judgment",
+          "reason": "Cardinality and polarity must be justified by each current surface rather than inherited from v0.1.",
+          "suggested_change": "Review the counterpart actors and any explicit absence or minimum-count language for all three surfaces."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "road_and_spatial_decomposition",
+          "recommendation": "human_judgment",
+          "reason": "Road and spatial metadata can contain implementation detail not stated by partial or vague text.",
+          "suggested_change": "Separate required, permitted, and forbidden road or spatial detail per surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "event_graph_and_actor_binding",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 intentionally removes ego reaction from query and event requirements; only external interaction events remain.",
+          "suggested_change": "Confirm every event actor and temporal edge, and leave reactive ego behavior to the ego policy."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "surface_layering",
+          "recommendation": "human_judgment",
+          "reason": "The precise, partial, and vague surfaces share an intent but do not necessarily state the same implementation detail.",
+          "suggested_change": "Confirm core-required, surface-required, permitted, and forbidden layers without canonical-query leakage."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "cpd_policy",
+          "target": "cpd_policy",
+          "recommendation": "human_judgment",
+          "reason": "CPD eligibility must use only frozen platform-invariant dimensions and an unambiguous target.",
+          "suggested_change": "Confirm eligibility and selector uniqueness; keep precise surfaces ineligible for rewarded diversity."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_role_count",
+          "recommendation": "human_judgment",
+          "reason": "Counterpart cardinality is a scored requirement only when the surface text supports it.",
+          "suggested_change": "Confirm the count and polarity independently for this surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "before",
+          "recommendation": "human_judgment",
+          "reason": "Temporal edges in v0.2 must connect external events only.",
+          "suggested_change": "Confirm both endpoints and remove any edge that implicitly specifies ego reaction."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "event_spec",
+          "recommendation": "human_judgment",
+          "reason": "In v0.2 interaction events may describe only counterpart, environment, signal, or policy-independent trigger behavior; ego reaction is excluded.",
+          "suggested_change": "Confirm the actor binding and reject any inferred ego reaction or terminal policy outcome."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "risk_level",
+          "recommendation": "human_judgment",
+          "reason": "Risk is external exposure metadata in v0.2, not a realized ego-policy outcome.",
+          "suggested_change": "Confirm whether the surface makes it scoreable or whether it should remain permitted metadata."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "rule_hook",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 rule hooks have explicit scene, counterpart-rule, and counterpart-violation scopes.",
+          "suggested_change": "Confirm the preserved scope; do not reinterpret a counterpart rule as an ego reaction requirement."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "temporal_structure",
+          "recommendation": "human_judgment",
+          "reason": "The v0.2 temporal structure orders external interaction events, not ego-policy reactions.",
+          "suggested_change": "Confirm that every ordered stage is external and expressed by the surface."
+        }
+      ]
+    },
+    {
+      "intent_group_id": "BSG_DEV_v0_2_S12",
+      "query_ids": [
+        "BSG_DEV_v0_2_S12_partial",
+        "BSG_DEV_v0_2_S12_precise",
+        "BSG_DEV_v0_2_S12_vague"
+      ],
+      "overall_disposition": "accept_with_attention",
+      "confidence": "medium",
+      "semantic_findings": [
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "support_and_response_disposition",
+          "recommendation": "accept",
+          "reason": "The v0.2 source explicitly declares supported support and its acceptable response; this is a machine projection, not human gold.",
+          "suggested_change": "Verify the declared support boundary and response disposition before finalizing the single human gold."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "cardinality_and_polarity",
+          "recommendation": "human_judgment",
+          "reason": "Cardinality and polarity must be justified by each current surface rather than inherited from v0.1.",
+          "suggested_change": "Review the counterpart actors and any explicit absence or minimum-count language for all three surfaces."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "road_and_spatial_decomposition",
+          "recommendation": "human_judgment",
+          "reason": "Road and spatial metadata can contain implementation detail not stated by partial or vague text.",
+          "suggested_change": "Separate required, permitted, and forbidden road or spatial detail per surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "event_graph_and_actor_binding",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 intentionally removes ego reaction from query and event requirements; only external interaction events remain.",
+          "suggested_change": "Confirm every event actor and temporal edge, and leave reactive ego behavior to the ego policy."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "surface_layering",
+          "recommendation": "human_judgment",
+          "reason": "The precise, partial, and vague surfaces share an intent but do not necessarily state the same implementation detail.",
+          "suggested_change": "Confirm core-required, surface-required, permitted, and forbidden layers without canonical-query leakage."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "cpd_policy",
+          "target": "cpd_policy",
+          "recommendation": "human_judgment",
+          "reason": "CPD eligibility must use only frozen platform-invariant dimensions and an unambiguous target.",
+          "suggested_change": "Confirm eligibility and selector uniqueness; keep precise surfaces ineligible for rewarded diversity."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_relative_region",
+          "recommendation": "human_judgment",
+          "reason": "The relative region is a heuristic projection from the counterpart role.",
+          "suggested_change": "Confirm or revise the region using the current v0.2 surface text."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "actor_role_count",
+          "recommendation": "human_judgment",
+          "reason": "Counterpart cardinality is a scored requirement only when the surface text supports it.",
+          "suggested_change": "Confirm the count and polarity independently for this surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "before",
+          "recommendation": "human_judgment",
+          "reason": "Temporal edges in v0.2 must connect external events only.",
+          "suggested_change": "Confirm both endpoints and remove any edge that implicitly specifies ego reaction."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "event_spec",
+          "recommendation": "human_judgment",
+          "reason": "In v0.2 interaction events may describe only counterpart, environment, signal, or policy-independent trigger behavior; ego reaction is excluded.",
+          "suggested_change": "Confirm the actor binding and reject any inferred ego reaction or terminal policy outcome."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "risk_level",
+          "recommendation": "human_judgment",
+          "reason": "Risk is external exposure metadata in v0.2, not a realized ego-policy outcome.",
+          "suggested_change": "Confirm whether the surface makes it scoreable or whether it should remain permitted metadata."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "rule_hook",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 rule hooks have explicit scene, counterpart-rule, and counterpart-violation scopes.",
+          "suggested_change": "Confirm the preserved scope; do not reinterpret a counterpart rule as an ego reaction requirement."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "atom_predicate",
+          "target": "temporal_structure",
+          "recommendation": "human_judgment",
+          "reason": "The v0.2 temporal structure orders external interaction events, not ego-policy reactions.",
+          "suggested_change": "Confirm that every ordered stage is external and expressed by the surface."
+        }
+      ]
+    },
+    {
+      "intent_group_id": "BSG_DEV_v0_2_U01",
+      "query_ids": [
+        "BSG_DEV_v0_2_U01_partial",
+        "BSG_DEV_v0_2_U01_precise",
+        "BSG_DEV_v0_2_U01_vague"
+      ],
+      "overall_disposition": "accept_with_attention",
+      "confidence": "medium",
+      "semantic_findings": [
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "support_and_response_disposition",
+          "recommendation": "accept",
+          "reason": "The v0.2 source explicitly declares unsupported support and its acceptable response; this is a machine projection, not human gold.",
+          "suggested_change": "Verify the declared support boundary and response disposition before finalizing the single human gold."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "cardinality_and_polarity",
+          "recommendation": "human_judgment",
+          "reason": "Cardinality and polarity must be justified by each current surface rather than inherited from v0.1.",
+          "suggested_change": "Review the counterpart actors and any explicit absence or minimum-count language for all three surfaces."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "road_and_spatial_decomposition",
+          "recommendation": "human_judgment",
+          "reason": "Road and spatial metadata can contain implementation detail not stated by partial or vague text.",
+          "suggested_change": "Separate required, permitted, and forbidden road or spatial detail per surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "event_graph_and_actor_binding",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 intentionally removes ego reaction from query and event requirements; only external interaction events remain.",
+          "suggested_change": "Confirm every event actor and temporal edge, and leave reactive ego behavior to the ego policy."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "surface_layering",
+          "recommendation": "human_judgment",
+          "reason": "The precise, partial, and vague surfaces share an intent but do not necessarily state the same implementation detail.",
+          "suggested_change": "Confirm core-required, surface-required, permitted, and forbidden layers without canonical-query leakage."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "cpd_policy",
+          "target": "cpd_policy",
+          "recommendation": "human_judgment",
+          "reason": "CPD eligibility must use only frozen platform-invariant dimensions and an unambiguous target.",
+          "suggested_change": "Confirm eligibility and selector uniqueness; keep precise surfaces ineligible for rewarded diversity."
+        }
+      ]
+    },
+    {
+      "intent_group_id": "BSG_DEV_v0_2_U02",
+      "query_ids": [
+        "BSG_DEV_v0_2_U02_partial",
+        "BSG_DEV_v0_2_U02_precise",
+        "BSG_DEV_v0_2_U02_vague"
+      ],
+      "overall_disposition": "accept_with_attention",
+      "confidence": "medium",
+      "semantic_findings": [
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "support_and_response_disposition",
+          "recommendation": "accept",
+          "reason": "The v0.2 source explicitly declares unsupported support and its acceptable response; this is a machine projection, not human gold.",
+          "suggested_change": "Verify the declared support boundary and response disposition before finalizing the single human gold."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "cardinality_and_polarity",
+          "recommendation": "human_judgment",
+          "reason": "Cardinality and polarity must be justified by each current surface rather than inherited from v0.1.",
+          "suggested_change": "Review the counterpart actors and any explicit absence or minimum-count language for all three surfaces."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "road_and_spatial_decomposition",
+          "recommendation": "human_judgment",
+          "reason": "Road and spatial metadata can contain implementation detail not stated by partial or vague text.",
+          "suggested_change": "Separate required, permitted, and forbidden road or spatial detail per surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "event_graph_and_actor_binding",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 intentionally removes ego reaction from query and event requirements; only external interaction events remain.",
+          "suggested_change": "Confirm every event actor and temporal edge, and leave reactive ego behavior to the ego policy."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "surface_layering",
+          "recommendation": "human_judgment",
+          "reason": "The precise, partial, and vague surfaces share an intent but do not necessarily state the same implementation detail.",
+          "suggested_change": "Confirm core-required, surface-required, permitted, and forbidden layers without canonical-query leakage."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "cpd_policy",
+          "target": "cpd_policy",
+          "recommendation": "human_judgment",
+          "reason": "CPD eligibility must use only frozen platform-invariant dimensions and an unambiguous target.",
+          "suggested_change": "Confirm eligibility and selector uniqueness; keep precise surfaces ineligible for rewarded diversity."
+        }
+      ]
+    },
+    {
+      "intent_group_id": "BSG_DEV_v0_2_U03",
+      "query_ids": [
+        "BSG_DEV_v0_2_U03_partial",
+        "BSG_DEV_v0_2_U03_precise",
+        "BSG_DEV_v0_2_U03_vague"
+      ],
+      "overall_disposition": "accept_with_attention",
+      "confidence": "medium",
+      "semantic_findings": [
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "support_and_response_disposition",
+          "recommendation": "accept",
+          "reason": "The v0.2 source explicitly declares unsupported support and its acceptable response; this is a machine projection, not human gold.",
+          "suggested_change": "Verify the declared support boundary and response disposition before finalizing the single human gold."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "cardinality_and_polarity",
+          "recommendation": "human_judgment",
+          "reason": "Cardinality and polarity must be justified by each current surface rather than inherited from v0.1.",
+          "suggested_change": "Review the counterpart actors and any explicit absence or minimum-count language for all three surfaces."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "road_and_spatial_decomposition",
+          "recommendation": "human_judgment",
+          "reason": "Road and spatial metadata can contain implementation detail not stated by partial or vague text.",
+          "suggested_change": "Separate required, permitted, and forbidden road or spatial detail per surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "event_graph_and_actor_binding",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 intentionally removes ego reaction from query and event requirements; only external interaction events remain.",
+          "suggested_change": "Confirm every event actor and temporal edge, and leave reactive ego behavior to the ego policy."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "surface_layering",
+          "recommendation": "human_judgment",
+          "reason": "The precise, partial, and vague surfaces share an intent but do not necessarily state the same implementation detail.",
+          "suggested_change": "Confirm core-required, surface-required, permitted, and forbidden layers without canonical-query leakage."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "cpd_policy",
+          "target": "cpd_policy",
+          "recommendation": "human_judgment",
+          "reason": "CPD eligibility must use only frozen platform-invariant dimensions and an unambiguous target.",
+          "suggested_change": "Confirm eligibility and selector uniqueness; keep precise surfaces ineligible for rewarded diversity."
+        }
+      ]
+    },
+    {
+      "intent_group_id": "BSG_DEV_v0_2_U04",
+      "query_ids": [
+        "BSG_DEV_v0_2_U04_partial",
+        "BSG_DEV_v0_2_U04_precise",
+        "BSG_DEV_v0_2_U04_vague"
+      ],
+      "overall_disposition": "accept_with_attention",
+      "confidence": "medium",
+      "semantic_findings": [
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "support_and_response_disposition",
+          "recommendation": "accept",
+          "reason": "The v0.2 source explicitly declares unsupported support and its acceptable response; this is a machine projection, not human gold.",
+          "suggested_change": "Verify the declared support boundary and response disposition before finalizing the single human gold."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "cardinality_and_polarity",
+          "recommendation": "human_judgment",
+          "reason": "Cardinality and polarity must be justified by each current surface rather than inherited from v0.1.",
+          "suggested_change": "Review the counterpart actors and any explicit absence or minimum-count language for all three surfaces."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "road_and_spatial_decomposition",
+          "recommendation": "human_judgment",
+          "reason": "Road and spatial metadata can contain implementation detail not stated by partial or vague text.",
+          "suggested_change": "Separate required, permitted, and forbidden road or spatial detail per surface."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "event_graph_and_actor_binding",
+          "recommendation": "human_judgment",
+          "reason": "v0.2 intentionally removes ego reaction from query and event requirements; only external interaction events remain.",
+          "suggested_change": "Confirm every event actor and temporal edge, and leave reactive ego behavior to the ego policy."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "required_check",
+          "target": "surface_layering",
+          "recommendation": "human_judgment",
+          "reason": "The precise, partial, and vague surfaces share an intent but do not necessarily state the same implementation detail.",
+          "suggested_change": "Confirm core-required, surface-required, permitted, and forbidden layers without canonical-query leakage."
+        },
+        {
+          "scope": "all_surfaces",
+          "target_type": "cpd_policy",
+          "target": "cpd_policy",
+          "recommendation": "human_judgment",
+          "reason": "CPD eligibility must use only frozen platform-invariant dimensions and an unambiguous target.",
+          "suggested_change": "Confirm eligibility and selector uniqueness; keep precise surfaces ineligible for rewarded diversity."
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "intent_count": 16,
+    "disposition_counts": {
+      "accept": 0,
+      "accept_with_attention": 16,
+      "revise": 0
+    }
+  }
+}

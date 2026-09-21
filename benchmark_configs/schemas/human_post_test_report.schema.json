@@ -1,0 +1,250 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/human_post_test_report.schema.json",
+  "title": "Single-reviewer human gold and unblinded evaluator-error report",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "workflow_type",
+    "review_policy",
+    "public_packet_id",
+    "reviewer_id",
+    "review_status",
+    "canonical_bundle_revalidated",
+    "decision_status",
+    "selected",
+    "human_gold_records",
+    "records",
+    "by_method"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "workflow_type": {"const": "post_test_method_blind_audit_report"},
+    "review_policy": {"const": "one_complete_human_gold_per_subject"},
+    "public_packet_id": {"$ref": "#/definitions/sha256"},
+    "reviewer_id": {"type": "string", "minLength": 1},
+    "review_status": {"const": "complete"},
+    "canonical_bundle_revalidated": {"const": true},
+    "decision_status": {"const": "confirmed"},
+    "selected": {"type": "integer", "minimum": 1},
+    "human_gold_records": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/definitions/humanGoldRecord"}
+    },
+    "records": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/definitions/comparisonRecord"}
+    },
+    "by_method": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {"type": "string", "minLength": 1},
+      "additionalProperties": {"$ref": "#/definitions/methodSummary"}
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "score": {"type": "number", "minimum": 0, "maximum": 1},
+    "nullableScore": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/definitions/score"}
+      ]
+    },
+    "sourceBinding": {
+      "type": "object",
+      "required": [
+        "public_packet_id",
+        "population_sha256",
+        "population_hash_scope",
+        "private_link_sha256",
+        "source_record_sha256",
+        "review_response_sha256"
+      ],
+      "properties": {
+        "public_packet_id": {"$ref": "#/definitions/sha256"},
+        "population_sha256": {"$ref": "#/definitions/sha256"},
+        "population_hash_scope": {"enum": ["file_bytes", "canonical_records"]},
+        "private_link_sha256": {"$ref": "#/definitions/sha256"},
+        "source_record_sha256": {"$ref": "#/definitions/sha256"},
+        "review_response_sha256": {"$ref": "#/definitions/sha256"}
+      },
+      "additionalProperties": false
+    },
+    "humanGoldRecord": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "workflow_type",
+        "gold_record_id",
+        "blind_review_id",
+        "subject_sha256",
+        "query_id",
+        "surface_style",
+        "terminal_status",
+        "reviewer_id",
+        "review_status",
+        "decision_status",
+        "reviewer_method_blind",
+        "canonical_source_revalidated",
+        "source_binding",
+        "human_srs",
+        "human_arc",
+        "human_rsc",
+        "human_iec_spec",
+        "error_taxonomy",
+        "notes"
+      ],
+      "properties": {
+        "schema_version": {"const": "0.1"},
+        "workflow_type": {"const": "post_test_method_blind_human_gold"},
+        "gold_record_id": {"$ref": "#/definitions/sha256"},
+        "blind_review_id": {"$ref": "#/definitions/sha256"},
+        "subject_sha256": {"$ref": "#/definitions/sha256"},
+        "query_id": {"type": "string", "minLength": 1},
+        "surface_style": {"enum": ["precise", "partial", "vague"]},
+        "terminal_status": {"type": "string", "minLength": 1},
+        "reviewer_id": {"type": "string", "minLength": 1},
+        "review_status": {"const": "complete"},
+        "decision_status": {"const": "confirmed"},
+        "reviewer_method_blind": {"const": true},
+        "canonical_source_revalidated": {"const": true},
+        "source_binding": {"$ref": "#/definitions/sourceBinding"},
+        "human_srs": {"$ref": "#/definitions/score"},
+        "human_arc": {"$ref": "#/definitions/score"},
+        "human_rsc": {"$ref": "#/definitions/score"},
+        "human_iec_spec": {"$ref": "#/definitions/score"},
+        "error_taxonomy": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "notes": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "stratum": {
+      "type": "object",
+      "required": ["platform", "surface_style", "terminal_status", "score_band"],
+      "properties": {
+        "platform": {"enum": ["carla", "metadrive"]},
+        "surface_style": {"enum": ["precise", "partial", "vague"]},
+        "terminal_status": {"type": "string", "minLength": 1},
+        "score_band": {"enum": ["low", "mid", "high", "unscored"]}
+      },
+      "additionalProperties": false
+    },
+    "metricError": {
+      "type": "object",
+      "required": ["automatic", "human", "signed_error", "absolute_error"],
+      "properties": {
+        "automatic": {"$ref": "#/definitions/nullableScore"},
+        "human": {"$ref": "#/definitions/score"},
+        "signed_error": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "number", "minimum": -1, "maximum": 1}
+          ]
+        },
+        "absolute_error": {"$ref": "#/definitions/nullableScore"}
+      },
+      "additionalProperties": false
+    },
+    "metricErrors": {
+      "type": "object",
+      "required": ["srs", "arc", "rsc", "iec_spec"],
+      "properties": {
+        "srs": {"$ref": "#/definitions/metricError"},
+        "arc": {"$ref": "#/definitions/metricError"},
+        "rsc": {"$ref": "#/definitions/metricError"},
+        "iec_spec": {"$ref": "#/definitions/metricError"}
+      },
+      "additionalProperties": false
+    },
+    "comparisonRecord": {
+      "type": "object",
+      "required": [
+        "human_gold_record_id",
+        "blind_review_id",
+        "run_id",
+        "method_id",
+        "query_id",
+        "platform",
+        "stratum",
+        "reviewer_id",
+        "review_status",
+        "metric_errors",
+        "error_taxonomy",
+        "notes"
+      ],
+      "properties": {
+        "human_gold_record_id": {"$ref": "#/definitions/sha256"},
+        "blind_review_id": {"$ref": "#/definitions/sha256"},
+        "run_id": {"type": "string", "minLength": 1},
+        "method_id": {"type": "string", "minLength": 1},
+        "query_id": {"type": "string", "minLength": 1},
+        "platform": {"enum": ["carla", "metadrive"]},
+        "stratum": {"$ref": "#/definitions/stratum"},
+        "reviewer_id": {"type": "string", "minLength": 1},
+        "review_status": {"const": "complete"},
+        "metric_errors": {"$ref": "#/definitions/metricErrors"},
+        "error_taxonomy": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "notes": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "metricSummary": {
+      "type": "object",
+      "required": ["comparable_count", "mean_signed_error", "mean_absolute_error"],
+      "properties": {
+        "comparable_count": {"type": "integer", "minimum": 0},
+        "mean_signed_error": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "number", "minimum": -1, "maximum": 1}
+          ]
+        },
+        "mean_absolute_error": {"$ref": "#/definitions/nullableScore"}
+      },
+      "additionalProperties": false
+    },
+    "metricSummarySet": {
+      "type": "object",
+      "required": ["srs", "arc", "rsc", "iec_spec"],
+      "properties": {
+        "srs": {"$ref": "#/definitions/metricSummary"},
+        "arc": {"$ref": "#/definitions/metricSummary"},
+        "rsc": {"$ref": "#/definitions/metricSummary"},
+        "iec_spec": {"$ref": "#/definitions/metricSummary"}
+      },
+      "additionalProperties": false
+    },
+    "methodSummary": {
+      "type": "object",
+      "required": [
+        "sample_count",
+        "uncertain_count",
+        "metric_error",
+        "error_taxonomy_counts"
+      ],
+      "properties": {
+        "sample_count": {"type": "integer", "minimum": 1},
+        "uncertain_count": {"const": 0},
+        "metric_error": {"$ref": "#/definitions/metricSummarySet"},
+        "error_taxonomy_counts": {
+          "type": "object",
+          "propertyNames": {"type": "string", "minLength": 1},
+          "additionalProperties": {"type": "integer", "minimum": 1}
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

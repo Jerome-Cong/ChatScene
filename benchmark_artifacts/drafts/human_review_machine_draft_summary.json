@@ -1,0 +1,143 @@
+{
+  "schema_version": "0.1",
+  "workflow_type": "carla_stage_machine_draft_summary",
+  "summary_id": "carla-human-review-machine-drafts-v0.2",
+  "decision_status": "draft",
+  "stage_scope": "carla_first",
+  "review_policy": "one_complete_human_gold_per_subject",
+  "production_exporter": "scripts/export_human_review_drafts.py",
+  "production_registry_scope": "assignment_time_only",
+  "human_gold_state": {
+    "completed_real_human_reviews": 0,
+    "completed_admissible_human_gold_records": 0,
+    "machine_drafts_are_gold": false,
+    "machine_recommendations_are_gold": false,
+    "machine_recommendations_populate_human_submissions": false
+  },
+  "workload": {
+    "expected_subject_records": 442,
+    "currently_packet_generatable_after_reviewer_assignment": 300,
+    "currently_blocked_subject_records": 142,
+    "expected_explicit_verdict_entries": 5843,
+    "currently_packet_generatable_explicit_verdict_entries": 5701,
+    "query_atom_verdict_entries": 3601,
+    "query_required_check_verdict_entries": 1800,
+    "query_cpd_verdict_entries": 300,
+    "query_machine_recommendation_entries": 5701,
+    "carla_platform_verdict_entries": 52,
+    "carla_calibration_verdict_entries": 90
+  },
+  "query_agent_semantic_review": {
+    "artifact": {
+      "path": "benchmark_artifacts/drafts/query_agent_semantic_review_v0_2.json",
+      "sha256": "6651c2d24a513221a0c0276ea69b2a370843daee7a32c405eada60d36b073117"
+    },
+    "reviewed_intent_groups": 100,
+    "reviewed_subjects": 300,
+    "draft_decision_entries": 5701,
+    "intent_semantic_finding_entries": 4078,
+    "source_projection_default_entries": 1623,
+    "overall_disposition_counts": {
+      "accept": 0,
+      "accept_with_attention": 300,
+      "revise": 0
+    },
+    "recommendation_counts": {
+      "accept_current": 1923,
+      "revise_current": 0,
+      "reject_current": 0,
+      "human_judgment_required": 3778
+    },
+    "machine_only_non_gold": true,
+    "human_submission_populated": false,
+    "human_action_required": true
+  },
+  "entries": [
+    {
+      "draft_id": "dev_query_oracle",
+      "status": "packet_generator_ready_after_real_reviewer_assignment",
+      "subject_records": 48,
+      "explicit_verdict_entries": 874,
+      "source_bindings": [
+        {
+          "path": "query_lib/bus_ego_topdown_2d_dev_query_library_v0_2.jsonl",
+          "sha256": "bb965d41c9cf21191b1a33d45be01e9ceb53d54d4216663a2f6578537bec62e5"
+        },
+        {
+          "path": "benchmark_artifacts/drafts/dev_oracle_draft.jsonl",
+          "sha256": "15d193c4c79e047b21ca60918ab9b59828194f2fe7779982b350fb731b87f3c5"
+        }
+      ],
+      "human_dependency": "one real reviewer ID and one complete response per subject"
+    },
+    {
+      "draft_id": "test_query_oracle",
+      "status": "packet_generator_ready_after_real_reviewer_assignment",
+      "subject_records": 252,
+      "explicit_verdict_entries": 4827,
+      "source_bindings": [
+        {
+          "path": "query_lib/bus_ego_topdown_2d_query_library_v0_2.jsonl",
+          "sha256": "81404653cf9ca6b228d71aa6a09f63901e74fe41839ebd64f2cb8db09ae6250e"
+        },
+        {
+          "path": "benchmark_artifacts/drafts/test_oracle_draft.jsonl",
+          "sha256": "b0c6ef1057fe1b8649a83c26d31b73b8685a610ec135a666859cf284849b57c5"
+        }
+      ],
+      "human_dependency": "one real reviewer ID and one complete response per subject"
+    },
+    {
+      "draft_id": "carla_platform_fixture_capability",
+      "status": "blocked_missing_source_assets",
+      "subject_records": 52,
+      "explicit_verdict_entries": 52,
+      "source_bindings": [],
+      "dependencies": [
+        "48 complete development-query human gold records and confirmed development oracle",
+        "common ontology derived from the confirmed development oracle",
+        "38 CARLA raw-artifact semantic fixtures",
+        "14-entry CARLA capability manifest"
+      ]
+    },
+    {
+      "draft_id": "carla_judge_calibration",
+      "status": "blocked_missing_source_assets",
+      "subject_records": 90,
+      "explicit_verdict_entries": 90,
+      "source_bindings": [],
+      "dependencies": [
+        "48 complete development-query human gold records and confirmed development oracle",
+        "240 immutable CARLA development responses",
+        "240 hash-matched CARLA semantic-evidence records",
+        "one pre-label 90-item CARLA roster and blind reviewer-subject JSONL"
+      ]
+    },
+    {
+      "draft_id": "metadrive_token_only_platform_infrastructure",
+      "status": "implemented_source_tested_independent_review_go_crosswalk_ready",
+      "subject_records": 0,
+      "explicit_verdict_entries": 0,
+      "source_bindings": [
+        {
+          "path": "benchmark_artifacts/drafts/metadrive_track_draft_decisions.json",
+          "sha256": "d8661de7af8d5a4e9414302738b425a99445478115422b89d4872f017a006241"
+        }
+      ],
+      "standalone_human_gold_subject": false,
+      "formal_destination_count": 5,
+      "missing_method_dependencies": [
+        "tested MetaDrive method adapter",
+        "real tested-method outputs"
+      ],
+      "counting_rule": "six machine decisions map to existing formal review subjects or automatic gates and add zero standalone gold records"
+    },
+    {
+      "draft_id": "final_cross_platform_protocol",
+      "status": "deferred_until_final_metadrive_and_cross_platform_assets",
+      "subject_records": 13,
+      "explicit_verdict_entries": 13,
+      "included_in_current_carla_workload": false
+    }
+  ]
+}

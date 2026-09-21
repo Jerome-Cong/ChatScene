@@ -1,0 +1,40 @@
+{
+  "by_style": {
+    "partial": {
+      "candidate": 76,
+      "coverage": 0.09210526315789473,
+      "eligible": 7
+    },
+    "vague": {
+      "candidate": 76,
+      "coverage": 0.09210526315789473,
+      "eligible": 7
+    }
+  },
+  "candidate": 152,
+  "coverage": 0.09210526315789473,
+  "decision_status": "draft",
+  "eligible": 14,
+  "eligible_query_ids": [
+    "BSG_v0_2_B07_partial",
+    "BSG_v0_2_B07_vague",
+    "BSG_v0_2_C13_partial",
+    "BSG_v0_2_C13_vague",
+    "BSG_v0_2_D01_partial",
+    "BSG_v0_2_D01_vague",
+    "BSG_v0_2_D02_partial",
+    "BSG_v0_2_D02_vague",
+    "BSG_v0_2_D05_partial",
+    "BSG_v0_2_D05_vague",
+    "BSG_v0_2_D06_partial",
+    "BSG_v0_2_D06_vague",
+    "BSG_v0_2_D07_partial",
+    "BSG_v0_2_D07_vague"
+  ],
+  "eligible_query_ids_sha256": "dcf4fffdb856cbddcaf55dc973d585be7bb9dccd6d435107f2793f2f189cdb6e",
+  "joint": {
+    "candidate": 152,
+    "coverage": 0.09210526315789473,
+    "eligible": 14
+  }
+}

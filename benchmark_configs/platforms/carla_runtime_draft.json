@@ -1,0 +1,139 @@
+{
+  "carla_endpoint": {
+    "host": "127.0.0.1",
+    "port": 2000,
+    "timeout_seconds": 10.0
+  },
+  "platform": "carla",
+  "rollout_seconds": 30.0,
+  "runtime_dependencies": {
+    "environment_manifest": {
+      "bytes": 28252,
+      "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/platforms/carla_runtime_environment_draft.json",
+      "sha256": "d03f96ee580b0bb0e620599669b60f36c9eb3ae5444579b2d82558b6497c2216"
+    },
+    "map_catalog": [
+      {
+        "bytes": 1424612,
+        "path": "/home/shijie20/CodeSpace/ChatScene/safebench/scenario/scenario_data/scenic_data/maps/Town01.snet",
+        "sha256": "768aed9b79b270b0e48f8db0553bd8902e62d0bfd502c5a1c2d132e74a327f6c"
+      },
+      {
+        "bytes": 973108,
+        "path": "/home/shijie20/CodeSpace/ChatScene/safebench/scenario/scenario_data/scenic_data/maps/Town01.xodr",
+        "sha256": "97a7f6ac67812567e5c8ee0599cd823b23f80f30f3f97c502212e38b72e2b709"
+      },
+      {
+        "bytes": 1305176,
+        "path": "/home/shijie20/CodeSpace/ChatScene/safebench/scenario/scenario_data/scenic_data/maps/Town02.snet",
+        "sha256": "b8ffa10126ef6449c25486a11317d497bd068d6420d3c4b7907c5a54215aae6d"
+      },
+      {
+        "bytes": 915949,
+        "path": "/home/shijie20/CodeSpace/ChatScene/safebench/scenario/scenario_data/scenic_data/maps/Town02.xodr",
+        "sha256": "953c05f17def231239ffcadba3307628a82d0d335b67b4e29c3098f7aed1dd7d"
+      },
+      {
+        "bytes": 6037477,
+        "path": "/home/shijie20/CodeSpace/ChatScene/safebench/scenario/scenario_data/scenic_data/maps/Town03.snet",
+        "sha256": "f9e404db0d5a24a4ea9c293b2802960ec192ec7cc6802c385b6f91b99a7df23c"
+      },
+      {
+        "bytes": 4589872,
+        "path": "/home/shijie20/CodeSpace/ChatScene/safebench/scenario/scenario_data/scenic_data/maps/Town03.xodr",
+        "sha256": "abf177bcd9b66cfefb7ac4919f6456815f1384f4229f1343c8a6a90bbb7713c9"
+      },
+      {
+        "bytes": 6244804,
+        "path": "/home/shijie20/CodeSpace/ChatScene/safebench/scenario/scenario_data/scenic_data/maps/Town04.snet",
+        "sha256": "1511731e31ba940135f6b0dcc1034abfdb906a3a96a863b50b2c7335def1d7e7"
+      },
+      {
+        "bytes": 3403393,
+        "path": "/home/shijie20/CodeSpace/ChatScene/safebench/scenario/scenario_data/scenic_data/maps/Town04.xodr",
+        "sha256": "4dddd1560ab7812b0e89cd4a523d8b6f2b93947eafb496d9eeb83cc772116c85"
+      },
+      {
+        "bytes": 6607021,
+        "path": "/home/shijie20/CodeSpace/ChatScene/safebench/scenario/scenario_data/scenic_data/maps/Town05.snet",
+        "sha256": "35fbe7a7c85ce85ec5c47134acd5f2a86c005ce5ca963ea0167263f2336d0f0c"
+      },
+      {
+        "bytes": 4651162,
+        "path": "/home/shijie20/CodeSpace/ChatScene/safebench/scenario/scenario_data/scenic_data/maps/Town05.xodr",
+        "sha256": "7edc53b0be840e177598da7a4ed9571146d7b2595ce280d154c90f92e8a48851"
+      },
+      {
+        "bytes": 4475666,
+        "path": "/home/shijie20/CodeSpace/ChatScene/safebench/scenario/scenario_data/scenic_data/maps/Town06.snet",
+        "sha256": "9fb45b709bb2f5093176d241e793d4adad98dfa16b7fefcec970e0ae4efe2803"
+      },
+      {
+        "bytes": 3004885,
+        "path": "/home/shijie20/CodeSpace/ChatScene/safebench/scenario/scenario_data/scenic_data/maps/Town06.xodr",
+        "sha256": "a90b613175fa837fdc128ddfaf5ddad25797b128fdbd8cd945974bc21a60496e"
+      },
+      {
+        "bytes": 2229151,
+        "path": "/home/shijie20/CodeSpace/ChatScene/safebench/scenario/scenario_data/scenic_data/maps/Town07.xodr",
+        "sha256": "be730652769e993e27f748ba5793dba9e49d299205146a7a8db0bcd17af877bf"
+      },
+      {
+        "bytes": 1857682,
+        "path": "/home/shijie20/CodeSpace/ChatScene/safebench/scenario/scenario_data/scenic_data/maps/Town10HD.xodr",
+        "sha256": "5d883b799f634030af92be1e9d79d107845540ba04338e8c60e095be1aef7be7"
+      }
+    ],
+    "python_path_entries": [
+      {
+        "bytes": 29687376,
+        "path": "/home/shijie20/CodeSpace/ChatScene/CARLA_0.9.13/PythonAPI/carla/dist/carla-0.9.13-py3.8-linux-x86_64.egg",
+        "sha256": "cd0d3b399ec573eda96b21e2924d43f3dce8749f6126fba116c55c0ec9958e4e"
+      }
+    ],
+    "source_trees": [
+      {
+        "bytes": 12020692630,
+        "file_count": 29855,
+        "path": "/home/shijie20/CodeSpace/ChatScene/CARLA_0.9.13",
+        "policy": "exclude_python_cache_v0.1",
+        "role": "carla_server_distribution",
+        "sha256": "2512f3ffb2ad1fea51ff8c8cc8e2a606794d61796c8b624147a3eae8e399f257"
+      },
+      {
+        "bytes": 881038,
+        "file_count": 95,
+        "path": "/home/shijie20/CodeSpace/ChatScene/Scenic/src",
+        "policy": "exclude_python_cache_v0.1",
+        "role": "scenic_editable_source",
+        "sha256": "d13ded587e9b3022ea27e62debd34ce27643f44e372440eea3cc3936a29b6f94"
+      }
+    ]
+  },
+  "schema_version": "0.1",
+  "server_binary": {
+    "bytes": 108844800,
+    "path": "/home/shijie20/CodeSpace/ChatScene/CARLA_0.9.13/CarlaUE4/Binaries/Linux/CarlaUE4-Linux-Shipping",
+    "sha256": "fae60aada71746ac21831d1964eca73c7197f4adcad42bc0b747bf0ae0d63204"
+  },
+  "status": "draft",
+  "sv_max_iterations": 2000,
+  "sv_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "worker": {
+    "environment": {
+      "PYTHONPATH": "/home/shijie20/CodeSpace/ChatScene/CARLA_0.9.13/PythonAPI/carla/dist/carla-0.9.13-py3.8-linux-x86_64.egg",
+      "PYTHON_EGG_CACHE": "/tmp/python-eggs"
+    },
+    "interpreter": "/home/shijie20/CodeSpace/ChatScene/chatscene/bin/python-frozen",
+    "interpreter_sha256": "298a9e830ed52f36c299427565485d717d1ce0179c0597cc16560513eb780b06",
+    "timeout_seconds": 180,
+    "worker": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/runtime_worker.py",
+    "worker_sha256": "a7a11f14ed9c08d42afb5128ff9d94216154873cbc21caf88ff28c2a328d1273"
+  }
+}

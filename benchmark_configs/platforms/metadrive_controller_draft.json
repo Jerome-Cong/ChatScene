@@ -1,0 +1,31 @@
+{
+  "schema_version": "0.1",
+  "status": "draft",
+  "controller_id": "metadrive-fixed-query-blind-v0.1",
+  "platform": "metadrive",
+  "query_blind": true,
+  "reads_query_metadata": false,
+  "reads_evaluation_metadata": false,
+  "ego_proxy": {
+    "length_m": 5.33,
+    "width_m": 2.1,
+    "proxy_id": "xl-topdown-proxy"
+  },
+  "implementation": {
+    "module": "bus_benchmark.runtime_worker",
+    "class": "FrozenBusIDMPolicy",
+    "source_path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/runtime_worker.py",
+    "source_sha256": "b1a52fe1ad5dbf24f57ce608387c7dcad499ee013f33bc5199268b00e3b2c4e8"
+  },
+  "parameters": {
+    "target_speed_km_h": 30.0,
+    "acceleration_factor": 0.7,
+    "deceleration_factor": -4.0,
+    "dt_seconds": 0.1
+  },
+  "action_contract": {
+    "lateral": "normalized steering [-1,1]",
+    "longitudinal": "normalized throttle/brake [-1,1]; IDM factors are dimensionless and not SI acceleration bounds",
+    "braking_preserved": true
+  }
+}

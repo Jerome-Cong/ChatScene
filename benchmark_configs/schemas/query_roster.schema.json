@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/query_roster.schema.json",
+  "title": "Frozen method query roster",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "decision_status",
+    "method_id",
+    "platform",
+    "library_path",
+    "library_sha256",
+    "query_count",
+    "expected_response_count",
+    "repetitions",
+    "queries"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "decision_status": {"enum": ["draft", "confirmed"]},
+    "method_id": {"type": "string", "minLength": 1},
+    "platform": {"enum": ["carla", "metadrive"]},
+    "library_path": {"type": "string", "minLength": 1},
+    "library_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "query_count": {"type": "integer", "minimum": 1},
+    "expected_response_count": {"type": "integer", "minimum": 5},
+    "repetitions": {"const": [0, 1, 2, 3, 4]},
+    "queries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "query_id",
+          "intent_group_id",
+          "statistical_intent_cluster_id",
+          "surface_style",
+          "expected_support"
+        ],
+        "properties": {
+          "query_id": {"type": "string", "minLength": 1},
+          "intent_group_id": {"type": "string", "minLength": 1},
+          "statistical_intent_cluster_id": {"type": "string", "minLength": 1},
+          "surface_style": {"enum": ["precise", "partial", "vague"]},
+          "expected_support": {"enum": ["supported", "unsupported"]}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

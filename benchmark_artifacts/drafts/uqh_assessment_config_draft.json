@@ -1,0 +1,12 @@
+{
+  "decision_status": "draft",
+  "protocol_version": "0.1",
+  "eligible_dispositions": [
+    "reject",
+    "clarification"
+  ],
+  "require_exact_oracle_reason_coverage": true,
+  "controlled_degradation_credit": false,
+  "judge_model_id": "TBD_BEFORE_FREEZE",
+  "inference_configuration": "TBD_BEFORE_FREEZE"
+}

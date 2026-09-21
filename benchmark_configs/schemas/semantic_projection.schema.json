@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/semantic_projection.schema.json",
+  "title": "Exact semantic extractor projection",
+  "type": "object",
+  "required": ["ego", "atoms", "common_atoms", "complete_categories"],
+  "properties": {
+    "ego": {
+      "type": "object",
+      "required": ["count", "semantic_role", "approved_proxy", "deterministic", "length_m", "width_m"],
+      "properties": {
+        "count": {"type": "integer", "minimum": 0},
+        "semantic_role": {"enum": ["ego_bus", "bus", "bus_proxy", "other", "missing"]},
+        "approved_proxy": {"type": "boolean"},
+        "deterministic": {"type": "boolean"},
+        "length_m": {"type": "number", "minimum": 0},
+        "width_m": {"type": "number", "minimum": 0},
+        "blueprint": {"type": "string"},
+        "vehicle_model": {"type": "string"},
+        "proxy_id": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "atoms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["category", "predicate", "arguments", "polarity", "evidence_source"],
+        "properties": {
+          "atom_id": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
+          "category": {"enum": ["actor", "road", "spatial", "event", "temporal", "normative"]},
+          "predicate": {"type": "string", "minLength": 1},
+          "arguments": {"type": "object"},
+          "polarity": {"enum": ["present", "absent"]},
+          "evidence_source": {"const": "deterministic"},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "common_atoms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["dimension", "value"],
+        "properties": {
+          "dimension": {"type": "string", "minLength": 1},
+          "value": {},
+          "target_signature": {
+            "type": "object",
+            "required": ["actor_class"],
+            "properties": {
+              "actor_class": {
+                "enum": ["ego_bus", "motor_vehicle", "cyclist", "pedestrian"]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "complete_categories": {
+      "type": "array",
+      "items": {"enum": ["actor", "road", "spatial", "event", "temporal", "normative"]},
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false
+}

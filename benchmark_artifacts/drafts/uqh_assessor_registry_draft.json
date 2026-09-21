@@ -1,0 +1,30 @@
+{
+  "schema_version": "0.1",
+  "status": "draft",
+  "protocol_version": "0.1",
+  "assessment_binding_contract": "uqh_assessment_binding_v0.1",
+  "controlled_degradation_credit": false,
+  "assessors": [
+    {
+      "assessor_id": "independent-uqh-judge-tbd",
+      "assessor_version": "draft-0.1",
+      "assessment_source": "judge",
+      "independent_from_producer_ids": [
+        "immutable-generation-runner"
+      ],
+      "assessment_config": {
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_artifacts/drafts/uqh_assessment_config_draft.json",
+        "sha256": "b4a5b5aa64db9df260a11462f213b92c931dd2fc4098af60a46248eb7f60a5f5",
+        "bytes": 311
+      },
+      "assessor_source": {
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_artifacts/drafts/uqh_assessor_source_draft.md",
+        "sha256": "655a06fbdc74b8452c962aa3034641422d03bcd1e325ee075f42ca3196d94ade",
+        "bytes": 500
+      },
+      "attestation_algorithm": "rsa_pss_sha256",
+      "attestation_public_key": null,
+      "key_custody": "external_to_method_runner"
+    }
+  ]
+}

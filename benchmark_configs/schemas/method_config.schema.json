@@ -1,0 +1,247 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/method_config.schema.json",
+  "title": "Frozen query-only generation method configuration",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "status",
+    "method_id",
+    "platform",
+    "query_input_fields",
+    "post_output_semantic_repair",
+    "implementation_bundle",
+    "adapter",
+    "finalization"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "status": {"enum": ["draft", "frozen"]},
+    "method_id": {"type": "string", "minLength": 1},
+    "platform": {"enum": ["carla", "metadrive"]},
+    "query_input_fields": {"const": ["query_text"]},
+    "post_output_semantic_repair": {"const": false},
+    "implementation_bundle": {"$ref": "#/definitions/implementationBundle"},
+    "token_registry": {"$ref": "#/definitions/fileBinding"},
+    "adapter": {
+      "oneOf": [
+        {"$ref": "#/definitions/commandAdapter"},
+        {"$ref": "#/definitions/chatSceneLegacyAdapter"}
+      ]
+    },
+    "finalization": {
+      "oneOf": [
+        {"$ref": "#/definitions/carlaFinalization"},
+        {"$ref": "#/definitions/metadriveFinalization"}
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"platform": {"const": "carla"}},
+        "required": ["platform"]
+      },
+      "then": {
+        "properties": {"finalization": {"$ref": "#/definitions/carlaFinalization"}},
+        "not": {"required": ["token_registry"]}
+      }
+    },
+    {
+      "if": {
+        "properties": {"platform": {"const": "metadrive"}},
+        "required": ["platform"]
+      },
+      "then": {
+        "required": ["token_registry"],
+        "properties": {
+          "adapter": {"$ref": "#/definitions/commandAdapter"},
+          "finalization": {"$ref": "#/definitions/metadriveFinalization"}
+        }
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "not": {"pattern": "^(?:/|.*(?:^|/)\\.\\.(?:/|$))"}
+    },
+    "fileBinding": {
+      "type": "object",
+      "required": ["path", "sha256", "bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "bytes": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "implementationBundle": {
+      "type": "object",
+      "required": [
+        "status",
+        "bundle_id",
+        "bundle_sha256",
+        "environment_manifest",
+        "harness_environment_manifest",
+        "files"
+      ],
+      "properties": {
+        "status": {"enum": ["draft", "frozen"]},
+        "bundle_id": {"type": "string", "minLength": 1},
+        "bundle_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "environment_manifest": {"$ref": "#/definitions/fileBinding"},
+        "harness_environment_manifest": {"$ref": "#/definitions/fileBinding"},
+        "files": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/definitions/fileBinding"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "environmentNames": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "PATH",
+          "LANG",
+          "LC_ALL",
+          "LD_LIBRARY_PATH",
+          "CUDA_VISIBLE_DEVICES",
+          "OPENAI_API_KEY",
+          "OPENAI_BASE_URL",
+          "HTTP_PROXY",
+          "HTTPS_PROXY",
+          "NO_PROXY"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "commandAdapter": {
+      "type": "object",
+      "required": [
+        "type",
+        "argv",
+        "artifact_path",
+        "timeout_seconds",
+        "output_protocol",
+        "environment_passthrough",
+        "max_stdout_bytes",
+        "max_stderr_bytes",
+        "max_artifact_bytes"
+      ],
+      "properties": {
+        "type": {"const": "command"},
+        "argv": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "artifact_path": {
+          "oneOf": [{"type": "null"}, {"$ref": "#/definitions/relativePath"}]
+        },
+        "timeout_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "output_protocol": {"enum": ["artifact_on_zero", "stdout_json_v0.1"]},
+        "environment_passthrough": {"$ref": "#/definitions/environmentNames"},
+        "max_stdout_bytes": {"type": "integer", "minimum": 1, "maximum": 16777216},
+        "max_stderr_bytes": {"type": "integer", "minimum": 1, "maximum": 16777216},
+        "max_artifact_bytes": {"type": "integer", "minimum": 1, "maximum": 67108864}
+      },
+      "additionalProperties": false
+    },
+    "chatSceneLegacyAdapter": {
+      "type": "object",
+      "required": [
+        "type",
+        "source_root",
+        "snapshot_paths",
+        "entrypoint",
+        "python_executable",
+        "python_environment_root",
+        "python_path_entries",
+        "sandbox_executable",
+        "argv",
+        "query_file",
+        "artifact_path",
+        "failure_artifact_path",
+        "timeout_seconds",
+        "environment_passthrough",
+        "max_stdout_bytes",
+        "max_stderr_bytes",
+        "max_artifact_bytes"
+      ],
+      "properties": {
+        "type": {"const": "chatscene_legacy"},
+        "source_root": {"type": "string", "minLength": 1},
+        "snapshot_paths": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "allOf": [
+              {"$ref": "#/definitions/relativePath"},
+              {
+                "not": {
+                  "pattern": "^(?:\\.$|\\.agents(?:/|$)|\\.codex(?:/|$)|\\.git(?:/|$)|benchmark_artifacts(?:/|$)|benchmark_configs(?:/|$)|query_lib(?:/|$)|refine-logs(?:/|$)|tests(?:/|$))"
+                }
+              }
+            ]
+          },
+          "uniqueItems": true
+        },
+        "entrypoint": {"$ref": "#/definitions/relativePath"},
+        "python_executable": {"type": "string", "minLength": 1},
+        "python_environment_root": {"type": "string", "minLength": 1},
+        "python_path_entries": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/definitions/fileBinding"}
+        },
+        "sandbox_executable": {"type": "string", "minLength": 1},
+        "argv": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "query_file": {"$ref": "#/definitions/relativePath"},
+        "artifact_path": {"$ref": "#/definitions/relativePath"},
+        "failure_artifact_path": {
+          "oneOf": [{"type": "null"}, {"$ref": "#/definitions/relativePath"}]
+        },
+        "timeout_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "environment_passthrough": {"$ref": "#/definitions/environmentNames"},
+        "max_stdout_bytes": {"type": "integer", "minimum": 1, "maximum": 16777216},
+        "max_stderr_bytes": {"type": "integer", "minimum": 1, "maximum": 16777216},
+        "max_artifact_bytes": {"type": "integer", "minimum": 1, "maximum": 67108864}
+      },
+      "additionalProperties": false
+    },
+    "carlaFinalization": {
+      "type": "object",
+      "required": ["policy_id", "ego_blueprint", "ego_length_m", "ego_width_m"],
+      "properties": {
+        "policy_id": {"const": "carla_ego_proxy_v0.1"},
+        "ego_blueprint": {"const": "vehicle.chevrolet.impala"},
+        "ego_length_m": {"const": 5.33},
+        "ego_width_m": {"const": 2.1}
+      },
+      "additionalProperties": false
+    },
+    "metadriveFinalization": {
+      "type": "object",
+      "required": [
+        "policy_id",
+        "artifact_type",
+        "ego_vehicle_model",
+        "ego_length_m",
+        "ego_width_m"
+      ],
+      "properties": {
+        "policy_id": {"const": "metadrive_pg_ego_proxy_v0.1"},
+        "artifact_type": {"const": "metadrive_pg_block_scene_v0.1"},
+        "ego_vehicle_model": {"const": "xl"},
+        "ego_length_m": {"const": 5.33},
+        "ego_width_m": {"const": 2.1}
+      },
+      "additionalProperties": false
+    }
+  }
+}

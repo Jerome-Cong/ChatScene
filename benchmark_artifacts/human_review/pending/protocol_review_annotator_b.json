@@ -1,0 +1,348 @@
+{
+  "annotator_role": "annotator_b",
+  "asset_binding_status": "unbound_draft",
+  "decision_status": "draft",
+  "formal_freeze_eligible": false,
+  "packet_id": "005d050d9dac1ab713077cec420dd4a7b25396d651ea658879dca8870b3ccd7d",
+  "reviewer_id": "UNASSIGNED_ANNOTATOR_B",
+  "schema_version": "0.1",
+  "source_binding": {
+    "asset_binding_status": "unbound_draft",
+    "decision_count": 13,
+    "protocol_draft_sha256": "41678577291a649004d1e0de6429d507dd5be8a26707f608bf270f879a02ffcf",
+    "protocol_hash_scope": "file_bytes"
+  },
+  "submission_template": {
+    "annotator_role": "annotator_b",
+    "independent_without_peer_submission": true,
+    "packet_id": "005d050d9dac1ab713077cec420dd4a7b25396d651ea658879dca8870b3ccd7d",
+    "responses": [
+      {
+        "response": null,
+        "subject_id": "BENCHMARK_SUITE_VISIBILITY",
+        "subject_sha256": "2e773f7cb0ac717278866e86383756e243551c368af4b02fc60f22abab6a65f9",
+        "task_id": "8a01e47c39096d69bb6b696479930fce4602c89f0b4fa4db750dd48cf3d07042"
+      },
+      {
+        "response": null,
+        "subject_id": "DEV_TEST_OVERLAP",
+        "subject_sha256": "c713d0f2735fdb67f4724fcdb5740c5a0a5964722772d93e36c9c05ad83ecc3f",
+        "task_id": "8091e8a65a549b3caf83da633038ee7ec6766f8f90da6db79fa7f09f5646e177"
+      },
+      {
+        "response": null,
+        "subject_id": "TEST_DUPLICATE_CLUSTERS",
+        "subject_sha256": "7aa862413da46bdc241d2ff2225faee82b6225504b5f12f1ae7a1b7de215dd50",
+        "task_id": "29c6608caa8b6e5f27d6b285e790f5ba026176c358ce01156436d375ddfe84c3"
+      },
+      {
+        "response": null,
+        "subject_id": "B08_SUPPORTED_REJECTION",
+        "subject_sha256": "42f213b1d9b820610ada2d8bff836ef72e38b7788f16ebf0448f76c598739a8b",
+        "task_id": "68d32a1dbadab065bf8df490caa94213c260860a136ffc8fdd34882c99aa11e9"
+      },
+      {
+        "response": null,
+        "subject_id": "ACTOR_CARDINALITY",
+        "subject_sha256": "55808b0c3f10c368d8348b017f3a0352d475f5f1a7845e16bb0309601907c65a",
+        "task_id": "4f331452a3a5d527e2781bebb5ae22ecb56258da38acf5e59a97bf0db5cda9a5"
+      },
+      {
+        "response": null,
+        "subject_id": "LANE_TRISTATE",
+        "subject_sha256": "4849763951280d15ac9b3fbe253d1c39360f4b8cea4d9d0e5c93fa560a606022",
+        "task_id": "994e50f6c0ec2c96af74873b3761f2def1c122ebf30e0edd68e33b843c356cb5"
+      },
+      {
+        "response": null,
+        "subject_id": "RISK_METADATA",
+        "subject_sha256": "b27124d79035e3b97f87fb2a35db4da5bc05b398335aace1aa75d08642503cc5",
+        "task_id": "6bc9699513c205914db91a46e18766ba93fe80cff384f8066bab7db8d3000afb"
+      },
+      {
+        "response": null,
+        "subject_id": "CPD_ELIGIBILITY",
+        "subject_sha256": "31b6f6deb592f1977cece0eaf5a1c9e638d1da8b92374911ca4f9eeb32f676a1",
+        "task_id": "03c0fd573435c46b2b7c514b38f37314cee26ff68248f7d137a43cd4e8066bef"
+      },
+      {
+        "response": null,
+        "subject_id": "EVENT_ONTOLOGY",
+        "subject_sha256": "79e83e73db96245a6dd006e8455e6bd5a20f1067cd281219795e062c05177821",
+        "task_id": "d0feeedbfd077fcdd4f5abd1823c2bd50141cd71ec25f8d439d57e755efcacdf"
+      },
+      {
+        "response": null,
+        "subject_id": "JUDGE_CALIBRATION_ROSTER",
+        "subject_sha256": "fa2f748e517ae7cac449f15b8f981621815472d5e49b6270ebfd282ba0860cdd",
+        "task_id": "ec71308aa916201b11677dacb603615192f70880f7f17e4aff4aa65470e65a9a"
+      },
+      {
+        "response": null,
+        "subject_id": "RUNTIME_VALIDATION_CARLA",
+        "subject_sha256": "779848ad653dd30eaba846f0d7eea51d7b7f2b24db24813c1df51b321c3d55f7",
+        "task_id": "211c10c10854a64575d777e4f19ce71b63edc6c00f272ba8cf012583fafc9971"
+      },
+      {
+        "response": null,
+        "subject_id": "RUNTIME_VALIDATION_METADRIVE",
+        "subject_sha256": "30fe5a1de6c50f759c20556de8ec49079cc5350a53b351f2f3b5555d5892af16",
+        "task_id": "89d14335ee3b87a5b8d80782866719dc7c3a7b584b1ffe624df3fa123bf216b0"
+      },
+      {
+        "response": null,
+        "subject_id": "EGO_PROXY_AND_CONTROLLERS",
+        "subject_sha256": "cf402c20da1f0d8d965619a70f9f65cdbabed01950f96964e99980a834f5e127",
+        "task_id": "c63a6901aebe27408e6c848c854a42b7d4105530bbb7c836d27564c4a48552db"
+      }
+    ],
+    "reviewer_id": "UNASSIGNED_ANNOTATOR_B",
+    "schema_version": "0.1",
+    "source_binding": {
+      "asset_binding_status": "unbound_draft",
+      "decision_count": 13,
+      "protocol_draft_sha256": "41678577291a649004d1e0de6429d507dd5be8a26707f608bf270f879a02ffcf",
+      "protocol_hash_scope": "file_bytes"
+    },
+    "submission_status": "pending",
+    "workflow_type": "protocol_proposal_review"
+  },
+  "tasks": [
+    {
+      "asset_binding_status": "unbound_draft",
+      "formal_freeze_eligible": false,
+      "machine_proposal": {
+        "decision_status": "draft",
+        "draft_decision": "treat_the_252_query_suite_as_design_visible_and_locked_after_freeze; do_not_claim_held_out_generalization",
+        "id": "BENCHMARK_SUITE_VISIBILITY",
+        "reason": "The suite was available during evaluator development; immutability after freeze cannot recreate historical blindness."
+      },
+      "response_template": {
+        "proposed_revision": null,
+        "reason": "",
+        "verdict": null
+      },
+      "subject_id": "BENCHMARK_SUITE_VISIBILITY",
+      "subject_sha256": "2e773f7cb0ac717278866e86383756e243551c368af4b02fc60f22abab6a65f9",
+      "task_id": "8a01e47c39096d69bb6b696479930fce4602c89f0b4fa4db750dd48cf3d07042"
+    },
+    {
+      "asset_binding_status": "unbound_draft",
+      "formal_freeze_eligible": false,
+      "machine_proposal": {
+        "decision_status": "draft",
+        "draft_decision": "accept_all_16_development_intents_as_non_overlapping",
+        "evidence": "No exact canonical, operation, topology, actor-role, rule-hook, or complete core-signature overlap was found; all 16 novelty notes still require human confirmation.",
+        "id": "DEV_TEST_OVERLAP"
+      },
+      "response_template": {
+        "proposed_revision": null,
+        "reason": "",
+        "verdict": null
+      },
+      "subject_id": "DEV_TEST_OVERLAP",
+      "subject_sha256": "c713d0f2735fdb67f4724fcdb5740c5a0a5964722772d93e36c9c05ad83ecc3f",
+      "task_id": "8091e8a65a549b3caf83da633038ee7ec6766f8f90da6db79fa7f09f5646e177"
+    },
+    {
+      "asset_binding_status": "unbound_draft",
+      "formal_freeze_eligible": false,
+      "machine_proposal": {
+        "decision_status": "draft",
+        "draft_decision": "keep_all_frozen_suite_queries_and_collapse_A07_E03_and_B09_E06_only_for_macro_statistics",
+        "evidence_asset": "statistical_clusters_draft.json",
+        "id": "TEST_DUPLICATE_CLUSTERS"
+      },
+      "response_template": {
+        "proposed_revision": null,
+        "reason": "",
+        "verdict": null
+      },
+      "subject_id": "TEST_DUPLICATE_CLUSTERS",
+      "subject_sha256": "7aa862413da46bdc241d2ff2225faee82b6225504b5f12f1ae7a1b7de215dd50",
+      "task_id": "29c6608caa8b6e5f27d6b285e790f5ba026176c358ce01156436d375ddfe84c3"
+    },
+    {
+      "asset_binding_status": "unbound_draft",
+      "formal_freeze_eligible": false,
+      "machine_proposal": {
+        "decision_status": "draft",
+        "draft_asset": "uqh_assessor_registry_draft.json",
+        "draft_decision": "only_flagged_generation_counts_as_supported_acceptance; strict_rejection_lowers_A_s; freeze_an_independent_uqh_assessor_registry; require_one_content_addressed_assessment_for_every_reject_or_clarification; missing_assessment_is_a_pipeline_error; controlled_degradation_always_scores_zero_in_v0_1",
+        "id": "B08_SUPPORTED_REJECTION",
+        "reason": "UQH defines A_s as the supported-query generation disposition even though B08 metadata also lists strict rejection as acceptable. Independent response-byte evidence prevents method self-report from certifying H_u."
+      },
+      "response_template": {
+        "proposed_revision": null,
+        "reason": "",
+        "verdict": null
+      },
+      "subject_id": "B08_SUPPORTED_REJECTION",
+      "subject_sha256": "42f213b1d9b820610ada2d8bff836ef72e38b7788f16ebf0448f76c598739a8b",
+      "task_id": "68d32a1dbadab065bf8df490caa94213c260860a136ffc8fdd34882c99aa11e9"
+    },
+    {
+      "asset_binding_status": "unbound_draft",
+      "formal_freeze_eligible": false,
+      "machine_proposal": {
+        "decision_status": "draft",
+        "draft_decision": "integer_is_exact; multiple_means_at_least_2; optional_is_permitted_min_0; zero_is_forbidden",
+        "id": "ACTOR_CARDINALITY",
+        "reason": "This preserves open cardinality without turning optional actors into required actors."
+      },
+      "response_template": {
+        "proposed_revision": null,
+        "reason": "",
+        "verdict": null
+      },
+      "subject_id": "ACTOR_CARDINALITY",
+      "subject_sha256": "55808b0c3f10c368d8348b017f3a0352d475f5f1a7845e16bb0309601907c65a",
+      "task_id": "4f331452a3a5d527e2781bebb5ae22ecb56258da38acf5e59a97bf0db5cda9a5"
+    },
+    {
+      "asset_binding_status": "unbound_draft",
+      "formal_freeze_eligible": false,
+      "machine_proposal": {
+        "decision_status": "draft",
+        "draft_decision": "missing_is_unknown; optional_is_permitted; false_is_not_forbidden_without_explicit_surface_text",
+        "id": "LANE_TRISTATE",
+        "reason": "Sparse lane metadata does not justify closed-world absence."
+      },
+      "response_template": {
+        "proposed_revision": null,
+        "reason": "",
+        "verdict": null
+      },
+      "subject_id": "LANE_TRISTATE",
+      "subject_sha256": "4849763951280d15ac9b3fbe253d1c39360f4b8cea4d9d0e5c93fa560a606022",
+      "task_id": "994e50f6c0ec2c96af74873b3761f2def1c122ebf30e0edd68e33b843c356cb5"
+    },
+    {
+      "asset_binding_status": "unbound_draft",
+      "formal_freeze_eligible": false,
+      "machine_proposal": {
+        "decision_status": "draft",
+        "draft_decision": "score_risk_only_when_the_presented_surface_expresses_it; otherwise_keep_as_analysis_tag",
+        "id": "RISK_METADATA",
+        "reason": "Every record has risk_level metadata, but not every query asks for a risk level."
+      },
+      "response_template": {
+        "proposed_revision": null,
+        "reason": "",
+        "verdict": null
+      },
+      "subject_id": "RISK_METADATA",
+      "subject_sha256": "b27124d79035e3b97f87fb2a35db4da5bc05b398335aace1aa75d08642503cc5",
+      "task_id": "6bc9699513c205914db91a46e18766ba93fe80cff384f8066bab7db8d3000afb"
+    },
+    {
+      "asset_binding_status": "unbound_draft",
+      "formal_freeze_eligible": false,
+      "machine_proposal": {
+        "decision_status": "draft",
+        "draft_decision": "freeze_the_16_concept_development_only_common_ontology; mark_test_only_dimensions_ineligible; review_all_152_candidates_against_exactly_76_routing_conformance_and_15_cross_platform_fixtures_with_all_7_registered_cpd_values_covered_on_both_platforms",
+        "id": "CPD_ELIGIBILITY",
+        "reason": "The draft yields 42 eligible test queries and coverage 42/152; test-only dimensions reduce coverage rather than extending the evaluator."
+      },
+      "response_template": {
+        "proposed_revision": null,
+        "reason": "",
+        "verdict": null
+      },
+      "subject_id": "CPD_ELIGIBILITY",
+      "subject_sha256": "31b6f6deb592f1977cece0eaf5a1c9e638d1da8b92374911ca4f9eeb32f676a1",
+      "task_id": "03c0fd573435c46b2b7c514b38f37314cee26ff68248f7d137a43cd4e8066bef"
+    },
+    {
+      "asset_binding_status": "unbound_draft",
+      "formal_freeze_eligible": false,
+      "machine_proposal": {
+        "decision_status": "draft",
+        "draft_decision": "classify_each_interaction_events_label_as_event_state_trigger_constraint_or_outcome_then_adjudicate_edges_and_actor_bindings",
+        "id": "EVENT_ONTOLOGY",
+        "reason": "Raw interaction_events labels are not homogeneous IEC atoms and list order is not universally a temporal edge."
+      },
+      "response_template": {
+        "proposed_revision": null,
+        "reason": "",
+        "verdict": null
+      },
+      "subject_id": "EVENT_ONTOLOGY",
+      "subject_sha256": "79e83e73db96245a6dd006e8455e6bd5a20f1067cd281219795e062c05177821",
+      "task_id": "d0feeedbfd077fcdd4f5abd1823c2bd50141cd71ec25f8d439d57e755efcacdf"
+    },
+    {
+      "asset_binding_status": "unbound_draft",
+      "formal_freeze_eligible": false,
+      "machine_proposal": {
+        "decision_status": "draft",
+        "draft_decision": "freeze_one_48x5_reference_grid_per_platform_exactly_240_outputs_each_480_total_then_use_fixed_seed_bus_judge_calibration_v0_1_to_precommit_exactly_90_judge_routed_atoms_per_platform_180_total_before_labels_or_predictions_cover_every_observed_judge_eligible_category_and_supported_query_blind_annotators_to_judge_predictions_report_actual_gold_support_and_forbid_adaptive_reselection_or_seed_search",
+        "id": "JUDGE_CALIBRATION_ROSTER",
+        "reason": "Platform-balanced, hash-bound source corpora and precommitted calibration rosters prevent a small, single-platform, selectively labeled, or verdict-balanced-by-selection sample from self-certifying the semantic judge; gold support is an observed property to disclose, not a quota available before labels exist, and predictions must be strictly parsed from exact raw judge responses."
+      },
+      "response_template": {
+        "proposed_revision": null,
+        "reason": "",
+        "verdict": null
+      },
+      "subject_id": "JUDGE_CALIBRATION_ROSTER",
+      "subject_sha256": "fa2f748e517ae7cac449f15b8f981621815472d5e49b6270ebfd282ba0860cdd",
+      "task_id": "ec71308aa916201b11677dacb603615192f70880f7f17e4aff4aa65470e65a9a"
+    },
+    {
+      "asset_binding_status": "unbound_draft",
+      "formal_freeze_eligible": false,
+      "machine_proposal": {
+        "decision_status": "draft",
+        "draft_decision": "accept_native_scenic_compile_plus_five_seed_static_sv_now; require_a_separately_recorded_successful_carla_server_probe_before_reporting_ne",
+        "id": "RUNTIME_VALIDATION_CARLA",
+        "reason": "CARLA 0.9.13 and its Python API are present and native Scenic compile/static-SV checks pass. In this environment the off-screen server process started but did not become API-responsive because usable GPU access was unavailable; therefore no CARLA NE success is claimed yet."
+      },
+      "response_template": {
+        "proposed_revision": null,
+        "reason": "",
+        "verdict": null
+      },
+      "subject_id": "RUNTIME_VALIDATION_CARLA",
+      "subject_sha256": "779848ad653dd30eaba846f0d7eea51d7b7f2b24db24813c1df51b321c3d55f7",
+      "task_id": "211c10c10854a64575d777e4f19ce71b63edc6c00f272ba8cf012583fafc9971"
+    },
+    {
+      "asset_binding_status": "unbound_draft",
+      "formal_freeze_eligible": false,
+      "machine_proposal": {
+        "decision_status": "draft",
+        "draft_decision": "require_native_scenarioonlineenv_reset_and_one_step_with_the_frozen_xl_ego_proxy",
+        "id": "RUNTIME_VALIDATION_METADRIVE",
+        "reason": "The runtime is available and the freeze gate can rerun this evidence."
+      },
+      "response_template": {
+        "proposed_revision": null,
+        "reason": "",
+        "verdict": null
+      },
+      "subject_id": "RUNTIME_VALIDATION_METADRIVE",
+      "subject_sha256": "30fe5a1de6c50f759c20556de8ec49079cc5350a53b351f2f3b5555d5892af16",
+      "task_id": "89d14335ee3b87a5b8d80782866719dc7c3a7b584b1ffe624df3fa123bf216b0"
+    },
+    {
+      "asset_binding_status": "unbound_draft",
+      "formal_freeze_eligible": false,
+      "machine_proposal": {
+        "decision_status": "draft",
+        "draft_decision": "approve_5_33_by_2_10_meter_bus_proxy_and_one_fixed_query_blind_controller_configuration_per_platform",
+        "id": "EGO_PROXY_AND_CONTROLLERS",
+        "reason": "The user permits ego blueprint and footprint changes, while generator architecture and query-conditioned policy changes remain out of scope."
+      },
+      "response_template": {
+        "proposed_revision": null,
+        "reason": "",
+        "verdict": null
+      },
+      "subject_id": "EGO_PROXY_AND_CONTROLLERS",
+      "subject_sha256": "cf402c20da1f0d8d965619a70f9f65cdbabed01950f96964e99980a834f5e127",
+      "task_id": "c63a6901aebe27408e6c848c854a42b7d4105530bbb7c836d27564c4a48552db"
+    }
+  ],
+  "workflow_type": "protocol_proposal_review"
+}

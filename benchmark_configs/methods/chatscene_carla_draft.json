@@ -1,0 +1,1019 @@
+{
+  "adapter": {
+    "argv": [
+      "--model",
+      "gpt-4o",
+      "--topk",
+      "3"
+    ],
+    "artifact_path": "safebench/scenario/scenario_data/scenic_data/dynamic_scenario/dynamic_0.scenic",
+    "entrypoint": "retrieve/retrieve.py",
+    "environment_passthrough": [
+      "PATH",
+      "LANG",
+      "LC_ALL",
+      "LD_LIBRARY_PATH",
+      "CUDA_VISIBLE_DEVICES",
+      "OPENAI_API_KEY",
+      "OPENAI_BASE_URL",
+      "HTTP_PROXY",
+      "HTTPS_PROXY",
+      "NO_PROXY"
+    ],
+    "failure_artifact_path": "safebench/scenario/scenario_data/scenic_data/dynamic_scenario/dynamic_0.txt",
+    "max_artifact_bytes": 4194304,
+    "max_stderr_bytes": 8388608,
+    "max_stdout_bytes": 8388608,
+    "python_environment_root": "/home/shijie20/CodeSpace/ChatScene/chatscene",
+    "python_executable": "/home/shijie20/CodeSpace/ChatScene/chatscene/bin/python-frozen",
+    "python_path_entries": [
+      {
+        "bytes": 29687376,
+        "path": "/home/shijie20/CodeSpace/ChatScene/CARLA_0.9.13/PythonAPI/carla/dist/carla-0.9.13-py3.8-linux-x86_64.egg",
+        "sha256": "cd0d3b399ec573eda96b21e2924d43f3dce8749f6126fba116c55c0ec9958e4e"
+      }
+    ],
+    "query_file": "retrieve/scenario_descriptions.txt",
+    "sandbox_executable": "/home/shijie20/.local/bin/bwrap",
+    "snapshot_paths": [
+      "Scenic/src",
+      "retrieve",
+      "safebench/util",
+      "safebench/scenario/scenario_data/scenic_data/maps"
+    ],
+    "source_root": "/home/shijie20/CodeSpace/ChatScene",
+    "timeout_seconds": 600,
+    "type": "chatscene_legacy"
+  },
+  "finalization": {
+    "ego_blueprint": "vehicle.chevrolet.impala",
+    "ego_length_m": 5.33,
+    "ego_width_m": 2.1,
+    "policy_id": "carla_ego_proxy_v0.1"
+  },
+  "implementation_bundle": {
+    "bundle_id": "chatscene-carla-implementation-v0.1",
+    "bundle_sha256": "ecace7b371d6f13da5340e6b5b5607e16b438418f474c60426b0a823fdf3e4b2",
+    "environment_manifest": {
+      "bytes": 28252,
+      "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/methods/chatscene_carla_environment_draft.json",
+      "sha256": "d03f96ee580b0bb0e620599669b60f36c9eb3ae5444579b2d82558b6497c2216"
+    },
+    "files": [
+      {
+        "bytes": 68032,
+        "path": "/home/shijie20/.local/bin/bwrap",
+        "sha256": "af662c55cd85178a58da083220a9348c4a7d3c24333fd0bc7badb18c93392987"
+      },
+      {
+        "bytes": 29687376,
+        "path": "/home/shijie20/CodeSpace/ChatScene/CARLA_0.9.13/PythonAPI/carla/dist/carla-0.9.13-py3.8-linux-x86_64.egg",
+        "sha256": "cd0d3b399ec573eda96b21e2924d43f3dce8749f6126fba116c55c0ec9958e4e"
+      },
+      {
+        "bytes": 28252,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/methods/benchmark_harness_environment_draft.json",
+        "sha256": "d03f96ee580b0bb0e620599669b60f36c9eb3ae5444579b2d82558b6497c2216"
+      },
+      {
+        "bytes": 28252,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/methods/chatscene_carla_environment_draft.json",
+        "sha256": "d03f96ee580b0bb0e620599669b60f36c9eb3ae5444579b2d82558b6497c2216"
+      },
+      {
+        "bytes": 11396,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/agent_query_review_draft.schema.json",
+        "sha256": "4ceb0f46acfa89332cc659754208323fd44e0394d1d44ba3b12cf054f71556d2"
+      },
+      {
+        "bytes": 3388,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/agent_semantic_review_fragment.schema.json",
+        "sha256": "e2582fd4c2df61ab895b033a145ee0fc0672ec23e467c715a0f5a6808631fa72"
+      },
+      {
+        "bytes": 1040,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/common_ontology.schema.json",
+        "sha256": "4bbe5a7cd61dd252d7c0f33cd33bf24f44c014d3c99276a5d081ae308bd519a1"
+      },
+      {
+        "bytes": 2075,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/controller_config.schema.json",
+        "sha256": "181054ea59f4418da037d2b58aebfacd2b080967fa6bd609806fd3af71f49d1a"
+      },
+      {
+        "bytes": 8238,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/cpd_aggregate.schema.json",
+        "sha256": "ae03cec57d962d9a5b8f5bbeb35e788c1d5f6ee6dbec41482fa988312c166b7d"
+      },
+      {
+        "bytes": 1769,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/cpd_coverage.schema.json",
+        "sha256": "0dae381302443646817e7ceffcbc252ef165ef17ca641833d174a9b923da73d6"
+      },
+      {
+        "bytes": 3341,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/cpd_input_record.schema.json",
+        "sha256": "dc516619d4566f8dfee961dbeed847b2e78c881e80d950c614aae00d77c186fc"
+      },
+      {
+        "bytes": 1893,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/cross_platform_fixture_corpus.schema.json",
+        "sha256": "153d359bd20cfb586d38815c6399078b22f9beae8173863b6b29158a88303fb4"
+      },
+      {
+        "bytes": 1761,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/freeze_asset.schema.json",
+        "sha256": "71be65584782858d40608b10ce9f813c15415267e687ddeec9f509d104afdcd3"
+      },
+      {
+        "bytes": 1501,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/freeze_manifest.schema.json",
+        "sha256": "6ac06698ee0d061b4bdfa706445a364e5fa7cdfec82fbb7d0cf9ce8fcf5a07e2"
+      },
+      {
+        "bytes": 917,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/freeze_protocol.schema.json",
+        "sha256": "81f1ea5920b1ae36de8d7e2dc074377ae90427053a1e67282f529932d6d300f3"
+      },
+      {
+        "bytes": 4175,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/generation_evidence.schema.json",
+        "sha256": "9844b4fcf2e3e99a415a577eb7375435f814d54de1c4b82d818198fa4b2024bf"
+      },
+      {
+        "bytes": 2188,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/generation_run_manifest.schema.json",
+        "sha256": "ecc396fdd9a6ef50617024fa5fa5bbbf05721edb2ad2499c6738eb341ee2d928"
+      },
+      {
+        "bytes": 3036,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/human_bound_review_packet.schema.json",
+        "sha256": "fdbf6a1ee39c6456752d69a48e4dff72827e136f50f4058e8f76a5d7398d2901"
+      },
+      {
+        "bytes": 1545,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/human_bound_review_submission.schema.json",
+        "sha256": "d2e3eb824929b4bb091f2d037b4a1c509ff4b340f4ccaed44f894b8213bc411b"
+      },
+      {
+        "bytes": 2105,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/human_calibration_gold_record.schema.json",
+        "sha256": "5ef21d382b5d4758f004528a2500ad88ae118e4b3fb25fb67e92c5e3ee31f500"
+      },
+      {
+        "bytes": 1282,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/human_carla_stage_calibration_report.schema.json",
+        "sha256": "0131339e7898c2100ddb89587540dbc8ce5526a66fa6b510e1e931ef7c856e9c"
+      },
+      {
+        "bytes": 2424,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/human_carla_stage_calibration_roster.schema.json",
+        "sha256": "ef7e01e14ad25a03c7d82ae9f392219c5e05366c808a1245893eeb5475f42c8c"
+      },
+      {
+        "bytes": 1252,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/human_carla_stage_platform_report.schema.json",
+        "sha256": "fdaada12d950ed880448dbd6c20e26e7f31555160292a251e4cbee4ae64f9ad0"
+      },
+      {
+        "bytes": 8494,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/human_machine_draft_registry.schema.json",
+        "sha256": "c2180cd9c62c6832a7f6a703cc2c86e1512a45095964abfcffe7ab253f316dcf"
+      },
+      {
+        "bytes": 7250,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/human_machine_draft_summary.schema.json",
+        "sha256": "7f191392d3e155aaf5536079bb1736b0c28a179572026135a78f4f1120cd0e08"
+      },
+      {
+        "bytes": 1705,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/human_platform_gold_record.schema.json",
+        "sha256": "a2059f07f04126389760cd959c299f4946867ca9c62137a73dac94d5be0167ca"
+      },
+      {
+        "bytes": 2903,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/human_post_test_private.schema.json",
+        "sha256": "ddb59b12de13d446320868ad13a003ccc6500b57265f668c65c95f5779ce6ee3"
+      },
+      {
+        "bytes": 2757,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/human_post_test_public.schema.json",
+        "sha256": "aa6123d71f47b8786db2865c5b60aa68cd15901510b18288058770f96886e52f"
+      },
+      {
+        "bytes": 8519,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/human_post_test_report.schema.json",
+        "sha256": "a18ca4949f088fec777ddc505bab0877c929897e5235ef7ba3e9d0c75326bd04"
+      },
+      {
+        "bytes": 1922,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/human_post_test_submission.schema.json",
+        "sha256": "44b1d9b23c6032ac317a2d89c3e11afa3a70884c2c862dad0db826e83a504b01"
+      },
+      {
+        "bytes": 4789,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/human_query_gold_record.schema.json",
+        "sha256": "a49a7985221dfb60339a6d95ab39b6dcb6f64dd338bda8db91b4c96644cb9f7b"
+      },
+      {
+        "bytes": 7800,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/human_query_review_packet.schema.json",
+        "sha256": "db8a60d5646ca9130e2e3501e873dbcbd05f771a156a1a97a4aa2b658e31a4f7"
+      },
+      {
+        "bytes": 4208,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/human_query_review_submission.schema.json",
+        "sha256": "6beaf8435c3fc3ede39ccd5fa57520d03d396e3935004b6b37946b1e7695ac5e"
+      },
+      {
+        "bytes": 2209,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/judge_calibration.schema.json",
+        "sha256": "561d7fef2d7fd95b6645de5b9ac35b436084b61de7b2e04a41411d34ddf78e52"
+      },
+      {
+        "bytes": 3459,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/judge_calibration_context_manifest.schema.json",
+        "sha256": "47660df0aa7bbd7b6f477094f12185d6496be0fb44dde43252b4d8440667ca7f"
+      },
+      {
+        "bytes": 1351,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/judge_calibration_request_bundle_manifest.schema.json",
+        "sha256": "64fbf213ad9f5b0fa0f8229add914590f329da0de74718d76d49740c59dde890"
+      },
+      {
+        "bytes": 2445,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/judge_calibration_request_record.schema.json",
+        "sha256": "70fbff427bb8b3e172d189b49602ce483568bcb0f1032e40d80e06b4a74b5e3d"
+      },
+      {
+        "bytes": 2519,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/judge_calibration_roster.schema.json",
+        "sha256": "527354ed67745a3b0be402e51403bcd3be42c0d6ffeeab2f83d78e633694c44b"
+      },
+      {
+        "bytes": 1268,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/judge_calibration_source_config.schema.json",
+        "sha256": "b7deb97cdd7994652c86333581e0743ef69514ed3759e596523cd9a66f932bbc"
+      },
+      {
+        "bytes": 2856,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/judge_execution_record.schema.json",
+        "sha256": "e2c1633ba3128001c846288e36f91964a2523489cd0065346ad827bad4f974b7"
+      },
+      {
+        "bytes": 618,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/judge_output.schema.json",
+        "sha256": "61eca3af83df9a68a4b3f13bbac086c8cfdce7d18a04397470d7f760ed3e26c4"
+      },
+      {
+        "bytes": 1181,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/judge_request_bundle_manifest.schema.json",
+        "sha256": "636e9c30daca43a6e411b80fb24a051e2f6245ad7920128ccf49ae97c4dece2c"
+      },
+      {
+        "bytes": 2159,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/judge_request_record.schema.json",
+        "sha256": "78984c90e4992bd20969f50fbab95e11ea964133cf9de172a358f765cf6095ca"
+      },
+      {
+        "bytes": 2343,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/judge_response_record.schema.json",
+        "sha256": "e4b266c8d2bf223b3efec628da4d30b600befe4a69055542ac6b41ec1a1dccb7"
+      },
+      {
+        "bytes": 3263,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/judge_rubric.schema.json",
+        "sha256": "96fe8740bdde2bf96fa9a055a74209ec7914cf0a9dc61ae35ecf0b707f6b8a2b"
+      },
+      {
+        "bytes": 1738,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/judge_run_manifest.schema.json",
+        "sha256": "c6223c4f4d2878f881e3b7aa9779b32d948a10e30d0fd973f5296862b7969b7f"
+      },
+      {
+        "bytes": 2458,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/judge_runner_manifest.schema.json",
+        "sha256": "e00cea43cdf8ec5d727a4956549802f3e38273d2c43e4f8b0afd08db9bc6c84c"
+      },
+      {
+        "bytes": 17449,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/metadrive_native_probe_evidence.schema.json",
+        "sha256": "0a01d972ca2c6bb6cbf19f39bc15836589fb87d91bbb0bc617c45894a4660adb"
+      },
+      {
+        "bytes": 7180,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/metadrive_pg_block_registry.schema.json",
+        "sha256": "bf544e16ae830a9bf57ed5f269cc77e11038ae2078ba43af15d141b210d2e5d1"
+      },
+      {
+        "bytes": 4843,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/metadrive_pg_block_scene.schema.json",
+        "sha256": "86ccf1569016e310408bb90a518e8e7a4d860814250ca883e219cf461a2467d1"
+      },
+      {
+        "bytes": 2794,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/metadrive_pg_token_registry.schema.json",
+        "sha256": "872e2ed11acd1add5ebea908f44a3a4daa01843963a6ec6b52beca19c23d9f40"
+      },
+      {
+        "bytes": 3210,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/metadrive_track_draft_decisions.schema.json",
+        "sha256": "4235eeda33e82fdde9bfe6c05eac2f738b35e3807f9ca26132aebe1b66c3f724"
+      },
+      {
+        "bytes": 8020,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/method_config.schema.json",
+        "sha256": "8f53414d81c9904c4fa9ed17e5e25c57849577ba8ce22fb38ff8251b9decde65"
+      },
+      {
+        "bytes": 1606,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/method_environment_manifest.schema.json",
+        "sha256": "7a7c23644205555aff7a9e163045faf9d0f59e0bc520ba0486fb4d4d2c838519"
+      },
+      {
+        "bytes": 7363,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/method_result.schema.json",
+        "sha256": "ade99e77b8fb1daea06057f4203f249be3b1b45f0265621c398915c374c0cf03"
+      },
+      {
+        "bytes": 5672,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/oracle_record.schema.json",
+        "sha256": "6bdd9bb4158b8659c63b105c26779777d051ee4db41d1156173fa9e62275dfcc"
+      },
+      {
+        "bytes": 2414,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/platform_capability.schema.json",
+        "sha256": "58a9778a8f74502e60f706ddae3f6e65ddea24203c3522f0fbcfd834e05d3f89"
+      },
+      {
+        "bytes": 2186,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/platform_fixture_review.schema.json",
+        "sha256": "f37d6bcddbe3bb00ff21066b73590389c63c79cacac941d7cce68aecd2b0676a"
+      },
+      {
+        "bytes": 6334,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/platform_runtime_config.schema.json",
+        "sha256": "58df82c3328319f71acf977e76368dcab04a8a206131a229271be4ec914f50e4"
+      },
+      {
+        "bytes": 2425,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/protocol_decision_review.schema.json",
+        "sha256": "49d411050e8be541123e5a4f649b44c1bc1f5c5f7225367aed0919ca76850278"
+      },
+      {
+        "bytes": 1657,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/query_roster.schema.json",
+        "sha256": "cd52552cebcaffdfa92f8d1f67c75d7b9391fd1a1702e4753baf00e472b4035b"
+      },
+      {
+        "bytes": 1738,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/requirement_atom.schema.json",
+        "sha256": "7786f94bfc816342abaa8339127191061cb1007371a02fdb2d8ed69bd4394801"
+      },
+      {
+        "bytes": 6803,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/response_record.schema.json",
+        "sha256": "71c98ffe482e2c8962825b14f1018f21d85d076cd31cae1eda3a0510e1d92a0c"
+      },
+      {
+        "bytes": 12980,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/runtime_record.schema.json",
+        "sha256": "34573a1fc09a0b6a5fbbc0a2b6637db48d8ce524c728bc91649799f3b3696849"
+      },
+      {
+        "bytes": 4346,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/semantic_evidence.schema.json",
+        "sha256": "d7ebd071ecb03b3042d3f21752d5bc4289973287f9d999813565af469f5b40ce"
+      },
+      {
+        "bytes": 4577,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/semantic_extractor_manifest.schema.json",
+        "sha256": "4c325a1369389a681b0e4f53a299751baae11e2d76a70fab66f5caf38cec6bea"
+      },
+      {
+        "bytes": 1551,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/semantic_fixture_corpus.schema.json",
+        "sha256": "4717c8ac60800fef81554caaefe59174728cbdca642606dc085e417bcf94d11d"
+      },
+      {
+        "bytes": 2594,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/semantic_fixture_input.schema.json",
+        "sha256": "83e0da2da5bb0d88271f1f9aee841a37c8e682d7bf280a1814b6e6684f60dd58"
+      },
+      {
+        "bytes": 1204,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/semantic_fixture_results.schema.json",
+        "sha256": "3954d171c47b033b591fd77642f448bb009804eff81d843aa542d310c5aa7c83"
+      },
+      {
+        "bytes": 2523,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/semantic_projection.schema.json",
+        "sha256": "403278d8720920c5be5299162e617a9fa0b99e4c0a22fcdcc5489f13ae7a4f05"
+      },
+      {
+        "bytes": 9106,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/semantic_score.schema.json",
+        "sha256": "7a10c9699ba58f96e496cdae186e089b3285a1fa2dd5f4ada962ccc2a0185f53"
+      },
+      {
+        "bytes": 4726,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/uqh_assessment.schema.json",
+        "sha256": "06d2d41b1df884e123d0f0229de198c7670545ebfad50c931c6b7b16b292fda2"
+      },
+      {
+        "bytes": 1164,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/uqh_assessor_execution.schema.json",
+        "sha256": "520da6ad6dfa161d1f1c28a4f9eec765b2226b80838c9b4c3db4af2ae8e87eb8"
+      },
+      {
+        "bytes": 1413,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/uqh_assessor_output.schema.json",
+        "sha256": "50e75afd9ad10a96536be84b7ddcf305aaa81fe1d4f16ed81919463c5ba34cbc"
+      },
+      {
+        "bytes": 2312,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/uqh_assessor_registry.schema.json",
+        "sha256": "4af8d0bb1249c55c35e330ae55d88bcce5d2b311e7a37181558a98aa74620da0"
+      },
+      {
+        "bytes": 1043,
+        "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/schemas/uqh_assessor_request_record.schema.json",
+        "sha256": "827057ce4b1676859df524a74f5c50bca5ced4a073d3ce65d66d3324c4eb2742"
+      },
+      {
+        "bytes": 384,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/__init__.py",
+        "sha256": "a1e106cd428758821ec26a8ed906889653607e62b81a146460b31e796b717ed3"
+      },
+      {
+        "bytes": 81,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/__main__.py",
+        "sha256": "2cdd23d4f5cd6c3b3e4cb690ad16d560637767b9ca5b2a3cf129fcc0a5ebc82b"
+      },
+      {
+        "bytes": 1333,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/adapters/__init__.py",
+        "sha256": "712077b78f2d8279055b077da9900d7f06af15c4cf6bbd920ad4d19ff911d6c9"
+      },
+      {
+        "bytes": 56174,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/adapters/chatscene.py",
+        "sha256": "f7c6bc2da964eb1a153234af3cb1b0d17a9d4268c631b185aea1a834284a5325"
+      },
+      {
+        "bytes": 29591,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/agent_query_review.py",
+        "sha256": "78685a170a2b8f161368bbb655fe4304a4d2435a10c4a008859ea8a38b613390"
+      },
+      {
+        "bytes": 7591,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/artifact_bundle.py",
+        "sha256": "66ab82049463b32505af5b16f6eca6fe51cb4920ebfd5b1eefc306dbc1a24d0d"
+      },
+      {
+        "bytes": 3159,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/atoms.py",
+        "sha256": "de20547cddb49a21bf346932d354e30f6e8390a7645f72cf79077517f141ded7"
+      },
+      {
+        "bytes": 5917,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/audit.py",
+        "sha256": "017c4fda908e6fd24856b233a620028042ea2d7d15d847957d71985964f095a2"
+      },
+      {
+        "bytes": 11849,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/calibration.py",
+        "sha256": "8ec325af4bf2db21d7a9613e328e7d700a4e969e1864a5a59bd07a70f94604a7"
+      },
+      {
+        "bytes": 71128,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/cli.py",
+        "sha256": "83303cf7f2488e658a962ec91be486b4c6dde224f64b0f3e6ddb98560ad5847d"
+      },
+      {
+        "bytes": 875,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/constants.py",
+        "sha256": "0485d4c227af66253c50e13ab32f62a2d1a3f8bea79afe4a4c6311d382e80d35"
+      },
+      {
+        "bytes": 37404,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/cpd.py",
+        "sha256": "3ccc265f3e6e06c091c1edf085bb2fa1758dc52c5ef7db90891dfbcd091ee8be"
+      },
+      {
+        "bytes": 1274,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/decisions.py",
+        "sha256": "253102eddc639dd4d414aac8b56fd56a71f396a6d54d35103fbb620bdfcc0a65"
+      },
+      {
+        "bytes": 483,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/errors.py",
+        "sha256": "0d84b715bbefca2a7663dff2dddb39eba641e0d7c443d76e0c7ab8a20af3b418"
+      },
+      {
+        "bytes": 1626,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/extractor_worker.py",
+        "sha256": "2c45ead3fc6ac1928e2644951db28bb5e5cf769f7bdb12e325e6f4aa7d674c5f"
+      },
+      {
+        "bytes": 455,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/fixture_extractor_carla.py",
+        "sha256": "d1c51da2c800ac3dc7917d0c578fba137d7ebb008419b0f315179b690a2fcdac"
+      },
+      {
+        "bytes": 16120,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/fixture_extractor_common.py",
+        "sha256": "5522cd135cabfadaec0ad0eba195e663f57d14ab4eb20d57b72fcf316a55c9fd"
+      },
+      {
+        "bytes": 463,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/fixture_extractor_metadrive.py",
+        "sha256": "66e35de6946807f82b595e086e654299aa63cc2dbfbc6370676167cfda3e96b6"
+      },
+      {
+        "bytes": 167347,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/freeze.py",
+        "sha256": "86c8631f71bcfcff0d6a21fc8d36fa3f2c90cf474f630b4962a4d6fa8b390ae6"
+      },
+      {
+        "bytes": 95092,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/generation.py",
+        "sha256": "011ede0d1eb83ced5c59f6e9dab12df4993201333e08110c19f1c63b3f27c8e1"
+      },
+      {
+        "bytes": 27831,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/generation_preflight.py",
+        "sha256": "3a74dbbf59cd743453a64361accd30fbbf6e56c35a6b2368c0185daf2c770aa6"
+      },
+      {
+        "bytes": 128091,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/human_workflow.py",
+        "sha256": "08f809cc34b69ef0425109e0336acb8fe5656f4707136b1799207389f545cec5"
+      },
+      {
+        "bytes": 4079,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/jsonio.py",
+        "sha256": "8a5c00604eb565332f40eee1751127ab57ed3c1828aad3c9ab86b31792cec777"
+      },
+      {
+        "bytes": 4014,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/judge.py",
+        "sha256": "e5572c1958fc3345c025437984eb38db3994d2d333c483d29103f089134e9b0d"
+      },
+      {
+        "bytes": 80409,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/judge_pipeline.py",
+        "sha256": "d787c24ad7a1ddaccd649305aa4cd05e22f47a16bfd0f50ed3a657deac05c314"
+      },
+      {
+        "bytes": 23516,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/library.py",
+        "sha256": "503868ba1cb31e9cce937c0dfe70b17e3640afe5507fc58d774169b1594bf192"
+      },
+      {
+        "bytes": 29100,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/metadrive_pg.py",
+        "sha256": "66350a38229e9f3a1e67ba7a3b29b163b2058d64705154f9fdc3223dc0c4e547"
+      },
+      {
+        "bytes": 19363,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/metadrive_pg_contract.py",
+        "sha256": "7815a9fb697087a50bcf7806974c863a0bb054a75e838938fde522b9d4b6f4d8"
+      },
+      {
+        "bytes": 71372,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/method_result.py",
+        "sha256": "f42ffa25f2451abefb9539147a8c43cd19e53f393fa7d8e69a2eecae58b0883c"
+      },
+      {
+        "bytes": 57608,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/metrics.py",
+        "sha256": "77eced3fd5d40c17c2c0f248a39ff301f728daa43873e97ab0234500ed684daf"
+      },
+      {
+        "bytes": 10931,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/native_observer.py",
+        "sha256": "048ce204cc73feaa387cef226d109ee3c5bb8005ef6cd3764a215b7a85510309"
+      },
+      {
+        "bytes": 4379,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/ontology.py",
+        "sha256": "274e85339a01e58057c5b5a3db75f461701083af6c4ea3e9b1c65057817850df"
+      },
+      {
+        "bytes": 21010,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/oracle.py",
+        "sha256": "e44f6fa377d040b2cb54dc24c27f4b639717b4ddf88ee30d15af74fff9f18735"
+      },
+      {
+        "bytes": 25838,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/provenance.py",
+        "sha256": "0ba4fde448379b4addd842d751c00958a023dc986419fcd41e672d616c2f4f5a"
+      },
+      {
+        "bytes": 74564,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/query_review_workbench.py",
+        "sha256": "f0fed67e1959b0fc39ba0e540bf103110827e51fe2e2d6b94a1470eaadef02d3"
+      },
+      {
+        "bytes": 56754,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/review_field_widgets.py",
+        "sha256": "0f87c2b6f8564cfaa4225d54dfd0509fa39d910f00c49a34ee16183ef37fc387"
+      },
+      {
+        "bytes": 8104,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/roster.py",
+        "sha256": "d71179ea60fcc991175480900ff5e33551557119933eddf5d2c558d2b6f280c5"
+      },
+      {
+        "bytes": 121005,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/runtime.py",
+        "sha256": "5a637e226f17b865f395524d527525220830adadce30e6aa14aa6a7c6dac6b76"
+      },
+      {
+        "bytes": 53779,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/runtime_worker.py",
+        "sha256": "a7a11f14ed9c08d42afb5128ff9d94216154873cbc21caf88ff28c2a328d1273"
+      },
+      {
+        "bytes": 13876,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/schema.py",
+        "sha256": "d12739f83b5acca68f0b696a4af493c60d8b232fa80f0c7dc93b11067f4125e0"
+      },
+      {
+        "bytes": 2964,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/semantic_pipeline.py",
+        "sha256": "7aeffb2a2ad05782973ccaf72ac5615c9439b122fe6523db438ac1d46aa5fc74"
+      },
+      {
+        "bytes": 3520,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/stats.py",
+        "sha256": "3dca8db57ea9cca493793984d2d71518d4fcf031fc79f33fc1b962d49f551601"
+      },
+      {
+        "bytes": 25542,
+        "path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/uqh.py",
+        "sha256": "5e1e040ad488eb78989f00fc7276a7d041064f0e20ed49dd935b0a2d2b3d41da"
+      },
+      {
+        "bytes": 5490456,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/bin/python-frozen",
+        "sha256": "298a9e830ed52f36c299427565485d717d1ce0179c0597cc16560513eb780b06"
+      },
+      {
+        "bytes": 89,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/__editable__.safebench-1.0.0.pth",
+        "sha256": "783748d30d3e38f65bdfdac9bd86a3de4949f56e96d1854fe290d559cd8c8f69"
+      },
+      {
+        "bytes": 3460,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/__editable___safebench_1_0_0_finder.py",
+        "sha256": "95bae704e8aa22cfd0f0328c5f043762da77089fec2f1c8cbc4819de6837ea1a"
+      },
+      {
+        "bytes": 6754,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/_distutils_hack/__init__.py",
+        "sha256": "a325c4f62f92a19daaa558088e4339afd78e14df40c20a7d51c9dc3a714dc237"
+      },
+      {
+        "bytes": 44,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/_distutils_hack/override.py",
+        "sha256": "12efecf8d17a5486780aa774b5b6c0e70b56932d8864f35df1eb7a18bb759b3a"
+      },
+      {
+        "bytes": 18,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/_virtualenv.pth",
+        "sha256": "69ac3d8f27e679c81b94ab30b3b56e9cd138219b1ba94a1fa3606d5a76a1433d"
+      },
+      {
+        "bytes": 4342,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/_virtualenv.py",
+        "sha256": "6cf30c56faf2a55228914dbbd17f8088ed371ebb08f5e7fa6fd931f913fcaf1d"
+      },
+      {
+        "bytes": 151,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/distutils-precedence.pth",
+        "sha256": "2638ce9e2500e572a5e0de7faed6661eb569d1b696fcba07b0dd223da5f5d224"
+      },
+      {
+        "bytes": 569,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/matplotlib-3.5.3-py3.8-nspkg.pth",
+        "sha256": "1603bfdee834ef511710a4fc9a038f054872aecc0fb4f0988cea540b26aeed45"
+      },
+      {
+        "bytes": 504,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/__init__.py",
+        "sha256": "4ec2a7b0ff0059da37673e34430af5247182dd6a7dc0760457a418c18ce69b99"
+      },
+      {
+        "bytes": 291,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/anchored_artists.py",
+        "sha256": "fc5ebef6269c66275be49a49f2308e67d3dd899691e6aa5f0637fedd58d3ccd7"
+      },
+      {
+        "bytes": 51,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/angle_helper.py",
+        "sha256": "4dbe0c6ff3469147648ac79b7b676a7c17459946624a61b25277ed892792225b"
+      },
+      {
+        "bytes": 178,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/axes_divider.py",
+        "sha256": "b4994f89add9f312eaeae5de841c00943ff8cb032f4534e433bdea3670a9a3b4"
+      },
+      {
+        "bytes": 89,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/axes_grid.py",
+        "sha256": "50f9550f0b337bfc3669978b68c83859954adead84bd678f5d315916f8c2433e"
+      },
+      {
+        "bytes": 47,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/axes_rgb.py",
+        "sha256": "2c5a381445d333613ecf113c72e611145cc300374ba0acb39be54d3a4497ec05"
+      },
+      {
+        "bytes": 48,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/axes_size.py",
+        "sha256": "bf8361c5eec3569d4590a5f4dc3a8927569ebc36a70ef80a4fdaf4a2e0f34f1c"
+      },
+      {
+        "bytes": 50,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/axis_artist.py",
+        "sha256": "cd49491541ee783b0cb732e2fe62b6fd67fe9d20508224ec30e169a3f4a7819d"
+      },
+      {
+        "bytes": 53,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/axisline_style.py",
+        "sha256": "94d5475e415685258f5ce39f17ec255640cfce6cee4ad27227317e352e567ff8"
+      },
+      {
+        "bytes": 48,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/axislines.py",
+        "sha256": "915ca16fa95a8889a6b8d139dd04d0877920c73d2c3b599c48ca67a88763ca50"
+      },
+      {
+        "bytes": 48,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/clip_path.py",
+        "sha256": "b3e777ea1522cbd23d052afdc29c6382800008242b7331e3c34ef626f02b36f1"
+      },
+      {
+        "bytes": 52,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/floating_axes.py",
+        "sha256": "8b7e4e7d5d59305f8390ba386ca9b31593fa2e00b05df7432b16251aa8f228e3"
+      },
+      {
+        "bytes": 50,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/grid_finder.py",
+        "sha256": "636db573e261fc015ddcea25cefaf407566bcfd3285cf6ad50005074bb05769c"
+      },
+      {
+        "bytes": 62,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/grid_helper_curvelinear.py",
+        "sha256": "9d197f07eef9e57ed4a55aaa77092a73f23089398ce3ccf778e307baf253e472"
+      },
+      {
+        "bytes": 216,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/inset_locator.py",
+        "sha256": "aaa5e54fc256a243f4915fbc34792764320db4afa36d77e4bad1ffd6d7117bfa"
+      },
+      {
+        "bytes": 523,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid/parasite_axes.py",
+        "sha256": "f19e65a1841182af5f22197ff41c56b363323036242bf16d95d96e02060348bf"
+      },
+      {
+        "bytes": 204,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid1/__init__.py",
+        "sha256": "fa5c3465f1b85d4a6e028942a57285c2d4b7c352c9d594e84840bd392981fb84"
+      },
+      {
+        "bytes": 19171,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid1/anchored_artists.py",
+        "sha256": "d72d56fdb37a46c067e94364cf869d6b996037834b6a97978c5938a288f0b45a"
+      },
+      {
+        "bytes": 26558,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid1/axes_divider.py",
+        "sha256": "35b0123d1a6a6401223575445930be11e512e792d8aee7b524e5479b1dec8ef4"
+      },
+      {
+        "bytes": 21404,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid1/axes_grid.py",
+        "sha256": "39da793b6753f46d86727cfd33e112b619f63193a58373f507c5bbedf895031d"
+      },
+      {
+        "bytes": 4149,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid1/axes_rgb.py",
+        "sha256": "dcb9c232beb002fd67dd9a8920301c4268dfa5828adcc88150550239fcf90ce7"
+      },
+      {
+        "bytes": 7541,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid1/axes_size.py",
+        "sha256": "7ea59fafad059622489b9997dcca60f3b5ec4a7c8c3dfcf42bb18e78040f8310"
+      },
+      {
+        "bytes": 22743,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid1/inset_locator.py",
+        "sha256": "9c113c24bb643df02a206ed5e2857c64026b70adbce379622da202529ff49815"
+      },
+      {
+        "bytes": 4372,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid1/mpl_axes.py",
+        "sha256": "81668118889359c8967dcb7149a4f4ded5b623aa10493b9aee1a76c6d035f286"
+      },
+      {
+        "bytes": 12601,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axes_grid1/parasite_axes.py",
+        "sha256": "1f9cf79e28de6d38e4bec3756ae601dcbfa94c36961965c808a6b6bc7b4e4631"
+      },
+      {
+        "bytes": 800,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/__init__.py",
+        "sha256": "9e1d919f78aa6f66800b83d888343090eef1f49d9b4368097485766946cce8b2"
+      },
+      {
+        "bytes": 12960,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/angle_helper.py",
+        "sha256": "a4226d497ef4f2bda56d4cae8740a9c0f55cb1ed9acaca44880c3004ca9d0031"
+      },
+      {
+        "bytes": 127,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/axes_divider.py",
+        "sha256": "6da3c2063336d12bc051e32386f952fdc71c452335cbb64ac9bb685bcba9a369"
+      },
+      {
+        "bytes": 362,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/axes_grid.py",
+        "sha256": "80434828a8866fe8c4dc60daca700188a09da6a5b1544383e22f0794206ba056"
+      },
+      {
+        "bytes": 164,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/axes_rgb.py",
+        "sha256": "20b53ef0391e4b08041827fc1e7f3e6611eaeff4e0150781f1cf66c58c98fadb"
+      },
+      {
+        "bytes": 37075,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/axis_artist.py",
+        "sha256": "3678c6c7d4fa22cb54e22c25aee02075fe93b758064834faa4bd545363737728"
+      },
+      {
+        "bytes": 4930,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/axisline_style.py",
+        "sha256": "45537465ea15c5ac16d193c4fd0d6f82c0ef041e769629fb330084b45ceb65d5"
+      },
+      {
+        "bytes": 20036,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/axislines.py",
+        "sha256": "4ae775a37136088548de610087ec820487457e530cd14abb681cf155fd21fbf7"
+      },
+      {
+        "bytes": 3838,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/clip_path.py",
+        "sha256": "76b07051b61626fc82b19989ea02d86f818a9a1fc9027e7be55aeacea7586399"
+      },
+      {
+        "bytes": 13000,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/floating_axes.py",
+        "sha256": "574f94111aad84227c9938dd053ba67b930f69ebc9c3cd0b6e85de9eacdae155"
+      },
+      {
+        "bytes": 12179,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/grid_finder.py",
+        "sha256": "aa479f5298098f05c158f24c8f45a810da30e1d045f634a4f62add3dcdd976b1"
+      },
+      {
+        "bytes": 13229,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/grid_helper_curvelinear.py",
+        "sha256": "0d6a9e17d1c6b84c8ff37af836731454db4f8d6ff8f66a59497ce5d2c66b97ef"
+      },
+      {
+        "bytes": 500,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/axisartist/parasite_axes.py",
+        "sha256": "8990cb0a612ce8e1dfe8913923f9a8583f2ed0bba551968ae851fc14d2dd2a51"
+      },
+      {
+        "bytes": 27,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/mplot3d/__init__.py",
+        "sha256": "57688f20ff55c9186826c1569d07f90247f223519248ff47ea120211ef5e749a"
+      },
+      {
+        "bytes": 31526,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/mplot3d/art3d.py",
+        "sha256": "928c7b68b02562c3c9d4cd5dca9a52966378fae3f12e68979d9ffbb89915af04"
+      },
+      {
+        "bytes": 131314,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/mplot3d/axes3d.py",
+        "sha256": "c81458e0c1543175fdf0e72fd1eec5700ce4e39c1aadd7d4898c0235759bca5f"
+      },
+      {
+        "bytes": 20624,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/mplot3d/axis3d.py",
+        "sha256": "9a6c0b73037fa07686728ce92f0de624c8027f5eda2564be41055cf1706a6c15"
+      },
+      {
+        "bytes": 4415,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/mplot3d/proj3d.py",
+        "sha256": "aed9e6bdee2a1c4cf2f52e6eb92facb4af2a4d848fb86cf868673e2e1d6205ad"
+      },
+      {
+        "bytes": 365,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/__init__.py",
+        "sha256": "3b1e35cc4959b753e8fb8d65c75e3e80c16bf51d4310ae809adeb81e7e5deac6"
+      },
+      {
+        "bytes": 139,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/conftest.py",
+        "sha256": "44cf33f29caca3b5d105a107bcf25f3274f5fdc734d387d958681e8834abd6ec"
+      },
+      {
+        "bytes": 2100,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/test_axes_grid.py",
+        "sha256": "a8493fed54c57507abe1d4ec49a10cf9b9d98e38944d10c4523d34924e85c59d"
+      },
+      {
+        "bytes": 19020,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/test_axes_grid1.py",
+        "sha256": "7e1f720c764e4bd8ee376e09e469f82b8b37004db2b13647fae6f21db0c2db4e"
+      },
+      {
+        "bytes": 5670,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/test_axisartist_angle_helper.py",
+        "sha256": "3f0849c019b6924e2e33285d3b96ab42cf0896a497daf37486f53323b607aabc"
+      },
+      {
+        "bytes": 3008,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/test_axisartist_axis_artist.py",
+        "sha256": "3782a1c7c8d2c64a22333dcabee9a876614a1d952d770b63933c4b58f49dcaec"
+      },
+      {
+        "bytes": 2722,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/test_axisartist_axislines.py",
+        "sha256": "3653a426682dcbb1e94dacb668d5bf8bc281fa6b929b69de85a19bb19859c07b"
+      },
+      {
+        "bytes": 1090,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/test_axisartist_clip_path.py",
+        "sha256": "85cc5e4b5afdde62d3f2cfd0d9d98a81768cd6d5a7ce5b6426e62934ed833ebe"
+      },
+      {
+        "bytes": 4689,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/test_axisartist_floating_axes.py",
+        "sha256": "6f253f842c010d70b2c21ac6bf43eed084d1f3130a7508d944f9aa402e2f2d37"
+      },
+      {
+        "bytes": 1156,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/test_axisartist_grid_finder.py",
+        "sha256": "73040b0ce75c25b018d84eddafce7de72cee361d7f621f34aff3bc5864f684c6"
+      },
+      {
+        "bytes": 7388,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/test_axisartist_grid_helper_curvelinear.py",
+        "sha256": "d36ba3e16eb303f4e6b2fa7f45db8f87da52dc7e183da79c88cb47e256e3dc1a"
+      },
+      {
+        "bytes": 58216,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/mpl_toolkits/tests/test_mplot3d.py",
+        "sha256": "9c175474f4a85e608fc902590549c738b2153a80e0cb7f7909c9460ae81e936e"
+      },
+      {
+        "bytes": 80,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/safebench-1.0.0.dist-info/direct_url.json",
+        "sha256": "d212ff2037cff0e96d66ae0ba161a30c3c8d1ff2fcb502fdbc94bb98100adf31"
+      },
+      {
+        "bytes": 87,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/scenic-2.1.0b4.dist-info/direct_url.json",
+        "sha256": "7cad1d361445d3dccfe01a4b206ebfef358c4d19bbeecc8f51513398150058ec"
+      },
+      {
+        "bytes": 45,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/lib/python3.8/site-packages/scenic.pth",
+        "sha256": "b4d56f9aebecdaffbe48faa8c02cfcda0d67ad9d7b902b1e8dfc7c5ee15933ff"
+      },
+      {
+        "bytes": 113,
+        "path": "/home/shijie20/CodeSpace/ChatScene/chatscene/pyvenv.cfg",
+        "sha256": "9108cdd35da0562c871568ef61417125337b11651d9bdcac41579d4ba4ecd76a"
+      },
+      {
+        "bytes": 5296,
+        "path": "/home/shijie20/CodeSpace/ChatScene/retrieve/retrieve.py",
+        "sha256": "800988aba5efd1c911a5aa2700df0deef87e34c2061cca189ec44892e2fe31c0"
+      }
+    ],
+    "harness_environment_manifest": {
+      "bytes": 28252,
+      "path": "/home/shijie20/CodeSpace/ChatScene/benchmark_configs/methods/benchmark_harness_environment_draft.json",
+      "sha256": "d03f96ee580b0bb0e620599669b60f36c9eb3ae5444579b2d82558b6497c2216"
+    },
+    "status": "draft"
+  },
+  "method_id": "chatscene_carla_v0_1",
+  "platform": "carla",
+  "post_output_semantic_repair": false,
+  "query_input_fields": [
+    "query_text"
+  ],
+  "schema_version": "0.1",
+  "status": "draft"
+}

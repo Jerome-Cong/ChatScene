@@ -1,0 +1,192 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/human_machine_draft_summary.schema.json",
+  "title": "Checked-in pre-assignment human machine-draft summary",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "workflow_type",
+    "summary_id",
+    "decision_status",
+    "stage_scope",
+    "review_policy",
+    "production_exporter",
+    "production_registry_scope",
+    "human_gold_state",
+    "workload",
+    "query_agent_semantic_review",
+    "entries"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "workflow_type": {"const": "carla_stage_machine_draft_summary"},
+    "summary_id": {"const": "carla-human-review-machine-drafts-v0.2"},
+    "decision_status": {"const": "draft"},
+    "stage_scope": {"const": "carla_first"},
+    "review_policy": {"const": "one_complete_human_gold_per_subject"},
+    "production_exporter": {"const": "scripts/export_human_review_drafts.py"},
+    "production_registry_scope": {"const": "assignment_time_only"},
+    "human_gold_state": {
+      "type": "object",
+      "required": [
+        "completed_real_human_reviews",
+        "completed_admissible_human_gold_records",
+        "machine_drafts_are_gold",
+        "machine_recommendations_are_gold",
+        "machine_recommendations_populate_human_submissions"
+      ],
+      "properties": {
+        "completed_real_human_reviews": {"const": 0},
+        "completed_admissible_human_gold_records": {"const": 0},
+        "machine_drafts_are_gold": {"const": false},
+        "machine_recommendations_are_gold": {"const": false},
+        "machine_recommendations_populate_human_submissions": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "workload": {
+      "type": "object",
+      "required": [
+        "expected_subject_records",
+        "currently_packet_generatable_after_reviewer_assignment",
+        "currently_blocked_subject_records",
+        "expected_explicit_verdict_entries",
+        "currently_packet_generatable_explicit_verdict_entries",
+        "query_atom_verdict_entries",
+        "query_required_check_verdict_entries",
+        "query_cpd_verdict_entries",
+        "query_machine_recommendation_entries",
+        "carla_platform_verdict_entries",
+        "carla_calibration_verdict_entries"
+      ],
+      "properties": {
+        "expected_subject_records": {"const": 442},
+        "currently_packet_generatable_after_reviewer_assignment": {"const": 300},
+        "currently_blocked_subject_records": {"const": 142},
+        "expected_explicit_verdict_entries": {"type": "integer", "minimum": 2244},
+        "currently_packet_generatable_explicit_verdict_entries": {"type": "integer", "minimum": 2100},
+        "query_atom_verdict_entries": {"type": "integer", "minimum": 0},
+        "query_required_check_verdict_entries": {"const": 1800},
+        "query_cpd_verdict_entries": {"const": 300},
+        "query_machine_recommendation_entries": {"type": "integer", "minimum": 2100},
+        "carla_platform_verdict_entries": {"const": 52},
+        "carla_calibration_verdict_entries": {"const": 90}
+      },
+      "additionalProperties": false
+    },
+    "query_agent_semantic_review": {
+      "type": "object",
+      "required": [
+        "artifact",
+        "reviewed_intent_groups",
+        "reviewed_subjects",
+        "draft_decision_entries",
+        "intent_semantic_finding_entries",
+        "source_projection_default_entries",
+        "overall_disposition_counts",
+        "recommendation_counts",
+        "machine_only_non_gold",
+        "human_submission_populated",
+        "human_action_required"
+      ],
+      "properties": {
+        "artifact": {"$ref": "#/definitions/source_binding"},
+        "reviewed_intent_groups": {"const": 100},
+        "reviewed_subjects": {"const": 300},
+        "draft_decision_entries": {"type": "integer", "minimum": 2100},
+        "intent_semantic_finding_entries": {"type": "integer", "minimum": 1},
+        "source_projection_default_entries": {"type": "integer", "minimum": 1},
+        "overall_disposition_counts": {
+          "type": "object",
+          "required": ["accept", "accept_with_attention", "revise"],
+          "properties": {
+            "accept": {"type": "integer", "minimum": 0},
+            "accept_with_attention": {"type": "integer", "minimum": 0},
+            "revise": {"type": "integer", "minimum": 0}
+          },
+          "additionalProperties": false
+        },
+        "recommendation_counts": {
+          "type": "object",
+          "required": [
+            "accept_current",
+            "revise_current",
+            "reject_current",
+            "human_judgment_required"
+          ],
+          "properties": {
+            "accept_current": {"type": "integer", "minimum": 0},
+            "revise_current": {"type": "integer", "minimum": 0},
+            "reject_current": {"type": "integer", "minimum": 0},
+            "human_judgment_required": {"type": "integer", "minimum": 0}
+          },
+          "additionalProperties": false
+        },
+        "machine_only_non_gold": {"const": true},
+        "human_submission_populated": {"const": false},
+        "human_action_required": {"const": true}
+      },
+      "additionalProperties": false
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": [
+          "draft_id",
+          "status",
+          "subject_records",
+          "explicit_verdict_entries"
+        ],
+        "properties": {
+          "draft_id": {
+            "enum": [
+              "dev_query_oracle",
+              "test_query_oracle",
+              "carla_platform_fixture_capability",
+              "carla_judge_calibration",
+              "metadrive_token_only_platform_infrastructure",
+              "final_cross_platform_protocol"
+            ]
+          },
+          "status": {"type": "string", "minLength": 1},
+          "subject_records": {"type": "integer", "minimum": 0},
+          "explicit_verdict_entries": {"type": "integer", "minimum": 0},
+          "source_bindings": {
+            "type": "array",
+            "items": {"$ref": "#/definitions/source_binding"}
+          },
+          "human_dependency": {"type": "string", "minLength": 1},
+          "dependencies": {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1}
+          },
+          "missing_method_dependencies": {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1}
+          },
+          "standalone_human_gold_subject": {"const": false},
+          "formal_destination_count": {"type": "integer", "minimum": 1},
+          "counting_rule": {"type": "string", "minLength": 1},
+          "included_in_current_carla_workload": {"type": "boolean"}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "definitions": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_binding": {
+      "type": "object",
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/definitions/sha256"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

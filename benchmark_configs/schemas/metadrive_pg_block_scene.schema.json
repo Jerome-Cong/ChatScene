@@ -1,0 +1,161 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/metadrive_pg_block_scene.schema.json",
+  "title": "Native MetaDrive PG block-sequence scene artifact",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "time_step_s",
+    "horizon_steps",
+    "map",
+    "ego",
+    "actors"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "artifact_type": {"const": "metadrive_pg_block_scene_v0.1"},
+    "time_step_s": {"const": 0.1},
+    "horizon_steps": {"type": "integer", "minimum": 1, "maximum": 36000},
+    "map": {
+      "type": "object",
+      "required": [
+        "generation_type",
+        "block_sequence",
+        "map_seed",
+        "lane_num",
+        "lane_width_m",
+        "exit_length_m",
+        "token_registry_id",
+        "token_registry_sha256"
+      ],
+      "properties": {
+        "generation_type": {"const": "block_sequence"},
+        "block_sequence": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "not": {"pattern": "I"}
+        },
+        "map_seed": {"type": "integer", "minimum": 0, "maximum": 2147483647},
+        "lane_num": {"type": "integer", "minimum": 1, "maximum": 5},
+        "lane_width_m": {"type": "number", "minimum": 2, "maximum": 6},
+        "exit_length_m": {"type": "number", "minimum": 5, "maximum": 500},
+        "token_registry_id": {"const": "metadrive-pg-token-registry-v0.1"},
+        "token_registry_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": false
+    },
+    "ego": {
+      "type": "object",
+      "required": [
+        "actor_id",
+        "actor_type",
+        "vehicle_model",
+        "length_m",
+        "width_m",
+        "reference_trajectory"
+      ],
+      "properties": {
+        "actor_id": {"const": "ego"},
+        "actor_type": {"const": "vehicle"},
+        "vehicle_model": {"enum": ["default", "s", "m", "l", "xl"]},
+        "length_m": {"type": "number", "minimum": 0.1, "maximum": 30},
+        "width_m": {"type": "number", "minimum": 0.1, "maximum": 5},
+        "reference_trajectory": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/definitions/state"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "actors": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {"$ref": "#/definitions/actor"}
+    },
+    "semantic_regions": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {"$ref": "#/definitions/semanticRegion"}
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$"
+    },
+    "point": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"type": "number", "minimum": -10000, "maximum": 10000}
+    },
+    "state": {
+      "type": "object",
+      "required": ["step", "position_m", "heading_rad", "speed_m_s", "valid"],
+      "properties": {
+        "step": {"type": "integer", "minimum": 0},
+        "position_m": {"$ref": "#/definitions/point"},
+        "heading_rad": {"type": "number", "minimum": -1000, "maximum": 1000},
+        "speed_m_s": {"type": "number", "minimum": 0, "maximum": 100},
+        "valid": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "actor": {
+      "type": "object",
+      "required": [
+        "actor_id",
+        "actor_type",
+        "length_m",
+        "width_m",
+        "motion_mode",
+        "trajectory"
+      ],
+      "properties": {
+        "actor_id": {"$ref": "#/definitions/identifier"},
+        "actor_type": {
+          "enum": ["vehicle", "pedestrian", "e_bike", "bicycle", "motorcycle"]
+        },
+        "length_m": {"type": "number", "minimum": 0.1, "maximum": 30},
+        "width_m": {"type": "number", "minimum": 0.1, "maximum": 5},
+        "motion_mode": {"const": "replay_trajectory"},
+        "trajectory": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/definitions/state"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "semanticRegion": {
+      "type": "object",
+      "required": ["region_id", "region_type", "polygon_m"],
+      "properties": {
+        "region_id": {"$ref": "#/definitions/identifier"},
+        "region_type": {
+          "enum": [
+            "bus_stop_area",
+            "bus_stop_no_parking_zone",
+            "crosswalk",
+            "sidewalk",
+            "motor_lane",
+            "non_motor_lane",
+            "bus_only_lane",
+            "queue_area"
+          ]
+        },
+        "polygon_m": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 128,
+          "items": {"$ref": "#/definitions/point"}
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

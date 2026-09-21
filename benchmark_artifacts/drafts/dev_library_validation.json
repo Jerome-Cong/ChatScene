@@ -1,0 +1,21 @@
+{
+  "bytes": 141539,
+  "dataset_split": "development",
+  "group_metadata_invariant": true,
+  "intent_groups": 16,
+  "metadata_schema_version": "0.2",
+  "path": "/home/shijie20/CodeSpace/ChatScene/query_lib/bus_ego_topdown_2d_dev_query_library_v0_2.jsonl",
+  "query_library_version": "BSG_DEV_v0_2",
+  "records": 48,
+  "sha256": "bb965d41c9cf21191b1a33d45be01e9ceb53d54d4216663a2f6578537bec62e5",
+  "supported_intents": 12,
+  "supported_records": 36,
+  "surface_counts": {
+    "partial": 16,
+    "precise": 16,
+    "vague": 16
+  },
+  "triplets_complete": true,
+  "unsupported_intents": 4,
+  "unsupported_records": 12
+}

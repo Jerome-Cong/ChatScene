@@ -1,0 +1,118 @@
+{
+  "schema_version": "0.1",
+  "decision_status": "draft",
+  "human_gold": false,
+  "platform": "metadrive",
+  "track_scope": "builtin_sequence_block_tokens_only",
+  "source_revision": "85e5dadc6c7436d324348f6e3d8f8e680c06b4db",
+  "formal_alignment": {
+    "crosswalk_contract": "metadrive_machine_decision_to_formal_destination_v0.1",
+    "standalone_human_gold_subject": false,
+    "standalone_human_gold_records_required": 0,
+    "decision_items_are_machine_crosswalk_entries": true,
+    "formal_human_gold_created_only_at_destinations": true,
+    "completed_admissible_human_gold_records": 0
+  },
+  "decisions": [
+    {
+      "decision_id": "MD_TOKEN_EXECUTABLE_WHITELIST",
+      "draft_decision": "approve_with_constraints",
+      "formal_destination": {
+        "destination_type": "platform_review_subject",
+        "destination_id": "registry_implementation:metadrive:pg_block_registry",
+        "standalone_human_gold_records_added": 0
+      },
+      "proposal": {
+        "allowed_tokens": ["$", "B", "C", "O", "P", "R", "S", "T", "U", "X", "Y", "r", "y"],
+        "excluded_tokens": ["F", "f"],
+        "lane_num_range": [1, 5],
+        "token_constraints": {"P": {"lane_num_allowed": [1]}}
+      },
+      "reason": "Native materialization succeeds for the allowed single-token probes; both fork constructors raise in the inspected source, and ParkingLot asserts one lane."
+    },
+    {
+      "decision_id": "MD_EGO_XL_PROXY",
+      "draft_decision": "approve_with_limitation",
+      "formal_destination": {
+        "destination_type": "protocol_decision_subject",
+        "destination_id": "EGO_PROXY_AND_CONTROLLERS",
+        "standalone_human_gold_records_added": 0
+      },
+      "proposal": {
+        "vehicle_model": "xl",
+        "top_down_length_m": 5.33,
+        "top_down_width_m": 2.1,
+        "native_physical_length_m": 5.74,
+        "native_physical_width_m": 2.3,
+        "native_physical_height_m": 2.8
+      },
+      "reason": "XLVehicle is the closest existing native class and supports the common top-down projection, but the override does not change its physical body or dynamics."
+    },
+    {
+      "decision_id": "MD_QUERY_BLIND_POLICY",
+      "draft_decision": "approve_for_diagnostic_execution",
+      "formal_destination": {
+        "destination_type": "protocol_decision_subject",
+        "destination_id": "EGO_PROXY_AND_CONTROLLERS",
+        "standalone_human_gold_records_added": 0
+      },
+      "proposal": {
+        "controller_class": "FrozenBusIDMPolicy",
+        "query_blind": true,
+        "event_state_machine": false,
+        "longitudinal_action": "normalized_throttle_brake_-1_to_1",
+        "idm_factor_units": "dimensionless",
+        "si_acceleration_bound_claimed": false,
+        "iec_spec_primary": true,
+        "iec_exec_diagnostic": true
+      },
+      "reason": "The native IDM-PID lane follower supports reproducible NE but cannot establish query-specific docking, dwell, or departure semantics; its factors and action are not SI acceleration bounds."
+    },
+    {
+      "decision_id": "MD_SV_REPETITION_SEMANTICS",
+      "draft_decision": "approve_with_limitation",
+      "formal_destination": {
+        "destination_type": "protocol_decision_subject",
+        "destination_id": "RUNTIME_VALIDATION_METADRIVE",
+        "standalone_human_gold_records_added": 0
+      },
+      "proposal": {
+        "protocol_indices": [0, 1, 2, 3, 4],
+        "artifact_map_seed_preserved": true,
+        "sampling_semantics": "deterministic_artifact_confirmation",
+        "independent_road_samples": false
+      },
+      "reason": "A finalized PG artifact fixes its block sequence and map_seed; the common five-attempt budget therefore provides fresh deterministic confirmations, not new generated road realizations."
+    },
+    {
+      "decision_id": "MD_EVIDENCE_SEPARATION",
+      "draft_decision": "approve",
+      "formal_destination": {
+        "destination_type": "automatic_gate",
+        "destination_id": "semantic_extractor_and_runtime_evidence_contract",
+        "standalone_human_gold_records_added": 0
+      },
+      "proposal": {
+        "artifact_trajectories": "specification_evidence",
+        "native_pgmap_features": "materialized_road_evidence",
+        "ne_trace": "execution_evidence"
+      },
+      "reason": "Generator-declared trajectories must not be mislabeled as policy-executed behavior."
+    },
+    {
+      "decision_id": "MD_METHOD_ADAPTER_ADMISSION",
+      "draft_decision": "pending_method_owner",
+      "formal_destination": {
+        "destination_type": "automatic_gate",
+        "destination_id": "method_config_and_generation_chain_admission",
+        "standalone_human_gold_records_added": 0
+      },
+      "proposal": {
+        "platform_track_status": "implementation_independent_review_go",
+        "tested_method_adapter_status": "missing",
+        "real_method_outputs_status": "missing"
+      },
+      "reason": "The provided simulator source establishes platform APIs only; it does not identify or freeze an evaluated scene-generation method."
+    }
+  ]
+}

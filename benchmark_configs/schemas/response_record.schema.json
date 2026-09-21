@@ -1,0 +1,213 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/response_record.schema.json",
+  "title": "Immutable generation response record",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "method_id",
+    "platform",
+    "query_id",
+    "intent_group_id",
+    "statistical_intent_cluster_id",
+    "surface_style",
+    "repetition",
+    "expected_support",
+    "disposition",
+    "request_sha256",
+    "config_sha256",
+    "implementation_bundle_sha256",
+    "terminal_status",
+    "artifact",
+    "raw_method_response",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "run_id": {"type": "string", "minLength": 1},
+    "method_id": {"type": "string", "minLength": 1},
+    "platform": {"enum": ["carla", "metadrive"]},
+    "query_id": {"type": "string", "minLength": 1},
+    "intent_group_id": {"type": "string", "minLength": 1},
+    "statistical_intent_cluster_id": {"type": "string", "minLength": 1},
+    "surface_style": {"enum": ["precise", "partial", "vague"]},
+    "repetition": {"type": "integer", "minimum": 0, "maximum": 4},
+    "expected_support": {"enum": ["supported", "unsupported"]},
+    "disposition": {
+      "enum": ["generate", "reject", "clarification", "controlled_degradation", "failure"]
+    },
+    "request_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "implementation_bundle_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "terminal_status": {"enum": ["complete", "failed", "timeout"]},
+    "artifact": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "required": ["path", "sha256", "bytes"],
+          "properties": {
+            "path": {"type": "string", "minLength": 1},
+            "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "bytes": {"type": "integer", "minimum": 0}
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "raw_method_response": {
+      "type": "object",
+      "description": "Immutable runner capture of the method process. envelope_sha256 is SHA-256 over canonical JSON of stdout, stderr, exit_code, and timed_out, excluding envelope_sha256 itself.",
+      "required": ["stdout", "stderr", "exit_code", "timed_out", "envelope_sha256"],
+      "properties": {
+        "stdout": {"$ref": "#/definitions/raw_stream_binding"},
+        "stderr": {"$ref": "#/definitions/raw_stream_binding"},
+        "exit_code": {
+          "oneOf": [
+            {"type": "integer"},
+            {"type": "null"}
+          ]
+        },
+        "timed_out": {"type": "boolean"},
+        "envelope_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": false
+    },
+    "unsupported_handling": {
+      "type": "object",
+      "description": "Method-response locator for a completed reject, clarification, or controlled degradation. This is raw-response evidence, never an evaluator verdict or normalized reason.",
+      "required": ["response_stream", "response_sha256"],
+      "properties": {
+        "response_stream": {"enum": ["stdout", "stderr"]},
+        "response_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["producer_id", "producer_version", "created_at_utc"],
+      "properties": {
+        "producer_id": {"type": "string", "minLength": 1},
+        "producer_version": {"type": "string", "minLength": 1},
+        "created_at_utc": {"type": "string", "format": "date-time"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "raw_stream_binding": {
+      "type": "object",
+      "required": ["path", "sha256", "bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "bytes": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"terminal_status": {"const": "complete"}},
+        "required": ["terminal_status"]
+      },
+      "then": {
+        "properties": {
+          "disposition": {
+            "enum": ["generate", "reject", "clarification", "controlled_degradation"]
+          },
+          "raw_method_response": {
+            "properties": {
+              "exit_code": {"const": 0},
+              "timed_out": {"const": false}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"terminal_status": {"const": "timeout"}},
+        "required": ["terminal_status"]
+      },
+      "then": {
+        "properties": {
+          "disposition": {"const": "failure"},
+          "artifact": {"type": "null"},
+          "raw_method_response": {
+            "properties": {
+              "exit_code": {"type": "null"},
+              "timed_out": {"const": true}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"terminal_status": {"const": "failed"}},
+        "required": ["terminal_status"]
+      },
+      "then": {
+        "properties": {
+          "disposition": {"const": "failure"},
+          "artifact": {"type": "null"},
+          "raw_method_response": {
+            "properties": {"timed_out": {"const": false}}
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"disposition": {"const": "generate"}, "terminal_status": {"const": "complete"}},
+        "required": ["disposition", "terminal_status"]
+      },
+      "then": {
+        "properties": {
+          "artifact": {"type": "object"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "disposition": {
+            "enum": ["reject", "clarification", "controlled_degradation"]
+          },
+          "terminal_status": {"const": "complete"}
+        },
+        "required": ["disposition", "terminal_status"]
+      },
+      "then": {"required": ["unsupported_handling"]},
+      "else": {"not": {"required": ["unsupported_handling"]}}
+    },
+    {
+      "if": {
+        "properties": {"disposition": {"enum": ["reject", "clarification"]}},
+        "required": ["disposition"]
+      },
+      "then": {
+        "properties": {
+          "terminal_status": {"const": "complete"},
+          "artifact": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"disposition": {"const": "controlled_degradation"}},
+        "required": ["disposition"]
+      },
+      "then": {
+        "properties": {
+          "terminal_status": {"const": "complete"},
+          "artifact": {"type": "object"}
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

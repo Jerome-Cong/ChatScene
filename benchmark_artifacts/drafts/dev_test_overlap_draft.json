@@ -1,0 +1,172 @@
+{
+  "dev_path": "/home/shijie20/CodeSpace/ChatScene/query_lib/bus_ego_topdown_2d_dev_query_library_v0_2.jsonl",
+  "draft_decision": "accept_all_dev_intents_as_non_overlapping",
+  "exact_canonical_overlap": [],
+  "exact_canonical_overlap_count": 0,
+  "nearest_candidates": [
+    {
+      "decision_status": "draft",
+      "dev_intent_group_id": "BSG_DEV_v0_2_U02",
+      "draft_decision": "non_overlapping",
+      "novelty_note": "Numerical dynamics contradiction, not used by any locked-test unsupported intent.",
+      "requires_human_review": true,
+      "structured_jaccard": 0.375,
+      "test_intent_group_id": "BSG_v0_2_G06"
+    },
+    {
+      "decision_status": "draft",
+      "dev_intent_group_id": "BSG_DEV_v0_2_U03",
+      "draft_decision": "non_overlapping",
+      "novelty_note": "Actor-cardinality versus required-event contradiction, absent from the locked test's scope, topology, and rule-conflict cases.",
+      "requires_human_review": true,
+      "structured_jaccard": 0.333333,
+      "test_intent_group_id": "BSG_v0_2_G02"
+    },
+    {
+      "decision_status": "draft",
+      "dev_intent_group_id": "BSG_DEV_v0_2_U04",
+      "draft_decision": "non_overlapping",
+      "novelty_note": "Persistent-state versus terminal-motion contradiction, absent from the locked test.",
+      "requires_human_review": true,
+      "structured_jaccard": 0.333333,
+      "test_intent_group_id": "BSG_v0_2_G08"
+    },
+    {
+      "decision_status": "draft",
+      "dev_intent_group_id": "BSG_DEV_v0_2_S09",
+      "draft_decision": "non_overlapping",
+      "novelty_note": "A moving lead cyclist transitions from a shared lane into a cycle lane; locked-test cases focus on cyclists passing a stopped bus, crossing, detouring, or swerving.",
+      "requires_human_review": true,
+      "structured_jaccard": 0.25,
+      "test_intent_group_id": "BSG_v0_2_D07"
+    },
+    {
+      "decision_status": "draft",
+      "dev_intent_group_id": "BSG_DEV_v0_2_S07",
+      "draft_decision": "non_overlapping",
+      "novelty_note": "Driveway-egress interaction; the nearest locked-test car cut-in occurs inside a bus-stop area and results in a blocked docking path.",
+      "requires_human_review": true,
+      "structured_jaccard": 0.230769,
+      "test_intent_group_id": "BSG_v0_2_C09"
+    },
+    {
+      "decision_status": "draft",
+      "dev_intent_group_id": "BSG_DEV_v0_2_U01",
+      "draft_decision": "non_overlapping",
+      "novelty_note": "Signal-state and compliance-label contradiction; the locked test's rule contradiction concerns boarding where no bus stop exists.",
+      "requires_human_review": true,
+      "structured_jaccard": 0.2,
+      "test_intent_group_id": "BSG_v0_2_G02"
+    },
+    {
+      "decision_status": "draft",
+      "dev_intent_group_id": "BSG_DEV_v0_2_S01",
+      "draft_decision": "non_overlapping",
+      "novelty_note": "Right-turn and through-cyclist interaction at a signalized cycle crossing; the locked test uses cyclist interactions mainly around bus stops and bus departure paths.",
+      "requires_human_review": true,
+      "structured_jaccard": 0.181818,
+      "test_intent_group_id": "BSG_v0_2_E04"
+    },
+    {
+      "decision_status": "draft",
+      "dev_intent_group_id": "BSG_DEV_v0_2_S02",
+      "draft_decision": "non_overlapping",
+      "novelty_note": "Oncoming-motorcycle interaction during an unsignalized left-turn intent; locked-test motorcycle roles are chiefly rear approach, overtaking, filtering, wrong-way travel, or stop obstruction.",
+      "requires_human_review": true,
+      "structured_jaccard": 0.181818,
+      "test_intent_group_id": "BSG_v0_2_E04"
+    },
+    {
+      "decision_status": "draft",
+      "dev_intent_group_id": "BSG_DEV_v0_2_S04",
+      "draft_decision": "non_overlapping",
+      "novelty_note": "Cross-street red-light violation during the bus straight-through intent; no locked-test core event uses a traffic-signal phase conflict.",
+      "requires_human_review": true,
+      "structured_jaccard": 0.166667,
+      "test_intent_group_id": "BSG_v0_2_E04"
+    },
+    {
+      "decision_status": "draft",
+      "dev_intent_group_id": "BSG_DEV_v0_2_S06",
+      "draft_decision": "non_overlapping",
+      "novelty_note": "Alternating-priority roadworks bottleneck, rather than stop blockage, bus-bay exit, or queue bypass.",
+      "requires_human_review": true,
+      "structured_jaccard": 0.166667,
+      "test_intent_group_id": "BSG_v0_2_E04"
+    },
+    {
+      "decision_status": "draft",
+      "dev_intent_group_id": "BSG_DEV_v0_2_S08",
+      "draft_decision": "non_overlapping",
+      "novelty_note": "Side-road priority violation at a T-junction; locked-test motorcycle interactions are anchored to stops, queues, passing, or rear approach.",
+      "requires_human_review": true,
+      "structured_jaccard": 0.142857,
+      "test_intent_group_id": "BSG_v0_2_E12"
+    },
+    {
+      "decision_status": "draft",
+      "dev_intent_group_id": "BSG_DEV_v0_2_S11",
+      "draft_decision": "non_overlapping",
+      "novelty_note": "Roundabout-entry interaction, absent from the locked test's bus-stop and adjacent-crossing event inventory.",
+      "requires_human_review": true,
+      "structured_jaccard": 0.142857,
+      "test_intent_group_id": "BSG_v0_2_E12"
+    },
+    {
+      "decision_status": "draft",
+      "dev_intent_group_id": "BSG_DEV_v0_2_S12",
+      "draft_decision": "non_overlapping",
+      "novelty_note": "Opposing buses interact at an intersection; locked-test two-bus cases concern sequential stop service and single-file stop queues.",
+      "requires_human_review": true,
+      "structured_jaccard": 0.142857,
+      "test_intent_group_id": "BSG_v0_2_E12"
+    },
+    {
+      "decision_status": "draft",
+      "dev_intent_group_id": "BSG_DEV_v0_2_S03",
+      "draft_decision": "non_overlapping",
+      "novelty_note": "Signal-controlled queue context with a red-to-green phase change; locked-test following-vehicle behavior is tied to bus-stop approach or dwell rather than a traffic-signal cycle.",
+      "requires_human_review": true,
+      "structured_jaccard": 0.133333,
+      "test_intent_group_id": "BSG_v0_2_A01"
+    },
+    {
+      "decision_status": "draft",
+      "dev_intent_group_id": "BSG_DEV_v0_2_S10",
+      "draft_decision": "non_overlapping",
+      "novelty_note": "Median-refuge two-stage crossing with delayed entry into the bus-side carriageway; locked-test pedestrian crossings are bus-stop or crosswalk adjacent without this staged topology.",
+      "requires_human_review": true,
+      "structured_jaccard": 0.133333,
+      "test_intent_group_id": "BSG_v0_2_D07"
+    },
+    {
+      "decision_status": "draft",
+      "dev_intent_group_id": "BSG_DEV_v0_2_S05",
+      "draft_decision": "non_overlapping",
+      "novelty_note": "Lane-specific transit-signal priority; the locked test contains bus-only-lane operation but not an early transit phase relative to adjacent traffic.",
+      "requires_human_review": true,
+      "structured_jaccard": 0.117647,
+      "test_intent_group_id": "BSG_v0_2_F07"
+    }
+  ],
+  "overall_decision_status": "draft",
+  "review_scope": "Confirm 16 novelty notes; structured similarity is advisory only.",
+  "schema_version": "0.2",
+  "test_internal_duplicate_candidates": [
+    {
+      "decision_status": "draft",
+      "draft_decision": "review_possible_semantic_duplicate",
+      "left": "BSG_v0_2_A07",
+      "right": "BSG_v0_2_E03",
+      "structured_jaccard": 1.0
+    },
+    {
+      "decision_status": "draft",
+      "draft_decision": "review_possible_semantic_duplicate",
+      "left": "BSG_v0_2_B09",
+      "right": "BSG_v0_2_E06",
+      "structured_jaccard": 0.818182
+    }
+  ],
+  "test_path": "/home/shijie20/CodeSpace/ChatScene/query_lib/bus_ego_topdown_2d_query_library_v0_2.jsonl"
+}

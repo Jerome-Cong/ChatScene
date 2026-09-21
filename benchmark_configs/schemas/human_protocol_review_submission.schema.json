@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/human_protocol_review_submission.schema.json",
+  "title": "Completed independent review of unbound protocol proposals",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "workflow_type",
+    "packet_id",
+    "annotator_role",
+    "reviewer_id",
+    "source_binding",
+    "independent_without_peer_submission",
+    "submission_status",
+    "responses"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "workflow_type": {"const": "protocol_proposal_review"},
+    "packet_id": {"$ref": "#/definitions/sha256"},
+    "annotator_role": {"enum": ["annotator_a", "annotator_b"]},
+    "reviewer_id": {"type": "string", "minLength": 1},
+    "source_binding": {"type": "object", "minProperties": 1},
+    "independent_without_peer_submission": {"const": true},
+    "submission_status": {"const": "complete"},
+    "responses": {
+      "type": "array",
+      "minItems": 13,
+      "maxItems": 13,
+      "items": {
+        "type": "object",
+        "required": ["task_id", "subject_id", "subject_sha256", "response"],
+        "properties": {
+          "task_id": {"$ref": "#/definitions/sha256"},
+          "subject_id": {"type": "string", "minLength": 1},
+          "subject_sha256": {"$ref": "#/definitions/sha256"},
+          "response": {
+            "type": "object",
+            "required": ["verdict", "reason", "proposed_revision"],
+            "properties": {
+              "verdict": {
+                "enum": ["approve_proposal", "reject_proposal", "request_revision"]
+              },
+              "reason": {"type": "string", "minLength": 1},
+              "proposed_revision": {
+                "oneOf": [
+                  {"type": "null"},
+                  {"type": "object", "minProperties": 1}
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "definitions": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}

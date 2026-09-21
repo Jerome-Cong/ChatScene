@@ -1,0 +1,234 @@
+{
+  "schema_version": "0.1",
+  "evidence_type": "carla_local_contract_verification",
+  "evidence_revision": "v2",
+  "evidence_date": "2026-07-15",
+  "status": "passed",
+  "claim_scope": {
+    "contract_and_synthetic_integration_verified": true,
+    "single_human_gold_contract_verified_with_synthetic_fixtures": true,
+    "real_chatscene_generation_verified": false,
+    "real_carla_native_executability_verified": false,
+    "formal_method_result_verified": false,
+    "real_human_gold_created": false,
+    "method_performance_claimed": false
+  },
+  "source_state": {
+    "repository_head": "1f517720efcd0a4ae13d4e091891425386a02745",
+    "benchmark_worktree_frozen": false,
+    "benchmark_files_git_tracked": false,
+    "inventory_algorithm": "canonical_inventory_v0.1: canonical JSON over path/sha256/bytes records sorted by repository-relative path",
+    "generation_harness_file_count": 113,
+    "generation_harness_bytes": 1436899,
+    "generation_harness_tree_sha256": "1a51a5fa46835de1ba750622028c945cdadc114f96f1bdc4b542f5b4957a0dee",
+    "executed_test_file_count": 19,
+    "executed_test_bytes": 552404,
+    "executed_test_tree_sha256": "cc3cec894b6f7658a8b3a5335f4d0a5d0b514bb8c36f6ea489d8cfab97ee3732"
+  },
+  "execution_evidence_boundary": {
+    "raw_test_logs_persisted": false,
+    "test_status_and_elapsed_source": "interactive unittest output observed during this verification session",
+    "independently_recomputable_from_this_artifact": [
+      "source inventories and hashes",
+      "declared test-count arithmetic",
+      "bound readiness, Agent-draft, and MetaDrive artifact hashes and summaries"
+    ],
+    "not_independently_recomputable_from_this_artifact": [
+      "historical unittest pass/fail output",
+      "historical unittest elapsed times"
+    ],
+    "reverification_path": "rerun each exact command in test_runs against the bound source inventories"
+  },
+  "test_runs": [
+    {
+      "scope": "generation",
+      "command": "python3 -m unittest -v tests.bus_benchmark.test_generation",
+      "tests": 35,
+      "failures": 0,
+      "errors": 0,
+      "elapsed_seconds": 19.376
+    },
+    {
+      "scope": "semantic_metrics_cpd_provenance",
+      "command": "python3 -m unittest -v tests.bus_benchmark.test_semantic_pipeline tests.bus_benchmark.test_extractor_metamorphic tests.bus_benchmark.test_metrics tests.bus_benchmark.test_cpd_stats_audit tests.bus_benchmark.test_score_cpd_generation_chain tests.bus_benchmark.test_provenance",
+      "tests": 95,
+      "failures": 0,
+      "errors": 0,
+      "elapsed_seconds": 5.475
+    },
+    {
+      "scope": "agent_review_human_workflow_schema",
+      "command": "python3 -m unittest -v tests.bus_benchmark.test_agent_query_review tests.bus_benchmark.test_human_workflow tests.bus_benchmark.test_human_workflow_cli tests.bus_benchmark.test_schema",
+      "tests": 60,
+      "failures": 0,
+      "errors": 0,
+      "elapsed_seconds": 15.198
+    },
+    {
+      "scope": "runtime_method_result_judge",
+      "command": "python3 -m unittest -v tests.bus_benchmark.test_runtime tests.bus_benchmark.test_runtime_native_worker tests.bus_benchmark.test_method_result tests.bus_benchmark.test_method_result_integration tests.bus_benchmark.test_judge_pipeline tests.bus_benchmark.test_judge_response_chain",
+      "tests": 85,
+      "failures": 0,
+      "errors": 0,
+      "elapsed_seconds": 369.059
+    },
+    {
+      "scope": "metadrive_native_contract",
+      "command": "python3 -m unittest -v tests.bus_benchmark.test_metadrive_runtime_contract",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "elapsed_seconds": 15.513
+    },
+    {
+      "scope": "formal_freeze_live_chain_tamper_gates",
+      "command": "python3 -m unittest tests.bus_benchmark.test_freeze_contract.FormalFreezeContractTests.test_judge_development_chain_is_live_complete_and_config_bound -v",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "elapsed_seconds": 546.077
+    },
+    {
+      "scope": "formal_freeze_positive_round_trip",
+      "command": "python3 -m unittest tests.bus_benchmark.test_freeze_contract.FormalFreezeContractTests.test_complete_cross_referenced_bundle_freezes_and_verifies -v",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "elapsed_seconds": 550.043
+    },
+    {
+      "scope": "formal_freeze_single_human_gold_gates",
+      "command": "python3 -m unittest tests.bus_benchmark.test_freeze_contract.FormalFreezeContractTests.test_query_review_requires_one_complete_human_gold tests.bus_benchmark.test_freeze_contract.FormalFreezeContractTests.test_platform_requires_one_complete_human_gold tests.bus_benchmark.test_freeze_contract.FormalFreezeContractTests.test_single_human_gold_contracts_without_native_runtime -v",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "elapsed_seconds": 427.149
+    }
+  ],
+  "test_summary": {
+    "tests": 288,
+    "failures": 0,
+    "errors": 0,
+    "elapsed_seconds": 1947.89
+  },
+  "synthetic_metric_diagnostic": {
+    "scope": "one synthetic CARLA intent with precise/partial/vague surfaces and five repetitions per surface",
+    "output_count": 15,
+    "native_simulation": false,
+    "formal_admission": false,
+    "method_performance_claim": false,
+    "srs": 1.0,
+    "arc": 1.0,
+    "rsc": 1.0,
+    "iec_spec": 1.0,
+    "ego_gate_rate": 1.0,
+    "rqs": 1.0,
+    "vague_gap": 0.0,
+    "cpd_common": {
+      "joint_macro_mean": 0.8,
+      "partial_macro_mean": 0.8,
+      "vague_macro_mean": 0.8
+    },
+    "coverage": {
+      "candidate_queries": 2,
+      "eligible_queries": 2,
+      "value": 1.0
+    },
+    "limitations": [
+      "the fixture is deliberately constructed to satisfy its oracle",
+      "generation, Judge provider execution, independent UQH assessment, and native CARLA rollout are substituted or unavailable",
+      "the formal 76-candidate-per-style CPD admission gate is not satisfied by this minimal diagnostic"
+    ]
+  },
+  "readiness_diagnostics": [
+    {
+      "scope": "development",
+      "path": "benchmark_artifacts/evidence/chatscene_carla_dev_generation_preflight.json",
+      "sha256": "201dfd5127aa9da18d6012b6b02c8a88d430cb4be631cb897064caa390190957",
+      "bytes": 8203,
+      "query_count": 48,
+      "job_count": 240,
+      "formal_ready": false,
+      "execution_ready": false,
+      "formal_blocker_count": 12,
+      "execution_blocker_count": 6,
+      "blocker_count": 18,
+      "adapter_invoked": false,
+      "repetition_consumed": false
+    },
+    {
+      "scope": "test",
+      "path": "benchmark_artifacts/evidence/chatscene_carla_test_generation_preflight.json",
+      "sha256": "13eddb8e0a3b77c0e2c961dd686aa75a104336b393d878fd387712d9392db3f9",
+      "bytes": 8207,
+      "query_count": 252,
+      "job_count": 1260,
+      "formal_ready": false,
+      "execution_ready": false,
+      "formal_blocker_count": 12,
+      "execution_blocker_count": 6,
+      "blocker_count": 18,
+      "adapter_invoked": false,
+      "repetition_consumed": false
+    }
+  ],
+  "single_human_gold_workflow": {
+    "review_policy": "one_complete_human_gold_per_subject",
+    "mandatory_second_review": false,
+    "adjudication_required": false,
+    "pending_uncertain_or_rejected_is_gold": false,
+    "real_human_gold_records_created": 0,
+    "carla_stage_subjects": 444,
+    "currently_packet_generatable_query_subjects": 300,
+    "currently_blocked_platform_and_calibration_subjects": 144,
+    "explicit_verdict_entries_after_all_carla_sources_exist": 6560,
+    "minimum_post_test_subjects_per_method": 126,
+    "deferred_cross_platform_protocol_subjects": 13,
+    "authorship_trust_boundary": "external_human_custody_required"
+  },
+  "agent_semantic_draft": {
+    "path": "benchmark_artifacts/drafts/query_agent_semantic_review_v0_1.json",
+    "sha256": "269969352840f52e996cfe409ad76de26caf0605b0d62f8d0c1ac779d9d95d11",
+    "bytes": 3199559,
+    "artifact_id": "5437b406732ece9092b8ff9d7679221cc02f4ffe0680c648454420859aa13aa8",
+    "intent_groups": 100,
+    "subjects": 300,
+    "explicit_decision_entries": 6416,
+    "finding_linked_entries": 765,
+    "source_projection_default_entries": 5651,
+    "recommendations": {
+      "accept_current": 5831,
+      "revise_current": 553,
+      "reject_current": 10,
+      "human_judgment_required": 22
+    },
+    "subject_dispositions": {
+      "accept": 30,
+      "accept_with_attention": 21,
+      "revise": 249
+    },
+    "human_gold": false,
+    "human_submission_populated": false
+  },
+  "metadrive_development_probe": {
+    "path": "benchmark_artifacts/evidence/metadrive_native_probe_evidence_v0_1.json",
+    "sha256": "365f64b3efb22e07f38160eeb0b1d0af1399e5fabd4b5bafdf79e98466d2811e",
+    "bytes": 7937,
+    "source_revision": "85e5dadc6c7436d324348f6e3d8f8e680c06b4db",
+    "external_worktree_clean": true,
+    "positive_token_count": 13,
+    "expected_native_failure_count": 3,
+    "native_reset_and_zero_step": true,
+    "method_run_evidence": false,
+    "thirty_second_native_executability": false,
+    "human_gold": false
+  },
+  "real_artifact_inventory": {
+    "response_jsonl": 0,
+    "generation_run_manifest": 0,
+    "formal_method_result": 0,
+    "runtime_records": 0,
+    "real_human_gold": 0
+  },
+  "conclusion": "The current 113-file evaluator/generation harness and selected 288-test contract/integration suite pass. The one-complete-human-gold-per-subject workflow is implemented and machine drafts are ready, but real human gold remains zero. Raw unittest logs were not persisted, so historical pass status and elapsed time require command reruns for independent verification. Both CARLA readiness diagnostics remain NO-GO with 18 blockers, so this report is not real ChatScene generation, CARLA NE, formal method-result, human-gold, or method-performance evidence."
+}

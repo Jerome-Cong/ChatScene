@@ -1,0 +1,76 @@
+{
+  "schema_version": "0.1",
+  "evidence_type": "carla_local_contract_verification",
+  "evidence_date": "2026-07-15",
+  "status": "passed",
+  "claim_scope": {
+    "contract_and_synthetic_integration_verified": true,
+    "real_chatscene_generation_verified": false,
+    "real_carla_native_executability_verified": false,
+    "formal_method_result_verified": false,
+    "human_gold_created": false
+  },
+  "source_state": {
+    "repository_head": "1f517720efcd0a4ae13d4e091891425386a02745",
+    "benchmark_worktree_frozen": false,
+    "benchmark_files_git_tracked": false,
+    "generation_harness_file_count": 109,
+    "generation_harness_bytes": 1355809,
+    "generation_harness_tree_sha256": "334e16b60841da9ddb7f73b4692c041c504d60cb232984090bd27911a3ba7bd2",
+    "executed_test_file_count": 13,
+    "executed_test_bytes": 403738,
+    "executed_test_tree_sha256": "a8e69d66b31af297d67f46facd1209bacfd30bc91b2eb2f3abc33cce6e5af555"
+  },
+  "test_runs": [
+    {
+      "scope": "generation",
+      "command": "python3 -m unittest -v tests.bus_benchmark.test_generation",
+      "tests": 35,
+      "failures": 0,
+      "errors": 0,
+      "elapsed_seconds": 16.805
+    },
+    {
+      "scope": "semantic_metrics_cpd_provenance",
+      "command": "python3 -m unittest -v tests.bus_benchmark.test_semantic_pipeline tests.bus_benchmark.test_extractor_metamorphic tests.bus_benchmark.test_metrics tests.bus_benchmark.test_cpd_stats_audit tests.bus_benchmark.test_score_cpd_generation_chain tests.bus_benchmark.test_provenance",
+      "tests": 94,
+      "failures": 0,
+      "errors": 0,
+      "elapsed_seconds": 4.411
+    },
+    {
+      "scope": "runtime_method_result_judge",
+      "command": "python3 -m unittest -v tests.bus_benchmark.test_runtime tests.bus_benchmark.test_runtime_native_worker tests.bus_benchmark.test_method_result tests.bus_benchmark.test_method_result_integration tests.bus_benchmark.test_judge_pipeline tests.bus_benchmark.test_judge_response_chain",
+      "tests": 85,
+      "failures": 0,
+      "errors": 0,
+      "elapsed_seconds": 321.105
+    }
+  ],
+  "test_summary": {
+    "tests": 214,
+    "failures": 0,
+    "errors": 0
+  },
+  "readiness_diagnostics": [
+    {
+      "scope": "development",
+      "path": "benchmark_artifacts/evidence/chatscene_carla_dev_generation_preflight.json",
+      "sha256": "201dfd5127aa9da18d6012b6b02c8a88d430cb4be631cb897064caa390190957",
+      "bytes": 8203,
+      "query_count": 48,
+      "job_count": 240,
+      "blocker_count": 18
+    },
+    {
+      "scope": "test",
+      "path": "benchmark_artifacts/evidence/chatscene_carla_test_generation_preflight.json",
+      "sha256": "13eddb8e0a3b77c0e2c961dd686aa75a104336b393d878fd387712d9392db3f9",
+      "bytes": 8207,
+      "query_count": 252,
+      "job_count": 1260,
+      "blocker_count": 18
+    }
+  ],
+  "conclusion": "The local CARLA-first harness and synthetic end-to-end metric contracts pass, but the checked method and platform remain execution-NO-GO. This report is not generation, NE, human-gold, or formal benchmark evidence."
+}

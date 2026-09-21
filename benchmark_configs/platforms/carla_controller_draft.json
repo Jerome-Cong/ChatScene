@@ -1,0 +1,43 @@
+{
+  "schema_version": "0.1",
+  "status": "draft",
+  "controller_id": "carla-fixed-query-blind-v0.1",
+  "platform": "carla",
+  "query_blind": true,
+  "reads_query_metadata": false,
+  "reads_evaluation_metadata": false,
+  "ego_proxy": {
+    "length_m": 5.33,
+    "width_m": 2.1,
+    "proxy_id": "vehicle.chevrolet.impala"
+  },
+  "implementation": {
+    "module": "bus_benchmark.runtime_worker",
+    "class": "FixedIDMPIDBehavior",
+    "source_path": "/home/shijie20/CodeSpace/ChatScene/bus_benchmark/runtime_worker.py",
+    "source_sha256": "b1a52fe1ad5dbf24f57ce608387c7dcad499ee013f33bc5199268b00e3b2c4e8"
+  },
+  "parameters": {
+    "dt_seconds": 0.1,
+    "target_speed_m_s": 8.3333333333,
+    "lookahead_seconds": 1.0,
+    "lateral_kp": 1.2,
+    "lateral_ki": 0.0,
+    "lateral_kd": 0.2,
+    "max_front_wheel_rate_rad_s": 0.419,
+    "max_front_wheel_angle_rad": 0.603,
+    "lane_half_width_m": 2.1,
+    "idm_delta": 4.0,
+    "max_acceleration_m_s2": 0.7,
+    "comfortable_deceleration_m_s2": 2.0,
+    "max_deceleration_m_s2": 4.0,
+    "max_longitudinal_jerk_m_s3": 4.0,
+    "minimum_gap_m": 2.0,
+    "time_headway_seconds": 1.5
+  },
+  "action_contract": {
+    "lateral": "normalized steering [-1,1]",
+    "longitudinal": "separate throttle/brake [0,1]",
+    "braking_preserved": true
+  }
+}

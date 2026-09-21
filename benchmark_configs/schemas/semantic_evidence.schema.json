@@ -1,0 +1,130 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/semantic_evidence.schema.json",
+  "title": "Deterministic-first semantic evidence",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "query_id",
+    "run_id",
+    "repetition",
+    "method_id",
+    "platform",
+    "intent_group_id",
+    "statistical_intent_cluster_id",
+    "surface_style",
+    "expected_support",
+    "terminal_status",
+    "ego",
+    "atoms",
+    "common_atoms",
+    "complete_categories",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "query_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "repetition": {"type": "integer", "minimum": 0, "maximum": 4},
+    "method_id": {"type": "string", "minLength": 1},
+    "platform": {"enum": ["carla", "metadrive"]},
+    "intent_group_id": {"type": "string", "minLength": 1},
+    "statistical_intent_cluster_id": {"type": "string", "minLength": 1},
+    "surface_style": {"enum": ["precise", "partial", "vague"]},
+    "expected_support": {"enum": ["supported", "unsupported"]},
+    "terminal_status": {"enum": ["complete", "failed", "timeout"]},
+    "ego": {
+      "type": "object",
+      "required": [
+        "count",
+        "semantic_role",
+        "approved_proxy",
+        "deterministic",
+        "length_m",
+        "width_m"
+      ],
+      "properties": {
+        "count": {"type": "integer", "minimum": 0},
+        "semantic_role": {"enum": ["ego_bus", "bus", "bus_proxy", "other", "missing"]},
+        "approved_proxy": {"type": "boolean"},
+        "deterministic": {"type": "boolean"},
+        "length_m": {"type": "number", "minimum": 0},
+        "width_m": {"type": "number", "minimum": 0},
+        "blueprint": {"type": "string"},
+        "vehicle_model": {"type": "string"},
+        "proxy_id": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "atoms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["category", "predicate", "arguments", "polarity", "evidence_source"],
+        "properties": {
+          "atom_id": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
+          "category": {"enum": ["actor", "road", "spatial", "event", "temporal", "normative"]},
+          "predicate": {"type": "string", "minLength": 1},
+          "arguments": {"type": "object"},
+          "polarity": {"enum": ["present", "absent"]},
+          "evidence_source": {"const": "deterministic"},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "common_atoms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["dimension", "value"],
+        "properties": {
+          "dimension": {"type": "string", "minLength": 1},
+          "value": {},
+          "target_signature": {
+            "type": "object",
+            "required": ["actor_class"],
+            "properties": {
+              "actor_class": {
+                "enum": ["ego_bus", "motor_vehicle", "cyclist", "pedestrian"]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "complete_categories": {
+      "type": "array",
+      "items": {"enum": ["actor", "road", "spatial", "event", "temporal", "normative"]},
+      "uniqueItems": true
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source_response_sha256",
+        "source_artifact_sha256",
+        "extractor_id",
+        "extractor_version",
+        "extractor_config_sha256",
+        "created_at_utc"
+      ],
+      "properties": {
+        "source_response_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "source_artifact_sha256": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          ]
+        },
+        "extractor_id": {"type": "string", "minLength": 1},
+        "extractor_version": {"type": "string", "minLength": 1},
+        "extractor_config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "created_at_utc": {"type": "string", "format": "date-time"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

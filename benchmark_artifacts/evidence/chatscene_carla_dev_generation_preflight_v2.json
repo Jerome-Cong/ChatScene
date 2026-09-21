@@ -1,0 +1,304 @@
+{
+  "adapter_invoked": false,
+  "blocker_count": 17,
+  "blockers": [
+    {
+      "check_id": "method_config_status",
+      "reason_code": "method_config_not_frozen",
+      "scope": "formal"
+    },
+    {
+      "check_id": "query_roster_status",
+      "reason_code": "query_roster_not_confirmed",
+      "scope": "formal"
+    },
+    {
+      "check_id": "implementation_bundle_formal_contract",
+      "reason_code": "implementation_bundle_formal_contract_invalid",
+      "scope": "formal"
+    },
+    {
+      "check_id": "implementation_bundle_status",
+      "reason_code": "implementation_bundle_not_frozen",
+      "scope": "formal"
+    },
+    {
+      "check_id": "legacy_snapshot_bundle_coverage",
+      "reason_code": "snapshot_bundle_incomplete",
+      "scope": "formal"
+    },
+    {
+      "check_id": "formal_environment_passthrough",
+      "reason_code": "unbound_environment_passthrough",
+      "scope": "formal"
+    },
+    {
+      "check_id": "method_environment_status",
+      "reason_code": "environment_manifest_not_frozen",
+      "scope": "formal"
+    },
+    {
+      "check_id": "method_environment_inventory",
+      "reason_code": "environment_inventory_mismatch",
+      "scope": "formal"
+    },
+    {
+      "check_id": "harness_environment_status",
+      "reason_code": "environment_manifest_not_frozen",
+      "scope": "formal"
+    },
+    {
+      "check_id": "harness_environment_inventory",
+      "reason_code": "environment_inventory_mismatch",
+      "scope": "formal"
+    },
+    {
+      "check_id": "method_import_setgpu",
+      "reason_code": "accelerator_driver_unavailable",
+      "scope": "execution"
+    },
+    {
+      "check_id": "method_import_sentence_transformers",
+      "reason_code": "native_runtime_incompatible",
+      "scope": "execution"
+    },
+    {
+      "check_id": "method_import_carla",
+      "reason_code": "module_not_found",
+      "scope": "execution"
+    },
+    {
+      "check_id": "method_cuda_device",
+      "reason_code": "cuda_device_unavailable",
+      "scope": "execution"
+    },
+    {
+      "check_id": "retrieval_model_asset",
+      "reason_code": "model_cache_not_bundle_bound",
+      "scope": "formal"
+    },
+    {
+      "check_id": "llm_credential_contract",
+      "reason_code": "credential_overridden_by_method_source",
+      "scope": "execution"
+    },
+    {
+      "check_id": "carla_loopback_listener",
+      "reason_code": "carla_listener_unavailable",
+      "scope": "execution"
+    }
+  ],
+  "checks": [
+    {
+      "check_id": "query_roster_grid",
+      "observed": {
+        "job_count": 240,
+        "physical_line_compatible": true,
+        "query_count": 48
+      },
+      "reason_code": "ok",
+      "scope": "both",
+      "status": "pass"
+    },
+    {
+      "check_id": "method_config_status",
+      "observed": {
+        "status": "draft"
+      },
+      "reason_code": "method_config_not_frozen",
+      "scope": "formal",
+      "status": "blocker"
+    },
+    {
+      "check_id": "query_roster_status",
+      "observed": {
+        "decision_status": "draft"
+      },
+      "reason_code": "query_roster_not_confirmed",
+      "scope": "formal",
+      "status": "blocker"
+    },
+    {
+      "check_id": "implementation_bundle_live_bindings",
+      "reason_code": "ok",
+      "scope": "both",
+      "status": "pass"
+    },
+    {
+      "check_id": "implementation_bundle_formal_contract",
+      "reason_code": "implementation_bundle_formal_contract_invalid",
+      "scope": "formal",
+      "status": "blocker"
+    },
+    {
+      "check_id": "implementation_bundle_status",
+      "observed": {
+        "status": "draft"
+      },
+      "reason_code": "implementation_bundle_not_frozen",
+      "scope": "formal",
+      "status": "blocker"
+    },
+    {
+      "check_id": "legacy_snapshot_bundle_coverage",
+      "observed": {
+        "missing_snapshot_file_count": 126,
+        "registered_snapshot_file_count": 1,
+        "snapshot_file_count": 127
+      },
+      "reason_code": "snapshot_bundle_incomplete",
+      "scope": "formal",
+      "status": "blocker"
+    },
+    {
+      "check_id": "formal_environment_passthrough",
+      "observed": {
+        "entry_count": 10
+      },
+      "reason_code": "unbound_environment_passthrough",
+      "scope": "formal",
+      "status": "blocker"
+    },
+    {
+      "check_id": "method_environment_status",
+      "observed": {
+        "decision_status": "draft"
+      },
+      "reason_code": "environment_manifest_not_frozen",
+      "scope": "formal",
+      "status": "blocker"
+    },
+    {
+      "check_id": "method_environment_executable",
+      "reason_code": "ok",
+      "scope": "formal",
+      "status": "pass"
+    },
+    {
+      "check_id": "method_environment_inventory",
+      "observed": {
+        "declared_dependency_count": 0,
+        "dependency_inventory_matches": false,
+        "observed_dependency_count": 90,
+        "runtime_version_matches": false
+      },
+      "reason_code": "environment_inventory_mismatch",
+      "scope": "formal",
+      "status": "blocker"
+    },
+    {
+      "check_id": "harness_environment_status",
+      "observed": {
+        "decision_status": "draft"
+      },
+      "reason_code": "environment_manifest_not_frozen",
+      "scope": "formal",
+      "status": "blocker"
+    },
+    {
+      "check_id": "harness_environment_executable",
+      "reason_code": "ok",
+      "scope": "formal",
+      "status": "pass"
+    },
+    {
+      "check_id": "harness_environment_inventory",
+      "observed": {
+        "declared_dependency_count": 0,
+        "dependency_inventory_matches": false,
+        "observed_dependency_count": 224,
+        "runtime_version_matches": true
+      },
+      "reason_code": "environment_inventory_mismatch",
+      "scope": "formal",
+      "status": "blocker"
+    },
+    {
+      "check_id": "legacy_sandbox_executable",
+      "reason_code": "ok",
+      "scope": "execution",
+      "status": "pass"
+    },
+    {
+      "check_id": "method_import_setgpu",
+      "observed": {
+        "exception_type": "NVMLError_DriverNotLoaded",
+        "importable": false
+      },
+      "reason_code": "accelerator_driver_unavailable",
+      "scope": "execution",
+      "status": "blocker"
+    },
+    {
+      "check_id": "method_import_sentence_transformers",
+      "observed": {
+        "exception_type": "ImportError",
+        "importable": false
+      },
+      "reason_code": "native_runtime_incompatible",
+      "scope": "execution",
+      "status": "blocker"
+    },
+    {
+      "check_id": "method_import_carla",
+      "observed": {
+        "exception_type": "ModuleNotFoundError",
+        "importable": false
+      },
+      "reason_code": "module_not_found",
+      "scope": "execution",
+      "status": "blocker"
+    },
+    {
+      "check_id": "method_cuda_device",
+      "observed": {
+        "available": false,
+        "device_count": 0
+      },
+      "reason_code": "cuda_device_unavailable",
+      "scope": "execution",
+      "status": "blocker"
+    },
+    {
+      "check_id": "retrieval_model_asset",
+      "observed": {
+        "bundle_bound": false
+      },
+      "reason_code": "model_cache_not_bundle_bound",
+      "scope": "formal",
+      "status": "blocker"
+    },
+    {
+      "check_id": "llm_credential_contract",
+      "observed": {
+        "environment_credential_present": false,
+        "method_source_overrides_environment": true
+      },
+      "reason_code": "credential_overridden_by_method_source",
+      "scope": "execution",
+      "status": "blocker"
+    },
+    {
+      "check_id": "carla_loopback_listener",
+      "observed": {
+        "listening": false,
+        "port": 2000
+      },
+      "reason_code": "carla_listener_unavailable",
+      "scope": "execution",
+      "status": "blocker"
+    }
+  ],
+  "execution_ready": false,
+  "formal_ready": false,
+  "job_count": 240,
+  "method_id": "chatscene_carla_v0_1",
+  "platform": "carla",
+  "preflight_type": "generation_preflight_v0.1",
+  "query_count": 48,
+  "query_text_disclosed": false,
+  "ready": false,
+  "repetition_consumed": false,
+  "schema_version": "0.1",
+  "secret_values_disclosed": false
+}
