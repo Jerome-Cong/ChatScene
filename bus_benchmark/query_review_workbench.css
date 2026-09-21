@@ -1,0 +1,127 @@
+/* Scoped to this widget: do not change the surrounding notebook or Jupyter UI. */
+.query-review-workbench {
+  --review-border: #dce5df;
+  --review-green: #236b56;
+  /* Keep this reading surface legible inside either Jupyter theme. */
+  --jp-ui-font-color0: #202f32;
+  --jp-ui-font-color1: #202f32;
+  --jp-ui-font-color2: #53645a;
+  --jp-content-font-color1: #202f32;
+  --jp-content-font-color2: #53645a;
+  --jp-layout-color0: #fff;
+  --jp-layout-color1: #f4f6f3;
+  --jp-layout-color2: #e9efeb;
+  --jp-layout-color3: #dce5df;
+  --jp-widgets-color: #202f32;
+  --jp-widgets-label-color: #202f32;
+  --jp-widgets-readout-color: #202f32;
+  --jp-widgets-input-color: #202f32;
+  --jp-widgets-input-background-color: #fff;
+  --jp-widgets-input-border-color: #c7d4cb;
+  color: #202f32;
+  background: #f4f6f3;
+  color-scheme: light;
+  padding: 12px;
+  box-sizing: border-box;
+  overflow: visible;
+  width: 100%;
+  min-width: 0;
+  gap: 10px;
+}
+.query-review-workbench .review-workspace {
+  display: grid;
+  grid-template-columns: minmax(260px, .8fr) minmax(0, 1.7fr);
+  gap: 18px;
+  align-items: start;
+  overflow: visible;
+}
+/* Jupyter's output wrappers otherwise intercept sticky scrolling. Only the
+   output containing this workbench opts out, not other cells or the notebook. */
+.jp-OutputArea-output:has(> .query-review-workbench),
+.jp-OutputArea-child:has(> .jp-OutputArea-output > .query-review-workbench),
+.jp-OutputArea:not(.jp-mod-outputsScrolled):has(> .jp-OutputArea-child > .jp-OutputArea-output > .query-review-workbench) {
+  overflow: visible;
+  min-width: 0;
+}
+.query-review-workbench .review-query {
+  position: sticky;
+  top: 12px;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  min-width: 0;
+}
+.query-review-workbench .review-main,
+.query-review-workbench .review-step,
+.query-review-workbench .review-cards {
+  min-width: 0;
+  gap: 12px;
+}
+.query-review-workbench .review-card {
+  border: 1px solid var(--review-border);
+  border-radius: 10px;
+  padding: 12px;
+  margin: 0 0 10px;
+  gap: 8px;
+  background: #fff;
+  scroll-margin: 24px;
+}
+.query-review-workbench .review-card:focus-within {
+  outline: 3px solid var(--review-green);
+  outline-offset: 2px;
+}
+.query-review-workbench .review-actions,
+.query-review-workbench .review-toolbar {
+  flex-wrap: wrap;
+  gap: 7px;
+  align-items: center;
+}
+.query-review-workbench .review-actions > .widget-button {
+  width: auto;
+  min-width: 96px;
+  height: auto;
+  min-height: 34px;
+  white-space: normal;
+  border-radius: 6px;
+  padding: 5px 10px;
+}
+.query-review-workbench .review-step > .widget-html,
+.query-review-workbench .review-card > .widget-html {
+  flex-shrink: 0;
+}
+.query-review-workbench .review-tabs > .lm-TabBar,
+.query-review-workbench .review-tabs > .p-TabBar {
+  height: auto;
+  min-height: 32px;
+  overflow: visible;
+}
+.query-review-workbench .review-tabs .lm-TabBar-content,
+.query-review-workbench .review-tabs .p-TabBar-content {
+  flex-wrap: wrap;
+}
+.query-review-workbench .review-tabs > .widget-tab-bar .lm-TabBar-tab,
+.query-review-workbench .review-tabs > .widget-tab-bar .p-TabBar-tab {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: none;
+}
+.query-review-workbench .review-status {
+  color: #53645a;
+  font-size: 12px;
+}
+.query-review-workbench .widget-html-content {
+  overflow-wrap: anywhere;
+}
+.query-review-workbench .review-guide {
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 1000px) {
+  .query-review-workbench .review-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .query-review-workbench .review-query {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+}

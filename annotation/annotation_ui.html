@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>LangTrajEval · 标注工作台</title>
+<style>
+:root{--ink:#202f32;--muted:#697779;--line:#dfe5e2;--paper:#fff;--bg:#f4f6f3;--green:#236b56;--pale:#e9f3ed;--amber:#936123;--sans:Inter,"PingFang SC","Microsoft YaHei",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.6 var(--sans)}button,input,textarea,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.45}button,a,input,textarea,select{outline-offset:4px}button:focus-visible,a:focus-visible{outline:3px solid #6cad92}button{border:1px solid var(--line);background:white;color:var(--ink);border-radius:8px;padding:9px 15px;font-weight:600;transition:background .15s}button:hover:not(:disabled){background:#eff4f0}button.primary{background:var(--green);color:white;border-color:var(--green)}button.primary:hover:not(:disabled){background:#19503f}button.quiet{background:transparent;border-color:transparent;color:var(--muted)}header{height:76px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 34px;gap:16px}.brand{display:flex;align-items:center;gap:12px;font-size:18px;letter-spacing:-.4px}.mark{display:grid;place-items:center;background:var(--green);color:white;width:34px;height:34px;border-radius:10px;font-size:21px}.brand small{font-size:12px;color:var(--muted);border-left:1px solid var(--line);padding-left:14px;margin-left:7px;letter-spacing:0}.header-actions{display:flex;gap:9px}.layout{max-width:1510px;display:grid;grid-template-columns:246px minmax(0,1fr);margin:auto;min-height:calc(100vh - 76px)}aside{padding:30px 23px;border-right:1px solid var(--line)}.eyebrow{font-size:10px;letter-spacing:2px;font-weight:700;color:var(--muted);text-transform:uppercase}.project{font-weight:700;font-size:17px;margin:8px 0 5px}.muted{color:var(--muted)}.small{font-size:12px}.pill{display:inline-block;padding:3px 9px;border-radius:5px;background:var(--pale);color:var(--green);font-size:11px;font-weight:600}.pill.demo{background:#faf0df;color:var(--amber)}.progress-label{display:flex;justify-content:space-between;margin-top:27px;font-size:12px}progress{width:100%;height:6px;border:0;border-radius:5px;overflow:hidden;margin:9px 0 23px;background:#dfe8df}progress::-webkit-progress-bar{background:#dfe8df}progress::-webkit-progress-value{background:var(--green)}progress::-moz-progress-bar{background:var(--green)}.filters{display:grid;gap:7px}.filter{text-align:left;display:flex;justify-content:space-between;border-color:transparent;background:transparent;font-weight:500}.filter[aria-pressed=true]{background:#e4eee6;color:var(--green);font-weight:700}.filter span{font-size:12px}.queue{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin:14px 0 25px;max-height:224px;overflow:auto;padding:3px}.queue button{padding:5px 0;font-size:11px;font-weight:500;border-radius:6px}.queue button.done{background:#e4eee6;border-color:#d1dfd4;color:var(--green)}.queue button.low{box-shadow:inset 0 -3px #c59a48}.queue button[aria-current=true]{outline:2px solid var(--green);outline-offset:1px;font-weight:700}.aside-bottom{border-top:1px solid var(--line);padding-top:20px}.aside-bottom input{width:100%;margin:8px 0;border:1px solid var(--line);border-radius:6px;background:#fff;padding:8px 10px}.save-status{font-size:11px;margin-top:12px;color:var(--muted)}main{padding:30px 38px 20px;min-width:0}.topline{display:flex;align-items:center;justify-content:space-between;gap:15px}.breadcrumb{color:var(--muted);font-size:12px}.breadcrumb span{margin:0 8px;color:#a6afab}.demo-notice{font-size:12px;color:var(--amber);margin:15px 0 22px;padding:10px 13px;border:1px solid #ebdfc5;border-radius:7px;background:#fcf8ef}.heading{display:flex;align-items:flex-end;justify-content:space-between;gap:15px;margin-bottom:22px}h1{font-size:26px;line-height:1.35;letter-spacing:-.6px;margin:5px 0 6px}.heading p{margin:0;font-size:12px;color:var(--muted)}.step{font-size:12px;color:var(--muted);white-space:nowrap}.workspace{display:grid;grid-template-columns:minmax(0,1.13fr) minmax(310px,1fr);gap:23px;align-items:start}.column{display:grid;gap:18px}.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:23px;min-width:0}.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px;font-weight:650}.section-title .number{display:inline-grid;place-items:center;border:1px solid var(--line);width:23px;height:23px;border-radius:50%;font-size:11px;margin-right:8px;color:var(--muted)}.instruction{font-size:21px;line-height:1.65;font-weight:500;margin:8px 0 21px;overflow-wrap:anywhere;white-space:pre-wrap}.identifiers{font:10px/1.8 ui-monospace,monospace;color:var(--muted);border-top:1px solid #edf0ed;padding-top:13px;overflow-wrap:anywhere}.ast{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.85 ui-monospace,SFMono-Regular,Consolas,monospace;background:#f5f7f4;border:1px solid #e8ece5;border-radius:8px;padding:17px;color:#315747;margin:0}.program-empty{text-align:center;padding:22px 10px;color:var(--muted);background:#f7f8f5;border:1px dashed var(--line);border-radius:8px}.program-empty b{display:block;margin-bottom:7px;color:#596862;font-weight:500}.legend{font-size:11px;color:var(--muted);margin:12px 0 0}.draft-card{background:#f0f5ef;border-color:#dbe6da}.draft-values{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}.draft-values span{font-size:11px;padding:4px 8px;background:#fff9;border:1px solid #dbe4d8;border-radius:5px}.draft-reason{font-size:12px;line-height:1.8;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}.draft-caveat{font-size:11px;color:var(--muted);margin:13px 0 0;border-top:1px solid #dbe4d8;padding-top:10px}.review-card{padding:23px 24px}.review-card>.section-title{margin-bottom:4px}.review-intro{color:var(--muted);font-size:12px;margin:0 0 22px}fieldset{border:0;padding:0;margin:0 0 22px;min-width:0}legend{font-weight:600;font-size:13px;padding:0}.field-help{font-size:11px;color:var(--muted);margin:5px 0 10px}.choices{display:flex;gap:7px}.choice{flex:1;min-width:0;padding:9px 5px;font-size:12px;font-weight:500;display:flex;justify-content:center;gap:5px;align-items:center}.choice::before{content:"";width:11px;height:11px;border:1px solid #bac6bd;border-radius:50%;flex-shrink:0}.choice[aria-checked=true]{border-color:var(--green);background:var(--pale);color:var(--green);font-weight:650}.choice[aria-checked=true]::before{border:3px solid var(--green);background:#fff}.changed{color:var(--amber);font-size:10px;margin-left:7px;font-weight:400}.field-text,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:10px 12px;resize:vertical;background:#fcfdfb;min-height:76px;font-size:12px;color:var(--ink)}.notes-label{font-size:12px;display:block;margin-bottom:7px}.submission{border-top:1px solid var(--line);padding-top:16px}.submission .primary{width:100%;padding:11px}.submission p{font-size:11px;text-align:center;color:var(--muted);margin:9px 0 0}.nav-footer{display:flex;align-items:center;justify-content:space-between;margin-top:20px;padding:0 0 12px;gap:12px}.nav-footer div{display:flex;gap:6px}.nav-footer p{font-size:11px;color:var(--muted);margin:0}.empty{padding:70px 25px;text-align:center;background:white;border:1px solid var(--line);border-radius:12px}.empty h2{font-size:22px}.empty p{color:var(--muted)}.empty button{margin:8px}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#233c32;color:white;padding:12px 22px;border-radius:9px;box-shadow:0 7px 30px #12291a26;max-width:90vw;z-index:5;font-size:13px}.toast.error{background:#873e32}dialog{border:1px solid var(--line);border-radius:14px;padding:30px;max-width:560px;width:calc(100% - 30px);color:var(--ink);box-shadow:0 20px 80px #12291a25}dialog::backdrop{background:#162a2255}dialog h2{margin:0 0 12px;font-size:22px}dialog p,dialog li{font-size:13px;color:var(--muted)}dialog li{margin-bottom:10px}.dialog-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:22px}.import-box{padding:18px;background:var(--bg);border:1px dashed #b5c7b8;border-radius:8px;margin:18px 0}.import-box input{width:100%;font-size:12px}.import-error{color:#a43d2d;font-size:12px;white-space:pre-wrap}[hidden]{display:none!important}
+@media(min-width:1450px){main{padding:36px 48px}.card{padding:26px}.instruction{font-size:23px}}@media(max-width:1100px){.layout{grid-template-columns:210px minmax(0,1fr)}aside{padding:24px 16px}main{padding:24px}.workspace{grid-template-columns:1fr}.column{gap:15px}.instruction{font-size:20px}.brand small{display:none}}@media(max-width:650px){header{height:auto;padding:15px 16px;flex-wrap:wrap}.brand{font-size:16px}.header-actions{margin-left:auto}.header-actions button{padding:7px 9px;font-size:12px}.layout{display:block}aside{border-right:0;border-bottom:1px solid var(--line);padding:17px}.project,.aside-bottom,.queue,.queue-title,aside>.eyebrow{display:none}.progress-label{margin-top:10px}progress{margin-bottom:8px}.filters{display:flex}.filter{flex:1;padding:8px;font-size:12px;gap:5px}main{padding:20px 16px}h1{font-size:23px}.card{padding:19px}.nav-footer{align-items:flex-start}.nav-footer p{max-width:45%}.heading{align-items:start}.step{padding-top:9px}}
+.capability-reference{margin-top:18px;border-top:1px solid var(--line);padding-top:17px}.capability-reference h3{font-size:13px;margin:0}.capability-reference p{font-size:12px;line-height:1.8;margin:8px 0;color:var(--muted)}.capability-reference button{padding:6px 9px;font-size:11px}.capability-version{font-size:11px;color:var(--muted);overflow-wrap:anywhere}.capability-decisions{padding:12px 14px;background:var(--pale);border-radius:8px;margin-top:12px}.capability-decisions p{color:var(--ink);font-size:11px}.capability-decisions p:first-child{margin-top:0}.capability-decisions p:last-child{margin-bottom:0}#capability-dialog{max-width:780px;max-height:85vh;overflow-y:auto}#capability-dialog h3{font-size:15px;margin:23px 0 8px}#capability-dialog ul{padding-left:20px}#capability-dialog li{line-height:1.85;overflow-wrap:anywhere}#capability-dialog li strong{color:var(--ink)}#capability-dialog .dialog-top{display:flex;justify-content:space-between;align-items:start;gap:15px}#capability-dialog .dialog-top button{flex-shrink:0}
+.field-criteria{font-size:11px;margin-top:8px;color:var(--muted)}.field-criteria summary{cursor:pointer;color:var(--green)}.field-criteria ul{padding-left:17px;margin:7px 0}.field-criteria li{margin:5px 0}.protocol-notice{font-size:12px;color:var(--amber);background:#fcf8ef;border:1px solid #ebdfc5;border-radius:8px;padding:12px 15px;margin:14px 0}.protocol-notice button{font-size:11px;margin-top:7px}#help-dialog{max-width:760px;max-height:85vh;overflow-y:auto}#help-dialog h3{font-size:15px;margin:22px 0 7px}#guide-fields ul{padding-left:20px}.guide-top{display:flex;justify-content:space-between;align-items:start;gap:12px}#legacy-field-note{font-size:12px;white-space:pre-wrap;color:var(--amber);padding:10px;background:#fcf8ef;border-radius:7px;margin-bottom:14px}
+</style>
+</head>
+<body>
+<header><div class="brand"><span class="mark" aria-hidden="true">↗</span><strong>LangTrajEval</strong><small>ANNOTATION STUDIO</small></div><div class="header-actions"><button id="capability-button" class="quiet" hidden>表示能力</button><button id="help-button" class="quiet">标注指南</button><button id="load-button">加载任务</button><button id="export-button" class="primary">导出结果 ↗</button></div></header>
+<div class="layout">
+<aside aria-label="标注进度与导航">
+  <div class="eyebrow">WORKSPACE / 01</div><div class="project" id="project-name"></div><span class="pill" id="mode-badge"></span>
+  <div class="progress-label"><span>已提交</span><strong id="progress-text"></strong></div><progress id="progress" aria-label="已提交进度"></progress>
+  <nav class="filters" aria-label="记录筛选"><button class="filter" data-filter="all">全部记录 <span></span></button><button class="filter" data-filter="pending">待提交 <span></span></button><button class="filter" data-filter="low">低信心复看 <span></span></button></nav>
+  <div class="eyebrow queue-title" style="margin-top:30px">RECORDS</div><div id="queue" class="queue" aria-label="跳转记录"></div>
+  <div class="aside-bottom"><label class="small" for="annotator">标注者</label><input id="annotator" value="" maxlength="80" placeholder="姓名或代号"><div class="small muted">逐条确认。草稿不会自动计入结果。</div></div>
+  <p id="save-status" class="save-status" role="status"></p>
+</aside>
+<main>
+  <div class="topline"><div class="breadcrumb">工作台 <span>/</span> <span id="task-title" style="margin:0;color:inherit"></span></div><span class="pill">本地离线</span></div>
+  <div id="demo-notice" class="demo-notice">交互验收模式 · 样例与草稿均为演示内容，不作为人工抽检结果。</div>
+  <div id="protocol-notice" class="protocol-notice" hidden><div>已切换到当前任务的标注口径。旧记录保留原选择，需逐条复核后重新提交；选项不会自动更改。</div><button id="legacy-export" hidden>下载旧版原始结果</button></div>
+  <div class="heading"><div><div class="eyebrow" style="margin-top:18px">REVIEW & ANNOTATE</div><h1 id="page-title">让每一次判断都有依据。</h1><p id="task-description"></p></div><div class="step" id="position"></div></div>
+  <div id="record-view" class="workspace">
+    <div class="column"><section class="card"><div class="section-title"><span><span class="number">01</span>指令原文</span><span id="status-badge" class="pill"></span></div><div id="instruction" class="instruction"></div><div id="identifiers" class="identifiers"></div></section>
+      <section class="card"><div class="section-title"><span><span class="number">02</span>程序与上下文</span><span class="small muted">只读</span></div><div id="context-view"></div><section id="capability-reference" class="capability-reference" aria-label="当前表示能力" hidden><div class="section-title" style="margin-bottom:5px"><h3>当前表示能力</h3><button id="capability-details">查看完整说明 ↗</button></div><div id="capability-version" class="capability-version"></div><p id="capability-summary"></p><p id="capability-fallback" hidden></p><div id="capability-decisions" class="capability-decisions" hidden></div></section></section>
+      <section class="card draft-card"><div class="section-title"><span><span class="number">03</span>Agent 草稿</span><span class="small muted">供复查</span></div><div id="draft-values" class="draft-values"></div><p id="draft-reason" class="draft-reason"></p><p class="draft-caveat">草稿可能有偏差。请独立判断，有异议可直接更改。</p></section>
+    </div>
+    <section class="card review-card"><div class="section-title"><span><span class="number">04</span>你的复查</span><span id="review-state" class="pill"></span></div><p class="review-intro">已预填草稿，只需修改有异议的判断。</p><form id="review-form"><div id="fields"></div><label class="notes-label" for="notes">备注 <span class="muted">· 可选</span></label><textarea id="notes" placeholder="记录你的判断依据或疑问…"></textarea><div class="submission" style="margin-top:20px"><button class="primary" id="submit-button" type="submit">确认并提交 →</button><p>提交当前记录，自动进入下一条待提交记录。</p></div></form></section>
+  </div>
+  <div id="empty-view" class="empty" hidden><span class="pill">REVIEW STATUS</span><h2 id="empty-title"></h2><p id="empty-description"></p><button id="show-all">查看全部记录</button><button id="empty-export" class="primary">导出已提交结果 ↗</button></div>
+  <footer class="nav-footer"><p>所有操作留在本机 · 导出后再交回结果</p><div><button id="previous" class="quiet">← 上一条</button><button id="next">下一条 →</button></div></footer>
+</main></div>
+<dialog id="load-dialog" aria-labelledby="load-title"><h2 id="load-title">加载标注任务</h2><p>同时选择 <b>annotation_task.json</b> 和 <b>items.json</b>，可附带 <b>drafts.json</b>。文件内容在本机读取。</p><div class="import-box"><input id="task-files" type="file" accept=".json,application/json" multiple aria-label="选择任务、样本和草稿文件"></div><p>加载成功后切换任务。请先导出当前已提交结果；尚未提交的修改仅保留在当前任务的浏览器存档中。</p><p id="import-error" class="import-error" role="alert"></p><div class="dialog-actions"><button id="demo-button">进入演示任务</button><button data-close="load-dialog">取消</button><button id="import-button" class="primary">加载所选文件</button></div><hr style="border:0;border-top:1px solid var(--line);margin:24px 0 16px"><p>续标当前任务：导入之前下载的结果，只恢复匹配记录；与当前已有修改冲突时拒绝导入。</p><input id="resume-file" type="file" accept=".json,application/json" aria-label="导入当前任务的已提交结果"></dialog>
+<dialog id="help-dialog" aria-labelledby="help-title"><div class="guide-top"><div><h2 id="help-title">标注指南与统一口径</h2><p id="guide-version"></p></div><button data-close="help-dialog">关闭</button></div><h3>操作步骤</h3><ol id="guide"></ol><div id="guide-principles"></div><div id="guide-fields"></div><div id="guide-examples"></div><p>查看或关闭指南不会替你确认任何一条记录。未提交修改会暂存，但不会出现在结果里；低信心记录可从左侧返回复看。</p><p>浏览器存档仅是便利功能，请及时下载结果。窄屏下可在首次提交时填写标注者代号。</p><div class="dialog-actions"><button class="primary" data-close="help-dialog">开始复查</button></div></dialog>
+<dialog id="annotator-dialog" aria-labelledby="annotator-title"><h2 id="annotator-title">记录这次判断的标注者</h2><p>填写一次姓名或代号，之后所有判断都可以点击完成。</p><form id="annotator-form"><input id="annotator-entry" aria-label="标注者姓名或代号" required maxlength="80" style="padding:10px;width:100%"><div class="dialog-actions"><button type="button" data-close="annotator-dialog">取消</button><button type="submit" class="primary">保存并提交当前条</button></div></form></dialog>
+<dialog id="capability-dialog" aria-labelledby="capability-title"><div class="dialog-top"><div><h2 id="capability-title">当前程序的表示能力</h2><div id="capability-dialog-version" class="capability-version"></div></div><button data-close="capability-dialog">关闭</button></div><p id="capability-dialog-scope"></p><p id="capability-dialog-fallback"></p><div id="capability-sections"></div></dialog>
+<div id="toast" class="toast" role="status" hidden></div>
+<script id="demo-data" type="application/json">{"task": {"task_id": "l3_parse_accuracy", "title": "L3 解析质量抽检", "demo": true, "description": "对照指令与程序，复查语义、结构和拒绝是否合理。", "instructions": ["先阅读统一口径与当前表示能力，再读指令和程序。", "有程序时分别判断语义完整性和结构正确性；没有程序时判断拒绝是否合理。", "草稿只是初始建议；按字段旁的判据独立选择。合理拒绝时可填写最小缺失能力，漏解析或歧义的依据写在备注。", "逐条提交，低信心项可返回复看，最后下载已提交结果。"], "fields": [{"id": "semantic_complete", "label": "语义是否完整？", "help": "检查全部明确要求；部分覆盖与完全不符分开判断，不能用常识补全程序。", "type": "choice", "options": [{"value": "Y", "label": "完整", "description": "程序覆盖原指令的全部明确语义，无需额外假设或补全。"}, {"value": "N", "label": "不完整", "description": "核心要求未被表达或含义错误，不能视为有效的部分覆盖。"}, {"value": "partial", "label": "部分覆盖", "description": "程序表达了一部分要求，但遗漏其余明确行为、修饰或关系。"}], "required": true, "when": {"status": "parsed"}}, {"id": "structure_correct", "label": "结构是否正确？", "help": "检查角色、先后关系、时间窗口和参数是否忠实；结构合法不等于结构正确。", "type": "choice", "options": [{"value": "Y", "label": "是", "description": "角色绑定、时序关系、窗口和参数均与原指令一致。"}, {"value": "N", "label": "否", "description": "存在明确错误，或漏掉了指令要求的角色、先后等结构约束。"}, {"value": "ambiguous", "label": "有歧义", "description": "指令或对应程序有多种合理解读，暂不能确定结构对错。"}], "required": true, "when": {"status": "parsed"}}, {"id": "rejection_correct", "label": "这次拒绝是否合理？", "help": "是＝合理拒绝；否＝本可表达却漏解析；有歧义＝现有依据不足以判断。", "type": "choice", "options": [{"value": "Y", "label": "是", "description": "合理拒绝：至少一项必需语义超出当前表示能力，且不能由合法组合完整表达；可填写最小缺失能力。"}, {"value": "N", "label": "否", "description": "漏解析：全部要求本可由当前能力完整表达，却未生成程序，可能是保守拒判或解析遗漏；请在备注记录可行表达依据。"}, {"value": "ambiguous", "label": "有歧义", "description": "角色、时间或可表达性仍无法确定；保留歧义，必要时选择低信心并备注疑问。"}], "required": true, "when": {"status": "failure"}}, {"id": "missing_capability", "label": "缺少什么最小能力？", "help": "仅合理拒绝（Y）时显示，可选填写最小能力缺口。漏解析（N）的可行表达或歧义依据写在备注。", "type": "text", "when": {"status": "failure", "field": "rejection_correct", "equals": "Y"}, "placeholder": "例如：缺少持续直行的表达能力"}, {"id": "confidence", "label": "你对判断有多大把握？", "help": "选择对当前判断的把握；低信心进入复看列表，不改变其他判断的含义。", "type": "choice", "required": true, "options": [{"value": "high", "label": "高", "description": "依据清楚，能解释为何选择当前判断。"}, {"value": "medium", "label": "中", "description": "总体有依据，但仍有局部解释或边界不确定。"}, {"value": "low", "label": "低", "description": "判断依据不足，需要再次复看；不强迫选择高信心。"}]}], "capabilities": {"version": "W5 L3 表示能力 · 2026-09-05 快照", "summary": "基础谓词：accel 加速、decel 减速、stop 停车、turn 转弯、lanechange 无方向变道。时序与逻辑：eventually、always、until、and、or、not；组合有限制。overtake / bypass / follow 可写入结构，但尚不能由正式执行器评分。", "scope": "本说明对所有记录一致，依据当前 L3 schema、解析规则与执行器整理；不包含单条记录的模型失败理由。判断的是指令能否完整表达；表示能力缺口、解析器漏解析和执行器尚未实现应分开看。", "sections": [{"title": "1. 基础谓词：已定义并接入执行器", "entries": [{"name": "accel · 加速", "description": "逐时刻检查加速度是否达到阈值；参数 threshold 的单位是 m/s²。不能顺带表达直行、平顺性或任意强度修饰。"}, {"name": "decel · 减速", "description": "逐时刻检查减速度是否达到阈值；参数 threshold 的单位是 m/s²。减速与停车是不同要求。"}, {"name": "stop · 停车", "description": "逐时刻检查速度是否不超过阈值；参数 threshold 的单位是 m/s。eventually(stop) 表示窗口内达到停车条件；always(stop) 可表达指定窗口内持续满足低速条件，不自动包含停车地点或意图。"}, {"name": "turn · 左 / 右转", "description": "参数为 direction（left / right）与航向变化阈值（rad）。依据整段窗口起终点的净航向差，不能定位逐时刻转弯事件，因此不能放在 always 或 until 内。"}, {"name": "lanechange · 无方向变道", "description": "只有 minimum_duration（秒）参数，当前解析规则采用 0.5 s 驻留；没有左右方向参数。见证时刻后须留足驻留窗口，不能放在 always 或 until 内。"}]}, {"title": "2. 时序与逻辑：允许的组合边界", "entries": [{"name": "eventually · 窗口内至少一次", "description": "要求子表达式在指定区间内至少一次成立。分别要求 A、B 最终发生，并不保证先 A 后 B。"}, {"name": "always · 指定区间始终成立", "description": "当前本地解析校验要求内部涉及的谓词仅限 accel / decel / stop；不能用于 turn、lanechange 或交互占位谓词。逻辑组合及允许的嵌套时序还须满足总时间窗口限制。"}, {"name": "until · 受限的先后转换", "description": "当前解析规则仅用于 accel / decel / stop 的两阶段顺序，例如减速直到停车：后项须在给定区间内出现，前项从起点持续到后项见证之前，不要求见证时刻前项仍成立。下界必须是一个采样步，防止后项在起点就发生；两侧可用点态逻辑组合，不可再嵌套时序算子。"}, {"name": "and · 同时满足 / or · 至少一项 / not · 显式否定", "description": "逻辑可组合，但不额外产生先后或计数语义。not 只表达明确否定，不能因为没有提到某行为就推断其否定。"}, {"name": "多子句与更长顺序", "description": "子句按要求共同满足；排列顺序本身不表示时间先后。没有明确且可表示的子窗口时，三段及以上有序行为不可解析；尚无通用 ordered / throughout 节点。"}]}, {"title": "3. 交互谓词：结构可表示，正式执行仍是占位", "entries": [{"name": "overtake · 超车", "description": "必须绑定明确且不同的超车者与被超车者。当前 param 为空，不能附加超车侧向、安全距离或条件参数。"}, {"name": "bypass · 绕行", "description": "必须绑定明确且不同的绕行者与障碍对象。当前 param 为空，不能附加绕行侧向、间距或条件参数。"}, {"name": "follow · 明确的跟车", "description": "必须绑定明确且不同的跟随车辆与前车；模仿行为、沿相同路径或“following the same pattern”不能直接等同于跟车。当前不能附加安全距离等参数。"}, {"name": "表示与执行的区别", "description": "上述节点可以出现在合法 AST 中，但正式 L3 执行器尚无冻结公式，会拒绝执行。不能仅因不能评分就断言其基本角色关系无法表示；也不能因 schema 接受就声称完整交互语义和执行能力已经就绪。"}]}, {"title": "4. 角色、时间与完整性", "entries": [{"name": "角色绑定", "description": "只允许使用本条输入已经确定的 canonical agent_id；每个子句列出其实际引用的角色。不能补造对象，交互两角色必须不同；指代不清时保留歧义。"}, {"name": "时间窗口", "description": "AST 的 interval_s 是子句内的相对秒数，边界须非负、对齐采样间隔且不超过子句范围；嵌套时序加驻留所需的总时长也必须落在窗口内。scope 保留全局帧索引，不能把帧号直接当秒。"}, {"name": "时间锚不明", "description": "“第 65 秒”等表述若与短评价窗口冲突、又没有外部换算约定，不能擅自改作帧号或猜测时间起点。应标出歧义。"}, {"name": "完整表达", "description": "每项必需语义都要保留；不能删去无法表达的修饰或子句后将剩余程序判为完整。也不能只因没有同名谓词就认定无法表达，须检查已有谓词的合法组合能否精确覆盖要求。"}]}, {"title": "5. 当前未提供的独立能力与不能直接近似的要求", "entries": [{"name": "直行 / 恒速", "description": "没有 straight / keep_speed 等独立节点；不能把“没有加速、没有转弯”等近似判断直接当作精确等价表达。"}, {"name": "停车状态 / 等待", "description": "没有 park、stationary、wait-duration 独立节点。只要求某窗口持续低速时可检查 always(stop) 是否足够；停车地点、等待某事件或未定义时间锚不能一并冒充已表达。"}, {"name": "方向与交互条件", "description": "没有带方向的 lanechange，也没有 yield（让行）、cut-in（切入）、merge（汇入）节点；明确安全距离、侧向、优先权等额外要求不能塞进空的交互参数。"}, {"name": "风格、计数与强度", "description": "没有“平顺 / 谨慎 / 礼貌”等风格节点，也没有次数或数量量词节点。修饰词改变要求而又无精确参数表达时，不能静默忽略。"}, {"name": "任意事件排序", "description": "支持 until 不等于支持任意“先 A 后 B”；顺序涉及 turn 或 lanechange 时，当前没有可定位的有序事件见证。没有适当子窗口的更长顺序同样不支持。"}]}]}, "annotation_guide": {"version": "e7-2026-09-06", "principles": ["按指令明确要求与程序实际约束判断，不用日常经验替程序补上遗漏的行为、先后关系或参数。", "对未解析项的拒绝判断，Y 表示合理拒绝：至少一项必需语义超出当前能力且不能由合法组合完整表达；N 表示全部语义本可表达却没有解析出来；无法确定时选有歧义。其他字段的 Y/N 按各自判据判断。", "语义完整性与结构正确性分开判断。程序合法、可执行、草稿同意都不等于语义正确；交互占位的执行限制本身不能证明表示缺失。", "先独立看指令和程序，再复查草稿。草稿可能错误；信心低或存在多种解读时如实保留，备注不参与草稿一致性比较。"], "examples": [{"title": "最终停车不保证先减速再停车", "explanation": "eventually(stop) 可被全程静止的轨迹满足。对于明确要求“先减速再停车”的指令，它只覆盖停车，缺失减速和先后约束，应判断为部分覆盖、结构不正确。不能用常识替代程序中的约束。"}, {"title": "能写交互角色不等于能表达安全间距", "explanation": "基本 follow(A,B) 关系可进入 AST；若原指令额外要求安全距离，而当前没有对应参数或合法等价组合，则该完整指令仍可能属于合理拒绝（Y）。仅执行器未实现不能单独成为 Y 的依据。"}, {"title": "明确可表达的指令被拒绝", "explanation": "若角色与窗口已确定、指令只要求窗口内停车，且当前 stop 与 eventually 能完整表达，却未生成程序，应判断为漏解析（N）；备注写出可行表达。若时间起点或角色无法确定，保留有歧义。"}]}}, "items": [{"item_id": "demo-01", "scene_id": "demo-scene-01", "instruction_id": "demo-instruction-01", "status": "parsed", "context": {"instruction": "Have \u003cego> come to a complete stop.", "program": {"clauses": [{"scope": {"agents": ["ego"], "window": {"start_index": 11, "end_index": 90}}, "body": {"op": "eventually", "interval_s": {"lower": 0, "upper": 7.9}, "arg": {"predicate": "stop", "agent": "ego", "param": {"threshold": {"value": 0.1, "unit": "m/s"}}}}}]}}, "fields": {}}, {"item_id": "demo-02", "scene_id": "demo-scene-02", "instruction_id": "demo-instruction-02", "status": "parsed", "context": {"instruction": "Have \u003cego> decelerate and then come to a complete stop.", "program": {"clauses": [{"scope": {"agents": ["ego"], "window": {"start_index": 11, "end_index": 90}}, "body": {"op": "eventually", "interval_s": {"lower": 0, "upper": 7.9}, "arg": {"predicate": "stop", "agent": "ego", "param": {"threshold": {"value": 0.1, "unit": "m/s"}}}}}]}}, "fields": {}}, {"item_id": "demo-03", "scene_id": "demo-scene-03", "instruction_id": "demo-instruction-03", "status": "failure", "context": {"instruction": "Have \u003cego> drive straight at a constant speed."}, "fields": {}}, {"item_id": "demo-04", "scene_id": "demo-scene-04", "instruction_id": "demo-instruction-04", "status": "failure", "context": {"instruction": "Have \u003cego> wait, then turn right when it is safe."}, "fields": {}}, {"item_id": "demo-05", "scene_id": "demo-scene-05", "instruction_id": "demo-instruction-05", "status": "failure", "context": {"instruction": "Have \u003cego> follow the vehicle ahead and maintain a safe distance."}, "fields": {}}, {"item_id": "demo-06", "scene_id": "demo-scene-06", "instruction_id": "demo-instruction-06", "status": "parsed", "context": {"instruction": "Have \u003cego> turn left.", "program": {"clauses": [{"scope": {"agents": ["ego"], "window": {"start_index": 11, "end_index": 90}}, "body": {"op": "eventually", "interval_s": {"lower": 0, "upper": 7.9}, "arg": {"predicate": "turn", "agent": "ego", "param": {"direction": "left", "threshold": {"value": 0.25, "unit": "rad"}}}}}]}}, "fields": {}}], "drafts": [{"item_id": "demo-01", "fields": {"semantic_complete": "Y", "structure_correct": "Y", "confidence": "high"}, "reason": "演示草稿：程序要求 ego 在评价窗口内停车，与原指令一致。"}, {"item_id": "demo-02", "fields": {"semantic_complete": "partial", "structure_correct": "N", "confidence": "medium"}, "reason": "演示草稿：只表达了最终停车，遗漏明确的减速与先后约束；全程静止也能满足这个程序。"}, {"item_id": "demo-03", "fields": {"rejection_correct": "Y", "confidence": "medium", "missing_capability": "缺少持续直行与恒速的完整表达。"}, "reason": "演示草稿：持续直行与恒速要求需要独立判断，不能直接等同于现有停车或转弯谓词。"}, {"item_id": "demo-04", "fields": {"rejection_correct": "ambiguous", "confidence": "low"}, "reason": "演示草稿：「安全时」的条件与等待边界存在多种解读，建议保留歧义。"}, {"item_id": "demo-05", "fields": {"rejection_correct": "Y", "confidence": "medium", "missing_capability": "跟车占位参数中没有安全距离约束。"}, "reason": "演示草稿：基本跟车关系可写入 AST，但附加的安全距离要求尚无对应参数；请独立复查完整指令是否可表达。"}]}</script>
+<script>
+'use strict';
+// Single-file distribution is intentional. Sections: AST / validation / state / rendering / I/O.
+const $ = id => document.getElementById(id);
+const own = (o,k) => Object.prototype.hasOwnProperty.call(o,k);
+const clone = o => JSON.parse(JSON.stringify(o));
+const plain = o => o !== null && typeof o === 'object' && !Array.isArray(o);
+function assert(ok,message){if(!ok)throw new Error(message);}
+function formatValue(value){
+  if(plain(value)&&Number.isFinite(value.value)&&typeof value.unit==='string'&&Object.keys(value).length===2)return `${value.value} ${value.unit}`;
+  if(plain(value))return Object.entries(value).map(([key,v])=>`${key}=${formatValue(v)}`).join(', ');
+  if(Array.isArray(value))return value.map(formatValue).join(', ');
+  assert(['string','number','boolean'].includes(typeof value),'程序含无法显示的参数');
+  return String(value);
+}
+function formatAST(node,depth=0){
+  assert(depth<60 && plain(node),'程序节点无效或嵌套过深');
+  const sub = n => formatAST(n,depth+1);
+  if(own(node,'predicate')){
+    assert(['accel','decel','stop','turn','lanechange','overtake','bypass','follow'].includes(node.predicate),'未识别的谓词');
+    assert((typeof node.agent==='string'||plain(node.agent)) && plain(node.param),'谓词缺少角色或参数');
+    return `${node.predicate}(${typeof node.agent==='string'?'agent='+node.agent:formatValue(node.agent)}${Object.keys(node.param).length?', '+formatValue(node.param):''})`;
+  }
+  const op=node.op;
+  if(['eventually','always','until'].includes(op)){
+    const r=node.interval_s;
+    assert(plain(r)&&Number.isFinite(r.lower)&&Number.isFinite(r.upper)&&r.lower>=0&&r.upper>=r.lower,'时间区间无效');
+    return `${op}[${r.lower}–${r.upper}s](${op==='until'?sub(node.left)+', '+sub(node.right):sub(node.arg)})`;
+  }
+  if(op==='not')return `not(${sub(node.arg)})`;
+  assert(['and','or'].includes(op)&&Array.isArray(node.args)&&node.args.length>=2,'未识别的逻辑节点');
+  return `${op}(${node.args.map(sub).join(', ')})`;
+}
+function formatProgram(program){
+  if(typeof program==='string'){assert(program.trim()&&!/^[\s]*[\[{]/.test(program),'请提供格式化 AST 文本，不要将 JSON 放进字符串');return program;}
+  assert(plain(program)&&Array.isArray(program.clauses)&&program.clauses.length,'程序缺少 clauses');
+  return program.clauses.map((clause,i)=>{
+    const s=clause.scope;
+    assert(plain(s)&&Array.isArray(s.agents)&&s.agents.length&&plain(s.window)&&Number.isInteger(s.window.start_index)&&Number.isInteger(s.window.end_index)&&s.window.start_index>=0&&s.window.end_index>=s.window.start_index,'程序 scope 无效');
+    return `子句 ${i+1} · ${s.agents.join(', ')} · 帧 ${s.window.start_index}–${s.window.end_index}\n${formatAST(clause.body)}`;
+  }).join('\n\n');
+}
+const RESERVED=new Set(['__proto__','constructor','prototype','item_id','scene_id','instruction_id','status','annotator','date','draft_agreement','notes','annotation_guide_version']);
+function contextFields(task){return task.task_id==='l3_parse_accuracy'?[{key:'program',type:'program',label:'程序 AST'}]:(task.context_fields||[{key:'program',type:'program',label:'程序 AST'}]);}
+function visible(field,item,values){
+  return !field.when || ((!field.when.status||field.when.status===item.status)&&(!field.when.field||values[field.when.field]===field.when.equals));
+}
+function validateValues(fields,values){
+  assert(plain(values),'判断字段必须为对象');
+  for(const [id,value] of Object.entries(values)){
+    const field=fields.find(f=>f.id===id);
+    assert(field,`未知判断字段：${id}`);
+    assert(value===null||typeof value==='string',`字段 ${id} 的值必须为文本或 null`);
+    if(field.type==='choice'&&value!==null&&value!=='')assert(field.options.some(o=>o.value===value),`字段 ${id} 的选项无效`);
+  }
+}
+function validatePackage(pack){
+  const {task,items,drafts=[]}=pack;
+  assert(plain(task)&&typeof task.task_id==='string'&&task.task_id.trim()&&typeof task.title==='string','任务缺少 task_id 或 title');
+  if(own(task,'instructions'))assert(Array.isArray(task.instructions)&&task.instructions.every(line=>typeof line==='string'),'操作步骤 instructions 必须为文本数组');
+  if(own(task,'capabilities'))validateCapabilities(task.capabilities);
+  if(own(task,'annotation_guide'))validateGuide(task.annotation_guide);
+  assert(Array.isArray(task.fields)&&task.fields.length>0,'任务缺少 fields');
+  const names=new Set();
+  for(const f of task.fields){
+    assert(plain(f)&&typeof f.id==='string'&&/^[a-z][a-z0-9_]*$/.test(f.id)&&!RESERVED.has(f.id)&&!names.has(f.id),'判断字段 ID 无效或重复');names.add(f.id);
+    assert(typeof f.label==='string'&&['choice','text'].includes(f.type),'字段需要 label 与 choice/text 类型');
+    if(f.type==='choice')assert(Array.isArray(f.options)&&f.options.length>=2&&f.options.every(o=>plain(o)&&typeof o.value==='string'&&o.value&&typeof o.label==='string')&&new Set(f.options.map(o=>o.value)).size===f.options.length,'单选字段 options 无效');
+    if(f.options)assert(f.options.every(o=>o.description===undefined||typeof o.description==='string'),'选项判据 description 必须为文本');
+    if(f.when)assert(plain(f.when)&&(!f.when.field||names.has(f.when.field)&&f.when.field!==f.id),'条件字段必须引用前面已定义的字段');
+  }
+  if(task.task_id==='l3_parse_accuracy'&&task.annotation_guide){
+    const choices={semantic_complete:['parsed',['Y','N','partial']],structure_correct:['parsed',['Y','N','ambiguous']],rejection_correct:['failure',['Y','N','ambiguous']],confidence:[null,['high','medium','low']]};
+    assert(task.fields.length===5,'E7 需要四个单选字段与缺失能力字段');
+    for(const [id,[status,values]] of Object.entries(choices)){
+      const field=task.fields.find(f=>f.id===id);
+      assert(field?.type==='choice'&&field.required===true&&field.options.length===values.length&&values.every(value=>field.options.some(o=>o.value===value&&typeof o.description==='string'&&o.description.trim())),'E7 '+id+' 的类型、必填性或选项判据不完整');
+      assert(status?field.when?.status===status&&!field.when.field:!field.when,'E7 '+id+' 的显示条件无效');
+    }
+    const missing=task.fields.find(f=>f.id==='missing_capability');
+    assert(missing?.type==='text'&&!missing.required&&missing.when?.status==='failure'&&missing.when?.field==='rejection_correct'&&missing.when?.equals==='Y','E7 缺失能力字段必须可选且仅在 failure 且 rejection_correct=Y 时显示');
+  }
+  if(task.context_fields)assert(Array.isArray(task.context_fields)&&task.context_fields.every(f=>plain(f)&&typeof f.key==='string'&&typeof f.label==='string'&&['text','program'].includes(f.type)),'context_fields 无效');
+  assert(Array.isArray(items)&&items.length>0,'items 必须是非空数组');
+  const ids=new Set();
+  for(const item of items){
+    assert(plain(item)&&typeof item.item_id==='string'&&item.item_id.trim()&&!RESERVED.has(item.item_id)&&!ids.has(item.item_id),'item_id 为空、重复或不安全');ids.add(item.item_id);
+    assert(plain(item.context)&&typeof item.context.instruction==='string'&&item.context.instruction.trim(),'每条 context 需要 instruction 原文');
+    if(task.task_id==='l3_parse_accuracy'){
+      assert(['parsed','failure'].includes(item.status),'E7 条目需要 parsed/failure 状态');
+      assert(typeof item.scene_id==='string'&&item.scene_id&&typeof item.instruction_id==='string'&&item.instruction_id,'E7 条目缺少 scene_id / instruction_id');
+      if(item.status==='parsed')formatProgram(item.context.program);
+    }
+    for(const f of contextFields(task))if(item.context[f.key]!=null){if(f.type==='program'&&item.status!=='failure')formatProgram(item.context[f.key]);else if(f.type==='text')assert(typeof item.context[f.key]==='string','上下文文本必须为字符串');}
+    validateValues(task.fields,item.fields||{});
+  }
+  assert(Array.isArray(drafts),'drafts 必须是数组');
+  const draftIds=new Set();
+  for(const d of drafts){assert(plain(d)&&ids.has(d.item_id)&&!draftIds.has(d.item_id),'草稿引用未知或重复记录');draftIds.add(d.item_id);validateValues(task.fields,d.fields);assert(typeof d.reason==='string','草稿需要简短 reason');}
+  return {task,items,drafts};
+}
+function validateCapabilities(capabilities){
+  const nonempty=value=>typeof value==='string'&&value.trim();
+  assert(plain(capabilities)&&['version','summary','scope'].every(k=>nonempty(capabilities[k])),'能力说明需要 version、summary、scope');
+  assert(Array.isArray(capabilities.sections)&&capabilities.sections.length&&capabilities.sections.every(s=>plain(s)&&nonempty(s.title)&&Array.isArray(s.entries)&&s.entries.length&&s.entries.every(e=>plain(e)&&nonempty(e.name)&&nonempty(e.description))),'能力说明 sections 需要标题及非空 name/description 条目');
+  if(own(capabilities,'decision_guide'))assert(Array.isArray(capabilities.decision_guide)&&capabilities.decision_guide.every(nonempty),'能力说明 decision_guide 必须为文本数组');
+}
+function validateGuide(guide){
+  const text=value=>typeof value==='string'&&value.trim();
+  assert(plain(guide)&&text(guide.version)&&Array.isArray(guide.principles)&&guide.principles.length&&guide.principles.every(text),'标注指南需要 version 与 principles');
+  assert(Array.isArray(guide.examples)&&guide.examples.every(e=>plain(e)&&text(e.title)&&text(e.explanation)),'标注指南 examples 需要 title 与 explanation');
+}
+const demo=JSON.parse($('demo-data').textContent);
+let state,storageOK=true,toastTimer;
+const STORE='langtrajeval.annotation.v1';
+const activeFields=(item,values)=>state.task.fields.filter(f=>visible(f,item,values));
+const draftFor=item=>state.drafts.find(d=>d.item_id===item.item_id);
+function answerFor(item){
+  if(!own(state.answers,item.item_id))state.answers[item.item_id]={values:{...(item.fields||{}),...(draftFor(item)?.fields||{})},notes:'',submitted:false};
+  return state.answers[item.item_id];
+}
+function fresh(pack,isDemo=false){isDemo=isDemo||pack.task.demo===true;return {...clone(pack),isDemo,answers:{},index:0,filter:'all',annotator:isDemo?'交互验收者':'',finished:false};}
+function packageText(pack){return JSON.stringify({task:pack.task,items:pack.items,drafts:pack.drafts});}
+function archiveKey(pack){let hash=2166136261;for(const ch of packageText(pack))hash=Math.imul(hash^ch.charCodeAt(0),16777619);return `${STORE}.task.${hash>>>0}`;}
+function restoreOrFresh(pack,isDemo=false){
+  const normalized=upgradeE7Session(fresh(pack,isDemo));
+  // Prefer progress under the upgraded task before considering an older archive.
+  for(const expected of [normalized,pack]){
+    try{const saved=JSON.parse(localStorage.getItem(archiveKey(expected))||'null');if(saved&&packageText(saved)===packageText(expected)){validateSaved(saved);return upgradeE7Session(saved);}}
+    catch{/* An invalid archive must not prevent importing a valid task. */}
+  }
+  return normalized;
+}
+function upgradeE7Session(session){
+  if(session.task.task_id!=='l3_parse_accuracy')return session;
+  if(session.task.annotation_guide){
+    const stale=session.items.filter(item=>{const a=session.answers[item.item_id];return a?.submitted&&a.annotation_guide_version!==session.task.annotation_guide.version;});
+    if(stale.length){const ids=new Set(stale.map(i=>i.item_id));session.legacy_records=[...(session.legacy_records||[]),...exportRecords(session).filter(r=>ids.has(r.item_id))];for(const item of stale){session.answers[item.item_id].submitted=false;session.answers[item.item_id].needs_review=true;}session.protocol_updated=true;session.finished=false;delete session.guide_seen_version;}
+    return session;
+  }
+  // Keep the exact legacy export and every user's value. Only the review status changes.
+  session.legacy_records=[...(session.legacy_records||[]),...exportRecords(session)];
+  session.task={...session.task,fields:clone(demo.task.fields),instructions:clone(demo.task.instructions),annotation_guide:clone(demo.task.annotation_guide)};
+  for(const answer of Object.values(session.answers)){answer.submitted=false;answer.needs_review=true;}
+  session.protocol_updated=true;session.finished=false;delete session.guide_seen_version;
+  return session;
+}
+function validateSaved(saved){
+  validatePackage(saved);assert(plain(saved.answers)&&Number.isInteger(saved.index)&&saved.index>=0&&saved.index<saved.items.length&&['all','pending','low'].includes(saved.filter)&&typeof saved.annotator==='string','浏览器存档无效');
+  for(const [id,a] of Object.entries(saved.answers)){
+    const item=saved.items.find(i=>i.item_id===id);assert(item&&plain(a)&&typeof a.submitted==='boolean'&&typeof a.notes==='string','存档记录无效');validateValues(saved.task.fields,a.values);
+    if(a.submitted)assert(typeof a.annotator==='string'&&a.annotator.trim()&&typeof a.date==='string'&&Number.isFinite(Date.parse(a.date))&&saved.task.fields.filter(f=>visible(f,item,a.values)).every(f=>!f.required||String(a.values[f.id]??'').trim()),'已提交存档不完整');
+  }
+}
+function message(text,error=false){clearTimeout(toastTimer);$('toast').textContent=text;$('toast').className='toast'+(error?' error':'');$('toast').hidden=false;toastTimer=setTimeout(()=>$('toast').hidden=true,5000);}
+function persist(){
+  try{const serialized=JSON.stringify(state);localStorage.setItem(archiveKey(state),serialized);localStorage.setItem(STORE,serialized);storageOK=true;}
+  catch{storageOK=false;}
+  $('save-status').textContent=storageOK?'● 当前任务已暂存到此浏览器':'浏览器无法暂存，请及时导出已提交结果';
+}
+function matches(item){const a=answerFor(item);return state.filter==='all'||(state.filter==='pending'&&!a.submitted)||(state.filter==='low'&&a.values.confidence==='low');}
+function indices(){return state.items.map((_,i)=>i).filter(i=>matches(state.items[i]));}
+function updateNav(){
+  const submitted=state.items.filter(i=>answerFor(i).submitted).length;
+  $('progress-text').textContent=`${submitted} / ${state.items.length}`;$('progress').value=submitted;$('progress').max=state.items.length;
+  const counts={all:state.items.length,pending:state.items.length-submitted,low:state.items.filter(i=>answerFor(i).values.confidence==='low').length};
+  document.querySelectorAll('[data-filter]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.filter===state.filter));b.querySelector('span').textContent=counts[b.dataset.filter];});
+  $('queue').replaceChildren();
+  for(const i of indices()){
+    const a=answerFor(state.items[i]),b=document.createElement('button');b.textContent=String(i+1).padStart(2,'0');b.className=(a.submitted?'done ':'')+(a.values.confidence==='low'?'low':'');b.setAttribute('aria-current',String(i===state.index&&!state.finished));b.setAttribute('aria-label',`第 ${i+1} 条，${a.submitted?'已提交':'待提交'}${a.values.confidence==='low'?'，低信心':''}`);b.onclick=()=>{state.index=i;state.finished=false;render();};$('queue').append(b);
+  }
+  const list=indices(),pos=list.indexOf(state.index);
+  $('previous').disabled=state.finished||pos<=0;$('next').disabled=state.finished||pos<0||pos>=list.length-1;
+  $('export-button').disabled=submitted===0;$('empty-export').disabled=submitted===0;
+}
+function textElement(tag,text,className){const e=document.createElement(tag);e.textContent=text;if(className)e.className=className;return e;}
+function capabilityReference(){
+  if(state.task.capabilities)return {content:state.task.capabilities,fallback:false};
+  // Old W5 browser sessions keep their judgments and receive a clearly labeled reference.
+  return state.task.task_id==='l3_parse_accuracy'?{content:demo.task.capabilities,fallback:true}:null;
+}
+const CAPABILITY_FALLBACK='本任务未附能力说明，以下为内置 W5 参考。请先核对是否适用于本批次；不能确认时保留歧义。';
+function renderCapabilityReference(item){
+  const reference=capabilityReference();$('capability-button').hidden=!reference;$('capability-reference').hidden=!reference;
+  if(!reference)return;
+  const {content,fallback}=reference;
+  $('capability-version').textContent=content.version;$('capability-summary').textContent=content.summary;
+  $('capability-fallback').hidden=!fallback;$('capability-fallback').textContent=CAPABILITY_FALLBACK;
+  $('capability-decisions').replaceChildren();
+  const rejection=state.task.fields.find(f=>f.id==='rejection_correct');
+  const decisions=state.task.task_id==='l3_parse_accuracy'&&state.task.annotation_guide?rejection.options.map(o=>`${o.value} · ${o.label}：${o.description}`):content.decision_guide||[];
+  $('capability-decisions').hidden=item?.status!=='failure'||!decisions.length;
+  for(const line of decisions)$('capability-decisions').append(textElement('p',line));
+}
+function showCapabilities(){
+  const reference=capabilityReference();if(!reference)return;
+  const {content,fallback}=reference;
+  $('capability-dialog-version').textContent=content.version;$('capability-dialog-scope').textContent=content.scope;
+  $('capability-dialog-fallback').textContent=fallback?CAPABILITY_FALLBACK:'';
+  $('capability-sections').replaceChildren();
+  for(const section of content.sections){
+    const group=document.createElement('section');group.append(textElement('h3',section.title));const list=document.createElement('ul');
+    for(const entry of section.entries){const li=document.createElement('li');li.append(textElement('strong',entry.name+'：'),document.createTextNode(entry.description));list.append(li);}
+    group.append(list);$('capability-sections').append(group);
+  }
+  $('capability-dialog').showModal();$('capability-dialog').scrollTop=0;
+}
+function renderContext(item){
+  const box=$('context-view');box.replaceChildren();
+  if(item.status==='failure'){
+    const empty=textElement('div','','program-empty');empty.append(textElement('b','未生成可用程序'),textElement('span','请根据指令判断：这次拒绝是否合理？','small'));box.append(empty);
+  }
+  const fields=contextFields(state.task);
+  for(const f of fields){
+    if(item.context[f.key]==null||f.key==='instruction'||(f.type==='program'&&item.status==='failure'))continue;
+    box.append(textElement('div',f.label,'small muted'));
+    box.append(textElement(f.type==='program'?'pre':'p',f.type==='program'?formatProgram(item.context[f.key]):String(item.context[f.key]),f.type==='program'?'ast':'draft-reason'));
+  }
+  if(!box.children.length)box.append(textElement('p','本条没有额外上下文。','muted'));
+  if(item.status==='parsed')box.append(textElement('p','时间算子的区间单位为秒；scope 窗口保留原始帧索引。','legend'));
+}
+function edit(field,value){
+  const item=state.items[state.index],a=answerFor(item);a.values[field.id]=value;a.submitted=false;state.finished=false;
+  // Retain hidden text locally so toggling back does not lose edits; export only visible fields.
+  renderFields(item);updateNav();persist();
+}
+function optionCriteria(field){
+  const list=document.createElement('ul');
+  for(const option of field.options||[]){if(option.description){const li=document.createElement('li');li.append(textElement('strong',`${option.value} · ${option.label}：`),document.createTextNode(option.description));list.append(li);}}
+  return list;
+}
+function showGuide(){
+  const guide=state.task.annotation_guide;
+  $('guide-version').textContent=guide?`口径版本：${guide.version}`:'本任务操作指南';
+  $('guide').replaceChildren();for(const line of state.task.instructions||['阅读指令与只读上下文。','逐项选择你的判断，提交后下载结果。'])$('guide').append(textElement('li',line));
+  $('guide-principles').replaceChildren();$('guide-fields').replaceChildren();$('guide-examples').replaceChildren();
+  if(guide){
+    $('guide-principles').append(textElement('h3','共同判据'));const list=document.createElement('ul');for(const line of guide.principles)list.append(textElement('li',line));$('guide-principles').append(list);
+    for(const field of state.task.fields){const section=document.createElement('section');section.append(textElement('h3',field.label),textElement('p',field.help||''),optionCriteria(field));$('guide-fields').append(section);}
+    $('guide-examples').append(textElement('h3','边界示例（所有记录共用）'));
+    for(const example of guide.examples){const p=document.createElement('p');p.append(textElement('strong',example.title+'：'),document.createTextNode(example.explanation));$('guide-examples').append(p);}
+  }
+  $('help-dialog').showModal();$('help-dialog').scrollTop=0;
+}
+function introduceGuide(){if(state.task.annotation_guide&&state.guide_seen_version!==state.task.annotation_guide.version)showGuide();}
+function renderFields(item){
+  const a=answerFor(item),draft=draftFor(item);$('fields').replaceChildren();
+  for(const field of activeFields(item,a.values)){
+    const fs=document.createElement('fieldset'),legend=textElement('legend',field.label);fs.append(legend);
+    if(draft&&own(draft.fields,field.id)&&a.values[field.id]!==draft.fields[field.id])legend.append(textElement('span','已修改','changed'));
+    const hintId=`hint-${field.id}`;const hint=textElement('p',field.help||'', 'field-help');hint.id=hintId;fs.append(hint);
+    if(field.type==='choice'){
+      const group=textElement('div','','choices');group.setAttribute('role','radiogroup');group.setAttribute('aria-label',field.label);group.setAttribute('aria-describedby',hintId);
+      for(const option of field.options){const b=textElement('button',option.label,'choice');b.type='button';b.setAttribute('role','radio');b.setAttribute('aria-checked',String(a.values[field.id]===option.value));b.dataset.field=field.id;b.dataset.value=option.value;b.onclick=()=>{edit(field,option.value);document.querySelector(`[data-field="${field.id}"][data-value="${CSS.escape(option.value)}"]`)?.focus();};group.append(b);}
+      fs.append(group);
+      if(field.options.some(o=>o.description)){const details=document.createElement('details');details.className='field-criteria';details.dataset.criteria=field.id;details.append(textElement('summary','查看选项判据'),optionCriteria(field));fs.append(details);}
+    }else{
+      const input=document.createElement('textarea');input.value=a.values[field.id]||'';input.className='field-text';input.setAttribute('aria-label',field.label);input.placeholder=field.placeholder||'可填写简短说明';input.oninput=()=>{a.values[field.id]=input.value;a.submitted=false;updateReviewState(a);updateNav();persist();};fs.append(input);
+    }
+    $('fields').append(fs);
+  }
+  if(a.needs_review&&a.values.missing_capability&&!activeFields(item,a.values).some(f=>f.id==='missing_capability')){const note=textElement('p','旧版缺失能力原文（可在备注中补充复核依据）：'+a.values.missing_capability);note.id='legacy-field-note';$('fields').append(note);}
+  updateReviewState(a);
+}
+function updateReviewState(a){$('review-state').textContent=a.submitted?'已提交':a.needs_review?'旧版待复核':'待确认';$('submit-button').textContent=a.submitted?'再次确认并继续 →':'确认并提交 →';}
+function render(){
+  $('project-name').textContent=state.task.title;$('task-title').textContent=state.task.title;$('mode-badge').textContent=state.isDemo?'演示任务':'外部任务';$('mode-badge').className='pill'+(state.isDemo?' demo':'');$('demo-notice').hidden=!state.isDemo;$('task-description').textContent=state.task.description||'阅读上下文，逐条确认你的判断。';$('annotator').value=state.annotator;
+  updateNav();const list=indices();
+  if(!list.includes(state.index)&&!state.finished)state.index=list[0]??0;
+  renderCapabilityReference(state.items[state.index]);
+  $('protocol-notice').hidden=!state.protocol_updated;$('legacy-export').hidden=!state.legacy_records?.length;
+  const empty=state.finished||!list.length;$('record-view').hidden=empty;$('empty-view').hidden=!empty;
+  if(empty){$('position').textContent='';$('empty-title').textContent=state.finished?'本轮记录已全部提交':'这个列表暂时没有记录';$('empty-description').textContent=state.finished?'可以导出结果，也可以进入低信心列表再次复查。':'切换筛选即可继续；未提交的草稿不会被导出。';}
+  else{
+    const item=state.items[state.index],a=answerFor(item),draft=draftFor(item);
+    $('position').textContent=`记录 ${String(state.index+1).padStart(2,'0')} / ${String(state.items.length).padStart(2,'0')}`;$('instruction').textContent=item.context.instruction;$('status-badge').textContent=item.status==='parsed'?'已解析':item.status==='failure'?'未解析':'待判断';
+    $('identifiers').replaceChildren(textElement('div',`SCENE  ${item.scene_id||'—'}`),textElement('div',`ITEM   ${item.instruction_id||item.item_id}`));renderContext(item);
+    $('draft-values').replaceChildren();
+    if(draft)for(const f of state.task.fields.filter(f=>visible(f,item,draft.fields))){if(!own(draft.fields,f.id)||draft.fields[f.id]===null)continue;const value=f.options?.find(o=>o.value===draft.fields[f.id])?.label||draft.fields[f.id];$('draft-values').append(textElement('span',`${f.label} · ${value}`));}
+    $('draft-reason').textContent=draft?draft.reason:'此条没有 Agent 草稿，请直接选择你的判断。';document.querySelector('.review-intro').textContent=draft?'已预填草稿，只需修改有异议的判断。':'此条没有草稿，请逐项选择；不确定时可保留歧义。';
+    renderFields(item);$('notes').value=a.notes||'';
+  }
+  updateNav();persist();
+}
+function submitCurrent(){
+  const item=state.items[state.index],a=answerFor(item);
+  const missing=activeFields(item,a.values).find(f=>f.required&&!String(a.values[f.id]??'').trim());
+  if(missing){message(`请先完成「${missing.label}」`,true);return;}
+  if(!state.annotator.trim()){$('annotator-dialog').showModal();$('annotator-entry').focus();return;}
+  a.submitted=true;a.needs_review=false;a.date=new Date().toISOString();a.annotator=state.annotator.trim();
+  if(state.task.annotation_guide)a.annotation_guide_version=state.task.annotation_guide.version;
+  const next=state.items.map((_,i)=>(state.index+i+1)%state.items.length).find(i=>!answerFor(state.items[i]).submitted);
+  if(next===undefined)state.finished=true;else{state.index=next;state.filter='all';}
+  render();message('当前记录已提交');
+}
+function exportRecords(session=state){
+  return session.items.filter(item=>session.answers[item.item_id]?.submitted).map(item=>{
+    const a=session.answers[item.item_id],draft=session.drafts.find(d=>d.item_id===item.item_id),fields=session.task.fields.filter(f=>visible(f,item,a.values)),values=Object.fromEntries(fields.map(f=>[f.id,a.values[f.id]??(f.type==='text'?'':null)]));
+    // No draft => null. Only task judgments count; free-form reviewer notes are independent.
+    const draftFields=draft?session.task.fields.filter(f=>visible(f,item,draft.fields)):[];
+    const agreement=draft?(fields.length===draftFields.length&&fields.every(f=>(a.values[f.id]??'')===(draft.fields[f.id]??''))):null;
+    return {item_id:item.item_id,...(item.scene_id?{scene_id:item.scene_id}:{}),...(item.instruction_id?{instruction_id:item.instruction_id}:{}),...values,notes:a.notes||'',draft_agreement:agreement,annotator:a.annotator,date:a.date,...(a.annotation_guide_version?{annotation_guide_version:a.annotation_guide_version}:{})};
+  });
+}
+function downloadJSON(records,filename){const blob=new Blob([JSON.stringify(records,null,2)+'\n'],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=filename;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+function download(){
+  const records=exportRecords();if(!records.length){message('尚无已提交记录；草稿不会导出。',true);return;}
+  downloadJSON(records,state.isDemo?'demo_annotations.json':state.task.task_id==='l3_parse_accuracy'?'parse_accuracy_annotations.json':'annotations.json');message(`已导出 ${records.length} / ${state.items.length} 条已提交记录`);
+}
+async function readJSON(file){assert(file.size<=15*1024*1024,'单个文件超过 15 MB，请拆分任务');try{return JSON.parse(await file.text());}catch{throw new Error(`${file.name} 不是合法 JSON`);}}
+async function importTask(){
+  const files=Array.from($('task-files').files);$('import-error').textContent='';
+  try{
+    const pack={drafts:[]},seen=new Set();
+    for(const file of files){const name=file.name.toLowerCase(),key=name==='annotation_task.json'||name==='task.json'?'task':name==='items.json'?'items':name==='drafts.json'?'drafts':null;assert(key,`未识别文件 ${file.name}；请按约定文件名加载`);assert(!seen.has(key),'不能重复加载同类文件');seen.add(key);pack[key]=await readJSON(file);}
+    const validated=validatePackage(pack);persist();state=restoreOrFresh(validated);render();$('load-dialog').close();introduceGuide();message('任务已加载，匹配的本地进度已恢复');
+  }catch(error){$('import-error').textContent=error.message;}
+}
+async function resume(file){
+  try{
+    const records=await readJSON(file);assert(Array.isArray(records)&&records.length,'结果必须为非空数组');const updates={},seen=new Set(),legacy=[];
+    for(const r of records){
+      assert(plain(r),'结果记录必须为对象');const item=state.items.find(i=>i.item_id===r.item_id);assert(item&&!seen.has(r.item_id),'结果含未知或重复 item_id');seen.add(r.item_id);
+      assert((!item.scene_id||item.scene_id===r.scene_id)&&(!item.instruction_id||item.instruction_id===r.instruction_id),'结果与当前场景或指令不匹配');
+      const values=Object.fromEntries(state.task.fields.filter(f=>own(r,f.id)).map(f=>[f.id,r[f.id]]));validateValues(state.task.fields,values);
+      assert(activeFields(item,values).every(f=>!f.required||String(values[f.id]??'').trim()),'结果缺少必填判断');assert(typeof r.annotator==='string'&&r.annotator.trim()&&typeof r.date==='string'&&Number.isFinite(Date.parse(r.date)),'结果缺少合法标注者或日期');assert(r.notes===undefined||typeof r.notes==='string','备注必须为文本');
+      const current=state.answers[item.item_id];
+      const currentVersion=state.task.annotation_guide?.version;
+      const needsReview=Boolean(currentVersion&&r.annotation_guide_version!==currentVersion);
+      if(needsReview)legacy.push(clone(r));
+      const proposed={values,notes:r.notes||'',submitted:!needsReview,needs_review:needsReview,annotator:r.annotator,date:r.date,...(typeof r.annotation_guide_version==='string'?{annotation_guide_version:r.annotation_guide_version}:{})};
+      const initial={...(item.fields||{}),...(draftFor(item)?.fields||{})};
+      const changed=current&&(current.submitted||current.notes||JSON.stringify(current.values)!==JSON.stringify(initial));
+      const compared=proposed.submitted?activeFields(item,values):state.task.fields;
+      const same=current&&current.submitted===proposed.submitted&&current.annotation_guide_version===proposed.annotation_guide_version&&current.notes===proposed.notes&&current.annotator===proposed.annotator&&current.date===proposed.date&&compared.every(f=>(current.values[f.id]??'')===(values[f.id]??''));
+      assert(!changed||same,'导入会覆盖当前已有判断，请先导出当前结果，或在独立浏览器中加载任务并续标');updates[item.item_id]=same?current:proposed;
+    }
+    Object.assign(state.answers,updates);if(legacy.length){state.protocol_updated=true;const prior=state.legacy_records||[];state.legacy_records=[...prior,...legacy.filter(r=>!prior.some(p=>JSON.stringify(p)===JSON.stringify(r)))];}state.finished=false;state.filter='pending';state.index=0;render();$('load-dialog').close();message(legacy.length?`已保留 ${legacy.length} 条旧版记录，请按当前口径复核后提交`:`已恢复 ${records.length} 条标注`);
+  }catch(error){$('import-error').textContent=error.message;}
+}
+$('review-form').onsubmit=e=>{e.preventDefault();submitCurrent();};
+$('notes').oninput=()=>{const a=answerFor(state.items[state.index]);a.notes=$('notes').value;a.submitted=false;updateReviewState(a);updateNav();persist();};
+$('annotator').oninput=()=>{state.annotator=$('annotator').value;persist();};
+$('annotator-form').onsubmit=e=>{e.preventDefault();const name=$('annotator-entry').value.trim();if(!name)return;state.annotator=name;$('annotator').value=name;$('annotator-dialog').close();submitCurrent();};
+document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{state.filter=b.dataset.filter;state.finished=false;state.index=indices()[0]??0;render();});
+for(const [id,delta] of [['previous',-1],['next',1]])$(id).onclick=()=>{const list=indices(),next=list[list.indexOf(state.index)+delta];if(next!==undefined){state.index=next;render();}};
+for(const id of ['export-button','empty-export'])$(id).onclick=download;
+$('show-all').onclick=()=>{state.filter='all';state.finished=false;state.index=0;render();};
+$('load-button').onclick=()=>{$('import-error').textContent='';$('task-files').value='';$('resume-file').value='';$('load-dialog').showModal();};
+$('import-button').onclick=importTask;
+for(const id of ['capability-button','capability-details'])$(id).onclick=showCapabilities;
+$('resume-file').onchange=()=>{if($('resume-file').files[0])resume($('resume-file').files[0]);};
+$('demo-button').onclick=()=>{if(packageText(state)!==packageText(demo)){persist();state=restoreOrFresh(demo,true);render();}else message('当前已在演示任务中，保留现有进度。');$('load-dialog').close();introduceGuide();};
+$('help-button').onclick=showGuide;
+$('help-dialog').onclose=()=>{state.guide_seen_version=state.task.annotation_guide?.version;persist();};
+$('legacy-export').onclick=()=>downloadJSON(state.legacy_records,'legacy_annotations_backup.json');
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>$(b.dataset.close).close());
+try{
+  const saved=JSON.parse(localStorage.getItem(STORE)||'null');
+  if(saved){validateSaved(saved);state=upgradeE7Session(saved);}
+}catch{message('浏览器存档不可用，已打开演示任务。',true);}
+if(!state)state=fresh(validatePackage(demo),true);
+render();introduceGuide();
+</script>
+</body>
+</html>
