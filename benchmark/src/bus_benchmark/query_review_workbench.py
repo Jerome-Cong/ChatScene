@@ -54,6 +54,7 @@ from .review_presentation import (
     _human_token,
 )
 from .review_session import QueryReviewSession
+from .review_presentation import quick_confirmation_issues
 from .review_store import _checkpoint_guard
 from .review_vocabulary import (
     ATOM_ACCEPT_REASON,
@@ -3355,6 +3356,9 @@ class QueryReviewWorkbench:
         self.query_select.value = visible[(index + offset) % len(visible)]
 
     def _load_mechanical(self, _: Any) -> None:
+        if self.current_query_id and quick_confirmation_issues(self.session.task(self.current_query_id)["oracle_draft"]["atoms"], self.session.task(self.current_query_id)["query_text"]):
+            self._notify("存在未登记或未明确字段，不能整题预填确认；请逐条审阅或暂存疑问。", error=True)
+            return
         if not self.current_query_id or not self.mechanical_ack.value:
             return
         self.session.save_form(

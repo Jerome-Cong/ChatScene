@@ -25,7 +25,7 @@ PYTHONPATH=tests/bus_benchmark .carla-runtime/benchmark/bin/python -m unittest \
 
 ## 后续工作包
 
-BW-02 至 BW-12 尚未开始。每包完成后在此追加实际文件、检查结果、未验证事项、兼容性变化和回滚方式；正式发布仍受 Judge/仿真及真人试标验收约束。
+BW-03 至 BW-12 尚未开始。每包完成后在此追加实际文件、检查结果、未验证事项、兼容性变化和回滚方式；正式发布仍受 Judge/仿真及真人试标验收约束。
 
 ## BW-01：可移植审阅服务与显式上下文
 
@@ -38,3 +38,17 @@ BW-02 至 BW-12 尚未开始。每包完成后在此追加实际文件、检查�
 兼容性：原 public 导入、表单 canonical payload、checkpoint schema、确认/finalizer 语义保持；新上下文允许任意非空 suite 标签，48/252 仅保留于历史套件 manifest。缺失来源、未知 workspace、错 manifest 数量与安装目录写入被拒绝。核心在异目录运行且禁止导入 ipywidgets/IPython 的测试通过。
 
 未验证：本包未执行 Windows Python 存储测试、脱离 checkout 的 wheel 验收或仿真/Judge；分别属于后续入口/打包/环境验收。回滚：反向撤销本包代码拆分和路径新增；旧 checkpoint 无需数据转换，保留此前私钥修复。
+
+## BW-02：完整语义投影、共享词典与指南
+
+状态：完成。
+
+实际文件：两套源码的 `review_registry.py`、`review_presentation.py`、`review_field_widgets.py`、`query_review_workbench.py`；两套包内 `assets/review/guide_zh.md`、`practice.json`；新增 `test_review_presentation.py`。词典登记当前套件全部 predicate/字段，并同时提供卡片说明、编辑标签、提示与错误名称。
+
+行为：所有参数、计分层级、正反极性、备注和未知原值可见；未知字段、缺失必要参数、无效原文位置阻断整题快捷预填/确认资格。有效原文位置单独显示精确文字，机器元数据不冒充原文依据。未知角色/事件标记保留原值及可读空格形式，不自动推断其含义。事件缺失参与者、触发、结束信息时明示未明确。
+
+复审曾发现禁止层被错误地额外取反，现已修正：既有计分器按 polarity 判定，展示不新增第二次取反；禁止层配正向 polarity 会警告并禁快捷通过。练习与测试直接用既有计分器核对有/无参与者的结果，没有改 metrics。六个合成练习仅供培训，不产生 gold。
+
+验证：`test_review_presentation test_review_field_widgets test_query_review_workbench test_workbench_compatibility` 首轮 95 项中仅 1 项源归属展示兼容断言失败；保留原标记并补可读空格显示后，`test_review_presentation test_review_field_widgets test_workbench_compatibility` 加该失败用例共 39 项全部通过（2.558 秒）。测试遍历当前全部草稿的字段覆盖，并逐项改变参数验证显示差异；独立复审无剩余阻断。
+
+兼容性：正式表单、源码题库、计分与 finalizer 不变；可读文案和编辑字段标签发生有意变化。未知字段不再允许整题机械预填，专家逐条编辑入口保留。未验证：实际新人练习/效率与浏览器流程属于 BW-04/BW-11，未宣称收益。回滚：反向撤销本包展示/标签/快捷保护及新增培训资产，不转换已有 checkpoint。

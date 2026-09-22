@@ -18,6 +18,7 @@ from .constants import ATOM_CATEGORIES, REQUIREMENT_LAYERS
 from .cpd import QUERY_BLIND_TARGET_SELECTORS, query_blind_target_selector
 from .errors import ValidationError
 from .jsonio import canonical_json_bytes, strict_json_value_bytes
+from .review_registry import field_definition
 
 
 ARGUMENT_TYPES = (
@@ -198,7 +199,8 @@ class _ArgumentRow:
         )
         self.raw_value = widgets.Textarea(
             value=raw_text,
-            description="值",
+            description=field_definition(key)[0],
+            tooltip=field_definition(key)[1],
             rows=1,
             layout=widgets.Layout(width="50%"),
         )
@@ -207,6 +209,8 @@ class _ArgumentRow:
             field.observe(self._changed, names="value")
 
     def _changed(self, _change: Mapping[str, Any]) -> None:
+        self.raw_value.description = field_definition(self.key.value)[0]
+        self.raw_value.tooltip = field_definition(self.key.value)[1]
         self._on_change()
 
     def value(self) -> tuple:
