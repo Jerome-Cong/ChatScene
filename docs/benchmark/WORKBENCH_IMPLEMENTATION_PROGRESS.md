@@ -25,7 +25,7 @@ PYTHONPATH=tests/bus_benchmark .carla-runtime/benchmark/bin/python -m unittest \
 
 ## 后续工作包
 
-BW-03 至 BW-12 尚未开始。每包完成后在此追加实际文件、检查结果、未验证事项、兼容性变化和回滚方式；正式发布仍受 Judge/仿真及真人试标验收约束。
+BW-04 至 BW-12 尚未开始。每包完成后在此追加实际文件、检查结果、未验证事项、兼容性变化和回滚方式；正式发布仍受 Judge/仿真及真人试标验收约束。
 
 ## BW-01：可移植审阅服务与显式上下文
 
@@ -52,3 +52,15 @@ BW-03 至 BW-12 尚未开始。每包完成后在此追加实际文件、检查�
 验证：`test_review_presentation test_review_field_widgets test_query_review_workbench test_workbench_compatibility` 首轮 95 项中仅 1 项源归属展示兼容断言失败；保留原标记并补可读空格显示后，`test_review_presentation test_review_field_widgets test_workbench_compatibility` 加该失败用例共 39 项全部通过（2.558 秒）。测试遍历当前全部草稿的字段覆盖，并逐项改变参数验证显示差异；独立复审无剩余阻断。
 
 兼容性：正式表单、源码题库、计分与 finalizer 不变；可读文案和编辑字段标签发生有意变化。未知字段不再允许整题机械预填，专家逐条编辑入口保留。未验证：实际新人练习/效率与浏览器流程属于 BW-04/BW-11，未宣称收益。回滚：反向撤销本包展示/标签/快捷保护及新增培训资产，不转换已有 checkpoint。
+
+## BW-03：提案—人工编辑—明确确认
+
+状态：完成。
+
+实际文件：两套源码新增 `review_model.py`、`review_draft_store.py`；新增 `test_review_model.py` 和 `ADR_BW_002_EXPLICIT_CONFIRMATION.md`。提案独立不可覆盖存储，草稿按修改来源和版本记录；确认收据覆盖当前题/可见语义组，全部覆盖后才能编译。
+
+验证：`PYTHONPATH=tests/bus_benchmark .carla-runtime/benchmark/bin/python -m unittest test_review_model test_review_presentation test_review_context test_workbench_compatibility`，23 项全部通过（1.549 秒）。包括零 gold 生命周期、部分确认拒绝、修改/继承失效、显示快照变化、错 reviewer/源/guide、未知字段/疑问、CAS、不可覆盖机器提案以及新旧有效操作输出等价。独立复审无阻断。
+
+兼容性：旧 checkpoint 和 notebook 未迁移；新模型为独立 API/状态文件。确认理由只在明确确认后的编译阶段展开；旧 formal validator/finalizer、评分公式与整套闭合不变。收据不证明人工身份，维护者可信源与真实人工控制仍必要。
+
+未验证：新模型尚未接入离线浏览器（BW-04），未执行真实人工试标。回滚：撤销本包新增模块、测试和 ADR；旧工作流不受影响，新草稿保留供审计，不能改名当旧 checkpoint。
