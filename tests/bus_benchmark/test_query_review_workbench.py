@@ -1662,7 +1662,7 @@ class QueryReviewWorkbenchTests(unittest.TestCase):
             raise OSError("simulated write failure")
 
         with patch(
-            "bus_benchmark.query_review_workbench.write_jsonl",
+            "bus_benchmark.review_session.write_jsonl",
             side_effect=fail_after_foreign_file,
         ):
             with self.assertRaisesRegex(ValidationError, "\u5df2\u4fdd\u7559\u672a\u5b8c\u6210\u76ee\u5f55"):

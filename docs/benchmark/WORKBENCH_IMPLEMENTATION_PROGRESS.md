@@ -25,4 +25,16 @@ PYTHONPATH=tests/bus_benchmark .carla-runtime/benchmark/bin/python -m unittest \
 
 ## 后续工作包
 
-BW-01 至 BW-12 尚未开始。每包完成后在此追加实际文件、检查结果、未验证事项、兼容性变化和回滚方式；正式发布仍受 Judge/仿真及真人试标验收约束。
+BW-02 至 BW-12 尚未开始。每包完成后在此追加实际文件、检查结果、未验证事项、兼容性变化和回滚方式；正式发布仍受 Judge/仿真及真人试标验收约束。
+
+## BW-01：可移植审阅服务与显式上下文
+
+状态：完成。
+
+实际改动：两套源码新增 `review_context`、`review_forms`、`review_session`、`review_store`、`review_presentation`、`review_vocabulary`、`review_legacy`；原 notebook 改为调用并重新导出服务；`paths.py` 统一禁止安装目录状态写入。新增 `test_review_context.py`，原故障注入测试更新到实际 I/O 模块。路径和 CLI 用法见 `WORKBENCH_SERVICE_MIGRATION.md`。
+
+验证：`PYTHONPATH=tests/bus_benchmark .carla-runtime/benchmark/bin/python -m unittest test_query_review_workbench test_review_context test_workbench_compatibility` 联合 65 项通过（120.475 秒）；复审补齐旧入口安装目录保护后，更新后的 context/固定向量 7 项再次通过（0.647 秒）。提取的 compiler 函数逐个 AST 对照与旧实现相同；独立复审无剩余阻断。
+
+兼容性：原 public 导入、表单 canonical payload、checkpoint schema、确认/finalizer 语义保持；新上下文允许任意非空 suite 标签，48/252 仅保留于历史套件 manifest。缺失来源、未知 workspace、错 manifest 数量与安装目录写入被拒绝。核心在异目录运行且禁止导入 ipywidgets/IPython 的测试通过。
+
+未验证：本包未执行 Windows Python 存储测试、脱离 checkout 的 wheel 验收或仿真/Judge；分别属于后续入口/打包/环境验收。回滚：反向撤销本包代码拆分和路径新增；旧 checkpoint 无需数据转换，保留此前私钥修复。
