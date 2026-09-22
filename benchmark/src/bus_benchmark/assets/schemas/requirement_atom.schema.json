@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/requirement_atom.schema.json",
+  "title": "Bus benchmark requirement atom",
+  "type": "object",
+  "required": [
+    "atom_id",
+    "category",
+    "predicate",
+    "arguments",
+    "layer",
+    "polarity",
+    "weight",
+    "provenance",
+    "decision_status"
+  ],
+  "properties": {
+    "atom_id": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
+    "category": {
+      "enum": ["actor", "road", "spatial", "event", "temporal", "normative"]
+    },
+    "predicate": {"type": "string", "minLength": 1},
+    "arguments": {"type": "object"},
+    "layer": {
+      "enum": ["core_required", "surface_required", "permitted", "forbidden"]
+    },
+    "polarity": {"enum": ["present", "absent"]},
+    "weight": {"const": 1.0},
+    "provenance": {
+      "type": "object",
+      "required": ["source", "query_id"],
+      "properties": {
+        "source": {"enum": ["query_library_metadata", "query_text_regex", "human_review"]},
+        "query_id": {"type": "string", "minLength": 1},
+        "field": {"type": "string", "minLength": 1},
+        "index": {"type": "integer", "minimum": 0},
+        "span": {
+          "oneOf": [
+            {"type": "string", "minLength": 1},
+            {
+              "type": "array",
+              "items": {"type": "integer", "minimum": 0},
+              "minItems": 2,
+              "maxItems": 2
+            }
+          ]
+        },
+        "human_gold_record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": true
+    },
+    "decision_status": {"enum": ["draft", "confirmed", "rejected"]},
+    "notes": {"type": "string"}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,153 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/uqh_assessment.schema.json",
+  "title": "Independent unsupported-query handling assessment",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "assessment_id",
+    "assessment_content_sha256",
+    "run_id",
+    "query_id",
+    "disposition",
+    "response_record_sha256",
+    "raw_response_envelope_sha256",
+    "oracle_record_sha256",
+    "verdict",
+    "reason_codes",
+    "assessment_source",
+    "evidence",
+    "rationale",
+    "provenance",
+    "attestation"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 over the binding contract, immutable response and oracle bindings, and assessment_content_sha256."
+    },
+    "assessment_content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 over every assessment decision, reason, evidence, rationale, and provenance field."
+    },
+    "run_id": {"type": "string", "minLength": 1},
+    "query_id": {"type": "string", "minLength": 1},
+    "disposition": {"enum": ["reject", "clarification"]},
+    "response_record_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "raw_response_envelope_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "oracle_record_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "verdict": {"enum": ["valid", "invalid"]},
+    "reason_codes": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "assessment_source": {"enum": ["judge", "human_audit"]},
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["response_stream", "byte_start", "byte_end", "bytes_sha256"],
+        "properties": {
+          "response_stream": {"enum": ["stdout", "stderr"]},
+          "byte_start": {"type": "integer", "minimum": 0},
+          "byte_end": {"type": "integer", "minimum": 0},
+          "bytes_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        },
+        "additionalProperties": false
+      },
+      "uniqueItems": true
+    },
+    "rationale": {"type": "string", "minLength": 1},
+    "provenance": {
+      "type": "object",
+      "required": [
+        "assessor_id",
+        "assessor_version",
+        "assessor_registry_sha256",
+        "assessment_config_sha256",
+        "assessor_source_sha256",
+        "assessor_request_sha256",
+        "raw_assessor_request",
+        "raw_assessor_response",
+        "external_execution_id",
+        "created_at_utc"
+      ],
+      "properties": {
+        "assessor_id": {"type": "string", "minLength": 1},
+        "assessor_version": {"type": "string", "minLength": 1},
+        "assessor_registry_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "assessment_config_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "assessor_source_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "assessor_request_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "raw_assessor_request": {"$ref": "#/definitions/file_binding"},
+        "raw_assessor_response": {"$ref": "#/definitions/file_binding"},
+        "external_execution_id": {"type": "string", "minLength": 1},
+        "created_at_utc": {"type": "string", "format": "date-time"}
+      },
+      "additionalProperties": false
+    },
+    "attestation": {
+      "type": "object",
+      "required": ["algorithm", "signed_payload_sha256", "signature"],
+      "properties": {
+        "algorithm": {"const": "rsa_pss_sha256"},
+        "signed_payload_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "signature": {"$ref": "#/definitions/file_binding"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "file_binding": {
+      "type": "object",
+      "required": ["path", "sha256", "bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "bytes": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"verdict": {"const": "valid"}},
+        "required": ["verdict"]
+      },
+      "then": {
+        "properties": {"reason_codes": {"minItems": 1}}
+      }
+    }
+  ],
+  "additionalProperties": false
+}

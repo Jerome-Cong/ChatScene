@@ -1,0 +1,267 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/semantic_score.schema.json",
+  "title": "Per-run semantic score record",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "query_id",
+    "run_id",
+    "repetition",
+    "method_id",
+    "platform",
+    "intent_group_id",
+    "statistical_intent_cluster_id",
+    "surface_style",
+    "expected_support",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "query_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "repetition": {"type": "integer", "minimum": 0, "maximum": 4},
+    "method_id": {"type": "string", "minLength": 1},
+    "platform": {"enum": ["carla", "metadrive"]},
+    "intent_group_id": {"type": "string", "minLength": 1},
+    "statistical_intent_cluster_id": {"type": "string", "minLength": 1},
+    "surface_style": {"enum": ["precise", "partial", "vague"]},
+    "expected_support": {"enum": ["supported", "unsupported"]},
+    "ego_gate_passed": {"type": "boolean"},
+    "srs": {"type": "number", "minimum": 0, "maximum": 1},
+    "srs_common": {"type": "number", "minimum": 0, "maximum": 1},
+    "srs_category_scores": {
+      "type": "object",
+      "properties": {
+        "actor": {"type": "number", "minimum": 0, "maximum": 1},
+        "road": {"type": "number", "minimum": 0, "maximum": 1},
+        "spatial": {"type": "number", "minimum": 0, "maximum": 1},
+        "event": {"type": "number", "minimum": 0, "maximum": 1},
+        "temporal": {"type": "number", "minimum": 0, "maximum": 1},
+        "normative": {"type": "number", "minimum": 0, "maximum": 1}
+      },
+      "additionalProperties": false
+    },
+    "srs_common_category_scores": {
+      "type": "object",
+      "properties": {
+        "actor": {"type": "number", "minimum": 0, "maximum": 1},
+        "road": {"type": "number", "minimum": 0, "maximum": 1},
+        "spatial": {"type": "number", "minimum": 0, "maximum": 1},
+        "event": {"type": "number", "minimum": 0, "maximum": 1},
+        "temporal": {"type": "number", "minimum": 0, "maximum": 1},
+        "normative": {"type": "number", "minimum": 0, "maximum": 1}
+      },
+      "additionalProperties": false
+    },
+    "common_core_preservation": {
+      "type": "object",
+      "required": [
+        "all_common_core_satisfied",
+        "no_common_forbidden",
+        "evidence_complete"
+      ],
+      "properties": {
+        "all_common_core_satisfied": {"type": "boolean"},
+        "no_common_forbidden": {"type": "boolean"},
+        "evidence_complete": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "arc": {"$ref": "#/definitions/f1_diagnostic"},
+    "rsc": {"$ref": "#/definitions/f1_diagnostic"},
+    "iec_spec": {"$ref": "#/definitions/f1_diagnostic"},
+    "atom_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "atom_id",
+          "category",
+          "layer",
+          "polarity",
+          "verdict",
+          "verdict_source",
+          "satisfied",
+          "weight"
+        ],
+        "properties": {
+          "atom_id": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
+          "category": {"enum": ["actor", "road", "spatial", "event", "temporal", "normative"]},
+          "layer": {"enum": ["core_required", "surface_required", "forbidden"]},
+          "polarity": {"enum": ["present", "absent"]},
+          "verdict": {"enum": ["satisfied", "violated", "unknown"]},
+          "verdict_source": {"enum": ["deterministic", "judge", "unresolved"]},
+          "judge_response_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "judge_response_record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "satisfied": {"type": "boolean"},
+          "weight": {"const": 1.0}
+        },
+        "allOf": [
+          {
+            "if": {
+              "required": ["verdict_source"],
+              "properties": {"verdict_source": {"const": "judge"}}
+            },
+            "then": {"required": ["judge_response_id", "judge_response_record_sha256"]},
+            "else": {
+              "not": {
+                "anyOf": [
+                  {"required": ["judge_response_id"]},
+                  {"required": ["judge_response_record_sha256"]}
+                ]
+              }
+            }
+          }
+        ],
+        "additionalProperties": false
+      }
+    },
+    "judge_bindings_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "semantic_metrics": {"type": "null"},
+    "reason": {"type": "string", "minLength": 1},
+    "provenance": {
+      "type": "object",
+      "required": [
+        "oracle_sha256",
+        "oracle_record_sha256",
+        "evidence_record_sha256",
+        "response_record_sha256",
+        "roster_sha256",
+        "extractor_manifest_sha256",
+        "evaluator_source_sha256",
+        "freeze_manifest_sha256",
+        "scorer_id",
+        "scorer_version",
+        "created_at_utc"
+      ],
+      "properties": {
+        "oracle_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "oracle_record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "evidence_record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "response_record_sha256": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          ]
+        },
+        "roster_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "extractor_manifest_sha256": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          ]
+        },
+        "evaluator_source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "freeze_manifest_sha256": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          ]
+        },
+        "judge_run_manifest_sha256": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          ]
+        },
+        "judge_responses_sha256": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          ]
+        },
+        "scorer_id": {"type": "string", "minLength": 1},
+        "scorer_version": {"type": "string", "minLength": 1},
+        "created_at_utc": {"type": "string", "format": "date-time"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "f1_diagnostic": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "availability",
+            "precision",
+            "recall",
+            "f1",
+            "true_positive",
+            "false_positive",
+            "false_negative",
+            "gold_count",
+            "predicted_count",
+            "judge_true_positive"
+          ],
+          "properties": {
+            "availability": {"const": "available"},
+            "precision": {"type": "number", "minimum": 0, "maximum": 1},
+            "recall": {"type": "number", "minimum": 0, "maximum": 1},
+            "f1": {"type": "number", "minimum": 0, "maximum": 1},
+            "true_positive": {"type": "integer", "minimum": 0},
+            "false_positive": {"type": "integer", "minimum": 0},
+            "false_negative": {"type": "integer", "minimum": 0},
+            "gold_count": {"type": "integer", "minimum": 0},
+            "predicted_count": {"type": "integer", "minimum": 0},
+            "judge_true_positive": {"type": "integer", "minimum": 0}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "availability",
+            "reason",
+            "missing_complete_categories"
+          ],
+          "properties": {
+            "availability": {"const": "unavailable"},
+            "reason": {"type": "string", "minLength": 1},
+            "missing_complete_categories": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "enum": ["actor", "road", "spatial", "event", "temporal", "normative"]
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"expected_support": {"const": "supported"}},
+        "required": ["expected_support"]
+      },
+      "then": {
+        "required": [
+          "ego_gate_passed",
+          "srs",
+          "srs_common",
+          "srs_category_scores",
+          "srs_common_category_scores",
+          "common_core_preservation",
+          "arc",
+          "rsc",
+          "iec_spec",
+          "atom_results",
+          "judge_bindings_sha256"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {"expected_support": {"const": "unsupported"}},
+        "required": ["expected_support"]
+      },
+      "then": {"required": ["semantic_metrics", "reason"]}
+    }
+  ],
+  "additionalProperties": false
+}

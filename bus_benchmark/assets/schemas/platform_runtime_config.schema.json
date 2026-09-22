@@ -1,0 +1,184 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/platform_runtime_config.schema.json",
+  "title": "Frozen platform-native runtime execution configuration",
+  "type": "object",
+  "required": [
+    "schema_version", "platform", "status", "sv_seeds",
+    "sv_max_iterations", "rollout_seconds", "worker"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "platform": {"enum": ["carla", "metadrive"]},
+    "status": {"enum": ["draft", "frozen"]},
+    "sv_seeds": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {"type": "integer", "minimum": 0, "maximum": 4}
+    },
+    "sv_max_iterations": {"const": 2000},
+    "rollout_seconds": {"const": 30.0},
+    "carla_endpoint": {
+      "type": "object",
+      "required": ["host", "port", "timeout_seconds"],
+      "properties": {
+        "host": {"const": "127.0.0.1"},
+        "port": {"type": "integer", "minimum": 1, "maximum": 65535},
+        "timeout_seconds": {"type": "number", "exclusiveMinimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "server_binary": {
+      "type": "object",
+      "required": ["path", "sha256", "bytes"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "(^|/)CarlaUE4/Binaries/Linux/CarlaUE4-Linux-Shipping$"
+        },
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "bytes": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "runtime_dependencies": {
+      "oneOf": [
+        {"$ref": "#/definitions/carlaRuntimeDependencies"},
+        {"$ref": "#/definitions/metadriveRuntimeDependencies"}
+      ]
+    },
+    "token_registry": {
+      "type": "object",
+      "required": ["path", "sha256", "bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "bytes": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "worker": {
+      "type": "object",
+      "required": [
+        "interpreter", "interpreter_sha256", "worker", "worker_sha256",
+        "timeout_seconds", "environment"
+      ],
+      "properties": {
+        "interpreter": {"type": "string", "minLength": 1},
+        "interpreter_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "worker": {"type": "string", "minLength": 1},
+        "worker_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "timeout_seconds": {"type": "integer", "minimum": 1},
+        "environment": {
+          "type": "object",
+          "propertyNames": {
+            "enum": ["CARLA_ROOT", "LD_LIBRARY_PATH", "PYTHON_EGG_CACHE", "PYTHONPATH"]
+          },
+          "additionalProperties": {"type": "string"}
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"platform": {"const": "carla"}},
+        "required": ["platform"]
+      },
+      "then": {
+        "required": ["carla_endpoint", "server_binary", "runtime_dependencies"],
+        "not": {"required": ["token_registry"]}
+      },
+      "else": {
+        "required": ["token_registry", "runtime_dependencies"],
+        "not": {
+          "anyOf": [
+            {"required": ["carla_endpoint"]},
+            {"required": ["server_binary"]}
+          ]
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "fileBinding": {
+      "type": "object",
+      "required": ["path", "sha256", "bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "bytes": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "treeBinding": {
+      "type": "object",
+      "required": ["role", "path", "sha256", "bytes", "file_count", "policy"],
+      "properties": {
+        "role": {"enum": ["carla_server_distribution", "scenic_editable_source"]},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "bytes": {"type": "integer", "minimum": 1},
+        "file_count": {"type": "integer", "minimum": 1},
+        "policy": {"const": "exclude_python_cache_v0.1"}
+      },
+      "additionalProperties": false
+    },
+    "metadriveSourceBinding": {
+      "type": "object",
+      "required": [
+        "repository_path", "revision", "tracked_subpath", "tracked_tree_sha256",
+        "tracked_file_count", "tracked_bytes", "policy"
+      ],
+      "properties": {
+        "repository_path": {"type": "string", "minLength": 1},
+        "revision": {"const": "85e5dadc6c7436d324348f6e3d8f8e680c06b4db"},
+        "tracked_subpath": {"const": "metadrive"},
+        "tracked_tree_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "tracked_file_count": {"type": "integer", "minimum": 1},
+        "tracked_bytes": {"type": "integer", "minimum": 1},
+        "policy": {"const": "git_tracked_worktree_bytes_v0.1"}
+      },
+      "additionalProperties": false
+    },
+    "carlaRuntimeDependencies": {
+      "type": "object",
+      "required": [
+        "environment_manifest", "python_path_entries", "source_trees", "map_catalog"
+      ],
+      "properties": {
+        "environment_manifest": {"$ref": "#/definitions/fileBinding"},
+        "python_path_entries": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/definitions/fileBinding"}
+        },
+        "source_trees": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {"$ref": "#/definitions/treeBinding"}
+        },
+        "map_catalog": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/definitions/fileBinding"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "metadriveRuntimeDependencies": {
+      "type": "object",
+      "required": ["environment_manifest", "metadrive_module", "source_tree"],
+      "properties": {
+        "environment_manifest": {"$ref": "#/definitions/fileBinding"},
+        "metadrive_module": {"$ref": "#/definitions/fileBinding"},
+        "source_tree": {"$ref": "#/definitions/metadriveSourceBinding"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

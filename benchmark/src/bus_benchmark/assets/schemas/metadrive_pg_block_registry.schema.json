@@ -1,0 +1,216 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/metadrive_pg_block_registry.schema.json",
+  "title": "Frozen MetaDrive PGMap sequence-block implementation contract",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "decision_status",
+    "platform",
+    "input_contract",
+    "generator_class",
+    "road_source_contract",
+    "token_registry_id",
+    "token_registry",
+    "implementation_files",
+    "global_parameters",
+    "tokens",
+    "fixture_bindings"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "decision_status": {"const": "confirmed"},
+    "platform": {"const": "metadrive"},
+    "input_contract": {"const": "metadrive_pg_block_scene_v0.1"},
+    "generator_class": {"const": "metadrive.component.map.pg_map.PGMap"},
+    "road_source_contract": {"const": "builtin_sequence_block_tokens_only"},
+    "token_registry_id": {"const": "metadrive-pg-token-registry-v0.1"},
+    "token_registry": {"$ref": "#/definitions/file_binding"},
+    "implementation_files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/definitions/file_binding"}
+    },
+    "global_parameters": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/definitions/frozen_parameter"}
+    },
+    "tokens": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "token",
+          "block_id",
+          "class_name",
+          "pg_block_class",
+          "implementation_file_sha256",
+          "parameter_contract",
+          "map_parameter_constraints",
+          "road_semantics"
+        ],
+        "properties": {
+          "token": {"type": "string", "minLength": 1, "maxLength": 8},
+          "block_id": {"type": "string", "minLength": 1, "maxLength": 8},
+          "class_name": {"type": "string", "minLength": 1},
+          "pg_block_class": {"type": "string", "pattern": "^metadrive\\.component\\.pgblock\\.[A-Za-z0-9_]+\\.[A-Za-z0-9_]+$"},
+          "implementation_file_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "parameter_contract": {
+            "type": "array",
+            "items": {"$ref": "#/definitions/parameter_contract"}
+          },
+          "map_parameter_constraints": {
+            "type": "object",
+            "required": ["lane_num_allowed"],
+            "properties": {
+              "lane_num_allowed": {
+                "type": "array",
+                "minItems": 1,
+                "items": {"type": "integer", "minimum": 1, "maximum": 5},
+                "uniqueItems": true
+              }
+            },
+            "additionalProperties": false
+          },
+          "road_semantics": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1},
+            "uniqueItems": true
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "fixture_bindings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "case_id",
+          "concept_ids",
+          "native_artifact_sha256",
+          "block_sequence",
+          "map_parameters",
+          "road_semantics",
+          "semantic_regions",
+          "semantic_regions_topology_effect"
+        ],
+        "properties": {
+          "case_id": {"type": "string", "minLength": 1},
+          "concept_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1},
+            "uniqueItems": true
+          },
+          "native_artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "block_sequence": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "not": {"pattern": "I"}
+          },
+          "map_parameters": {
+            "type": "object",
+            "required": ["map_seed", "lane_num", "lane_width_m", "exit_length_m"],
+            "properties": {
+              "map_seed": {"type": "integer", "minimum": 0, "maximum": 2147483647},
+              "lane_num": {"type": "integer", "minimum": 1, "maximum": 5},
+              "lane_width_m": {"type": "number", "minimum": 2, "maximum": 6},
+              "exit_length_m": {"type": "number", "minimum": 5, "maximum": 500}
+            },
+            "additionalProperties": false
+          },
+          "road_semantics": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1},
+            "uniqueItems": true
+          },
+          "semantic_regions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["region_id", "region_type", "polygon_m"],
+              "properties": {
+                "region_id": {"type": "string", "minLength": 1},
+                "region_type": {
+                  "enum": [
+                    "bus_stop_area",
+                    "bus_stop_no_parking_zone",
+                    "crosswalk",
+                    "sidewalk",
+                    "motor_lane",
+                    "non_motor_lane",
+                    "bus_only_lane",
+                    "queue_area"
+                  ]
+                },
+                "polygon_m": {
+                  "type": "array",
+                  "minItems": 3,
+                  "items": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": {"type": "number", "minimum": -10000, "maximum": 10000}
+                  }
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "semantic_regions_topology_effect": {"const": false}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "definitions": {
+    "file_binding": {
+      "type": "object",
+      "required": ["path", "sha256", "bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "bytes": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "scalar": {
+      "type": ["string", "number", "integer", "boolean"]
+    },
+    "frozen_parameter": {
+      "type": "object",
+      "required": ["name", "value"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "value": {"$ref": "#/definitions/scalar"}
+      },
+      "additionalProperties": false
+    },
+    "parameter_contract": {
+      "type": "object",
+      "required": ["name", "value_type", "required"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "value_type": {"enum": ["string", "number", "integer", "boolean"]},
+        "required": {"type": "boolean"},
+        "minimum": {"type": "number"},
+        "maximum": {"type": "number"},
+        "allowed_values": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/definitions/scalar"},
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

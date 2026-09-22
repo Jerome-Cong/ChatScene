@@ -1,0 +1,143 @@
+{
+  "report_version": "v0_2",
+  "source_sha256": {
+    "development_v0_2": "bb965d41c9cf21191b1a33d45be01e9ceb53d54d4216663a2f6578537bec62e5",
+    "test_v0_2": "81404653cf9ca6b228d71aa6a09f63901e74fe41839ebd64f2cb8db09ae6250e"
+  },
+  "test_rows": 252,
+  "test_intents": 84,
+  "dev_rows": 48,
+  "dev_intents": 16,
+  "comparison_counts": {
+    "core_intent_pairs": 1344,
+    "same_style_surface_pairs": 4032
+  },
+  "validation_errors": [],
+  "thresholds": {
+    "near_core": 0.68,
+    "template": 0.82
+  },
+  "methods": {
+    "near_core": "jaccard_over_typed_atomic_core_event_signature_features",
+    "template": "sequence_matcher_over_lowercase_alpha_query_text_same_surface_style"
+  },
+  "exact_core_overlaps": [],
+  "near_core_flags": [],
+  "near_template_flags": [],
+  "nearest_core_pairs_for_review": [
+    {
+      "development_intent_group_id": "BSG_DEV_v0_2_U02",
+      "test_intent_group_id": "BSG_v0_2_G06",
+      "score": 0.375
+    },
+    {
+      "development_intent_group_id": "BSG_DEV_v0_2_S09",
+      "test_intent_group_id": "BSG_v0_2_C07",
+      "score": 0.333333
+    },
+    {
+      "development_intent_group_id": "BSG_DEV_v0_2_S09",
+      "test_intent_group_id": "BSG_v0_2_C12",
+      "score": 0.333333
+    },
+    {
+      "development_intent_group_id": "BSG_DEV_v0_2_S09",
+      "test_intent_group_id": "BSG_v0_2_D06",
+      "score": 0.333333
+    },
+    {
+      "development_intent_group_id": "BSG_DEV_v0_2_S09",
+      "test_intent_group_id": "BSG_v0_2_D07",
+      "score": 0.333333
+    },
+    {
+      "development_intent_group_id": "BSG_DEV_v0_2_U02",
+      "test_intent_group_id": "BSG_v0_2_G03",
+      "score": 0.333333
+    },
+    {
+      "development_intent_group_id": "BSG_DEV_v0_2_U02",
+      "test_intent_group_id": "BSG_v0_2_G07",
+      "score": 0.333333
+    },
+    {
+      "development_intent_group_id": "BSG_DEV_v0_2_U02",
+      "test_intent_group_id": "BSG_v0_2_G08",
+      "score": 0.333333
+    },
+    {
+      "development_intent_group_id": "BSG_DEV_v0_2_U03",
+      "test_intent_group_id": "BSG_v0_2_G02",
+      "score": 0.333333
+    },
+    {
+      "development_intent_group_id": "BSG_DEV_v0_2_U04",
+      "test_intent_group_id": "BSG_v0_2_G03",
+      "score": 0.333333
+    }
+  ],
+  "nearest_template_pairs_for_review": [
+    {
+      "development_query_id": "BSG_DEV_v0_2_S10_partial",
+      "test_query_id": "BSG_v0_2_C12_partial",
+      "surface_style": "partial",
+      "score": 0.699029
+    },
+    {
+      "development_query_id": "BSG_DEV_v0_2_S02_vague",
+      "test_query_id": "BSG_v0_2_D11_vague",
+      "surface_style": "vague",
+      "score": 0.683761
+    },
+    {
+      "development_query_id": "BSG_DEV_v0_2_S02_vague",
+      "test_query_id": "BSG_v0_2_B12_vague",
+      "surface_style": "vague",
+      "score": 0.666667
+    },
+    {
+      "development_query_id": "BSG_DEV_v0_2_S07_partial",
+      "test_query_id": "BSG_v0_2_D06_partial",
+      "surface_style": "partial",
+      "score": 0.666667
+    },
+    {
+      "development_query_id": "BSG_DEV_v0_2_S07_vague",
+      "test_query_id": "BSG_v0_2_B07_vague",
+      "surface_style": "vague",
+      "score": 0.654206
+    },
+    {
+      "development_query_id": "BSG_DEV_v0_2_S07_partial",
+      "test_query_id": "BSG_v0_2_C07_partial",
+      "surface_style": "partial",
+      "score": 0.645161
+    },
+    {
+      "development_query_id": "BSG_DEV_v0_2_S07_partial",
+      "test_query_id": "BSG_v0_2_E07_partial",
+      "surface_style": "partial",
+      "score": 0.621469
+    },
+    {
+      "development_query_id": "BSG_DEV_v0_2_S02_vague",
+      "test_query_id": "BSG_v0_2_B02_vague",
+      "surface_style": "vague",
+      "score": 0.62069
+    },
+    {
+      "development_query_id": "BSG_DEV_v0_2_S08_vague",
+      "test_query_id": "BSG_v0_2_D11_vague",
+      "surface_style": "vague",
+      "score": 0.612903
+    },
+    {
+      "development_query_id": "BSG_DEV_v0_2_S01_partial",
+      "test_query_id": "BSG_v0_2_D03_partial",
+      "surface_style": "partial",
+      "score": 0.607143
+    }
+  ],
+  "pass": true,
+  "interpretation": "A clean pass requires no exact/near core-event match and no high-scaffold surface-template match. The nearest pairs are retained for manual threshold-adjacent review before freezing."
+}

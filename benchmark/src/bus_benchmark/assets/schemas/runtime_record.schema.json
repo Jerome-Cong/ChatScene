@@ -1,0 +1,308 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/runtime_record.schema.json",
+  "title": "Platform-native Compile, SV, and NE record",
+  "type": "object",
+  "required": [
+    "schema_version", "run_id", "method_id", "platform", "query_id",
+    "intent_group_id", "statistical_intent_cluster_id", "surface_style",
+    "repetition", "expected_support", "source_response_sha256", "source_config_sha256",
+    "source_generation_manifest_sha256", "source_implementation_bundle_sha256",
+    "generation_chain_verified",
+    "source_artifact_sha256", "excluded_reason", "compile", "sv_trials",
+    "selected_seed", "ne", "iec_exec", "provenance"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "run_id": {"type": "string", "minLength": 1},
+    "method_id": {"type": "string", "minLength": 1},
+    "platform": {"enum": ["carla", "metadrive"]},
+    "query_id": {"type": "string", "minLength": 1},
+    "intent_group_id": {"type": "string", "minLength": 1},
+    "statistical_intent_cluster_id": {"type": "string", "minLength": 1},
+    "surface_style": {"enum": ["precise", "partial", "vague"]},
+    "repetition": {"type": "integer", "minimum": 0, "maximum": 4},
+    "expected_support": {"enum": ["supported", "unsupported"]},
+    "source_response_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_generation_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_implementation_bundle_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "generation_chain_verified": {"type": "boolean"},
+    "source_artifact_sha256": {
+      "oneOf": [{"type": "null"}, {"type": "string", "pattern": "^[0-9a-f]{64}$"}]
+    },
+    "excluded_reason": {"type": ["null", "string"]},
+    "compile": {"$ref": "#/definitions/stage"},
+    "sv_trials": {
+      "type": "array", "minItems": 5, "maxItems": 5,
+      "items": {"$ref": "#/definitions/sv_stage"}
+    },
+    "selected_seed": {
+      "oneOf": [{"type": "null"}, {"type": "integer", "minimum": 0, "maximum": 4}]
+    },
+    "ne": {"$ref": "#/definitions/ne_stage"},
+    "iec_exec": {
+      "type": "object",
+      "required": ["status", "coverage", "trace_available", "reason"],
+      "properties": {
+        "status": {"const": "unavailable"},
+        "coverage": {"const": "none"},
+        "trace_available": {"type": "boolean"},
+        "reason": {
+          "enum": [
+            "frozen_query_blind_event_observer_not_registered",
+            "native_rollout_trace_unavailable"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "producer_id", "producer_version", "created_at_utc", "worker_path",
+        "worker_sha256", "interpreter_path", "interpreter_sha256",
+        "worker_config", "worker_config_sha256", "controller_source_sha256",
+        "controller_config", "attempt_path"
+      ],
+      "properties": {
+        "producer_id": {"const": "bus_benchmark.runtime"},
+        "producer_version": {"const": "0.1"},
+        "created_at_utc": {"type": "string", "format": "date-time"},
+        "worker_path": {"type": "string", "minLength": 1},
+        "worker_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "interpreter_path": {"type": "string", "minLength": 1},
+        "interpreter_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "worker_config": {
+          "type": "object",
+          "required": [
+            "interpreter", "interpreter_sha256", "interpreter_bytes",
+            "worker", "worker_sha256", "worker_bytes", "timeout_seconds",
+            "environment", "platform_context", "runtime_dependencies"
+          ],
+          "properties": {
+            "interpreter": {"type": "string", "minLength": 1},
+            "interpreter_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "interpreter_bytes": {"type": "integer", "minimum": 1},
+            "worker": {"type": "string", "minLength": 1},
+            "worker_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "worker_bytes": {"type": "integer", "minimum": 1},
+            "timeout_seconds": {"type": "integer", "minimum": 1},
+            "environment": {
+              "type": "object",
+              "additionalProperties": {"type": "string"}
+            },
+            "platform_context": {
+              "type": "object",
+              "properties": {
+                "carla_endpoint": {
+                  "type": "object",
+                  "required": ["host", "port", "timeout_seconds"],
+                  "properties": {
+                    "host": {"const": "127.0.0.1"},
+                    "port": {"type": "integer", "minimum": 1, "maximum": 65535},
+                    "timeout_seconds": {"type": "number", "exclusiveMinimum": 0}
+                  },
+                  "additionalProperties": false
+                },
+                "server_binary": {"$ref": "#/definitions/artifact"},
+                "metadrive_token_registry": {"$ref": "#/definitions/artifact"}
+              },
+              "additionalProperties": false
+            },
+            "runtime_dependencies": {
+              "oneOf": [
+                {"$ref": "#/definitions/carla_runtime_dependencies"},
+                {"$ref": "#/definitions/metadrive_runtime_dependencies"}
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "worker_config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "controller_source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "controller_config": {"type": "object"},
+        "attempt_path": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"platform": {"const": "carla"}},
+        "required": ["platform"]
+      },
+      "then": {
+        "properties": {"ne": {"required": ["server_session"]}}
+      }
+    }
+  ],
+  "definitions": {
+    "artifact": {
+      "type": "object",
+      "required": ["path", "sha256", "bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "bytes": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "nullable_artifact": {
+      "oneOf": [{"type": "null"}, {"$ref": "#/definitions/artifact"}]
+    },
+    "tree_binding": {
+      "type": "object",
+      "required": ["role", "path", "sha256", "bytes", "file_count", "policy"],
+      "properties": {
+        "role": {"enum": ["carla_server_distribution", "scenic_editable_source"]},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "bytes": {"type": "integer", "minimum": 1},
+        "file_count": {"type": "integer", "minimum": 1},
+        "policy": {"const": "exclude_python_cache_v0.1"}
+      },
+      "additionalProperties": false
+    },
+    "metadrive_source_binding": {
+      "type": "object",
+      "required": [
+        "repository_path", "revision", "tracked_subpath", "tracked_tree_sha256",
+        "tracked_file_count", "tracked_bytes", "policy"
+      ],
+      "properties": {
+        "repository_path": {"type": "string", "minLength": 1},
+        "revision": {"const": "85e5dadc6c7436d324348f6e3d8f8e680c06b4db"},
+        "tracked_subpath": {"const": "metadrive"},
+        "tracked_tree_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "tracked_file_count": {"type": "integer", "minimum": 1},
+        "tracked_bytes": {"type": "integer", "minimum": 1},
+        "policy": {"const": "git_tracked_worktree_bytes_v0.1"}
+      },
+      "additionalProperties": false
+    },
+    "carla_runtime_dependencies": {
+      "type": "object",
+      "required": [
+        "environment_manifest", "python_path_entries", "source_trees",
+        "map_catalog", "verification_status"
+      ],
+      "properties": {
+        "environment_manifest": {"$ref": "#/definitions/artifact"},
+        "python_path_entries": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/definitions/artifact"}
+        },
+        "source_trees": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {"$ref": "#/definitions/tree_binding"}
+        },
+        "map_catalog": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/definitions/artifact"}
+        },
+        "verification_status": {
+          "enum": ["draft_bound", "formal_verified"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "metadrive_runtime_dependencies": {
+      "type": "object",
+      "required": [
+        "environment_manifest", "metadrive_module", "source_tree",
+        "verification_status"
+      ],
+      "properties": {
+        "environment_manifest": {"$ref": "#/definitions/artifact"},
+        "metadrive_module": {"$ref": "#/definitions/artifact"},
+        "source_tree": {"$ref": "#/definitions/metadrive_source_binding"},
+        "verification_status": {
+          "enum": ["draft_verified", "formal_verified"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "stage": {
+      "type": "object",
+      "required": [
+        "status", "started_at_utc", "finished_at_utc", "request", "stdout",
+        "stderr", "exit_code", "timed_out", "result", "error"
+      ],
+      "properties": {
+        "status": {"enum": ["passed", "failed", "skipped", "timeout"]},
+        "started_at_utc": {"type": "string", "format": "date-time"},
+        "finished_at_utc": {"type": "string", "format": "date-time"},
+        "request": {"$ref": "#/definitions/nullable_artifact"},
+        "stdout": {"$ref": "#/definitions/nullable_artifact"},
+        "stderr": {"$ref": "#/definitions/nullable_artifact"},
+        "exit_code": {"type": ["null", "integer"]},
+        "timed_out": {"type": "boolean"},
+        "result": {"type": ["null", "object"]},
+        "error": {"type": ["null", "string"]}
+      },
+      "additionalProperties": false
+    },
+    "sv_stage": {
+      "type": "object",
+      "required": [
+        "status", "started_at_utc", "finished_at_utc", "request", "stdout",
+        "stderr", "exit_code", "timed_out", "result", "error", "seed", "iterations"
+      ],
+      "properties": {
+        "status": {"enum": ["passed", "failed", "skipped", "timeout"]},
+        "started_at_utc": {"type": "string", "format": "date-time"},
+        "finished_at_utc": {"type": "string", "format": "date-time"},
+        "request": {"$ref": "#/definitions/nullable_artifact"},
+        "stdout": {"$ref": "#/definitions/nullable_artifact"},
+        "stderr": {"$ref": "#/definitions/nullable_artifact"},
+        "exit_code": {"type": ["null", "integer"]},
+        "timed_out": {"type": "boolean"},
+        "result": {"type": ["null", "object"]},
+        "error": {"type": ["null", "string"]},
+        "seed": {"type": "integer", "minimum": 0, "maximum": 4},
+        "iterations": {"type": ["null", "integer"], "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "ne_stage": {
+      "type": "object",
+      "required": [
+        "status", "started_at_utc", "finished_at_utc", "request", "stdout",
+        "stderr", "exit_code", "timed_out", "result", "error", "selected_seed",
+        "simulated_seconds", "steps", "trace", "controller_id",
+        "controller_config_sha256", "runtime_controller_class", "termination_reason"
+      ],
+      "properties": {
+        "status": {"enum": ["passed", "failed", "skipped", "timeout"]},
+        "started_at_utc": {"type": "string", "format": "date-time"},
+        "finished_at_utc": {"type": "string", "format": "date-time"},
+        "request": {"$ref": "#/definitions/nullable_artifact"},
+        "stdout": {"$ref": "#/definitions/nullable_artifact"},
+        "stderr": {"$ref": "#/definitions/nullable_artifact"},
+        "exit_code": {"type": ["null", "integer"]},
+        "timed_out": {"type": "boolean"},
+        "result": {"type": ["null", "object"]},
+        "error": {"type": ["null", "string"]},
+        "selected_seed": {
+          "oneOf": [{"type": "null"}, {"type": "integer", "minimum": 0, "maximum": 4}]
+        },
+        "simulated_seconds": {"type": "number", "minimum": 0, "maximum": 30.000001},
+        "steps": {"type": "integer", "minimum": 0},
+        "trace": {"$ref": "#/definitions/nullable_artifact"},
+        "server_session": {"$ref": "#/definitions/nullable_artifact"},
+        "controller_id": {"type": "string", "minLength": 1},
+        "controller_config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "runtime_controller_class": {"type": ["null", "string"]},
+        "termination_reason": {"type": ["null", "string"]}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

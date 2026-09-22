@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/controller_config.schema.json",
+  "title": "Frozen query-blind native runtime controller",
+  "type": "object",
+  "required": [
+    "schema_version", "status", "controller_id", "platform",
+    "query_blind", "reads_query_metadata", "reads_evaluation_metadata",
+    "ego_proxy", "implementation",
+    "parameters", "action_contract"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "status": {"enum": ["draft", "frozen"]},
+    "controller_id": {"type": "string", "minLength": 1},
+    "platform": {"enum": ["carla", "metadrive"]},
+    "query_blind": {"const": true},
+    "reads_query_metadata": {"const": false},
+    "reads_evaluation_metadata": {"const": false},
+    "ego_proxy": {
+      "type": "object",
+      "required": ["length_m", "width_m", "proxy_id"],
+      "properties": {
+        "length_m": {"const": 5.33},
+        "width_m": {"const": 2.1},
+        "proxy_id": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "implementation": {
+      "type": "object",
+      "required": ["module", "class", "source_path", "source_sha256"],
+      "properties": {
+        "module": {"type": "string", "minLength": 1},
+        "class": {"type": "string", "minLength": 1},
+        "source_path": {"type": "string", "minLength": 1},
+        "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": false
+    },
+    "parameters": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": ["number", "integer", "boolean", "string"]
+      }
+    },
+    "action_contract": {
+      "type": "object",
+      "required": ["lateral", "longitudinal", "braking_preserved"],
+      "properties": {
+        "lateral": {"type": "string", "minLength": 1},
+        "longitudinal": {"type": "string", "minLength": 1},
+        "braking_preserved": {"const": true}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

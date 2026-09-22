@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/judge_request_bundle_manifest.schema.json",
+  "title": "Immutable semantic Judge request bundle manifest",
+  "type": "object",
+  "required": [
+    "schema_version", "result_kind", "request_count", "request_index_sha256",
+    "responses_sha256", "evidence_sha256", "judge_rubric_sha256",
+    "runner_manifest_sha256", "freeze_manifest_sha256", "manifest_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "result_kind": {"const": "judge_request_bundle"},
+    "request_count": {"type": "integer", "minimum": 0},
+    "request_index_sha256": {"$ref": "#/definitions/sha256"},
+    "responses_sha256": {"$ref": "#/definitions/sha256"},
+    "evidence_sha256": {"$ref": "#/definitions/sha256"},
+    "judge_rubric_sha256": {"$ref": "#/definitions/sha256"},
+    "runner_manifest_sha256": {"$ref": "#/definitions/sha256"},
+    "freeze_manifest_sha256": {"$ref": "#/definitions/sha256"},
+    "manifest_sha256": {"$ref": "#/definitions/sha256"}
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

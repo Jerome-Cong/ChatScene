@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/uqh_assessor_execution.schema.json",
+  "title": "External independent UQH assessor execution",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "external_execution_id",
+    "created_at_utc",
+    "raw_assessor_request",
+    "raw_assessor_response"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "run_id": {"type": "string", "minLength": 1},
+    "external_execution_id": {"type": "string", "minLength": 1},
+    "created_at_utc": {"type": "string", "format": "date-time"},
+    "raw_assessor_request": {"$ref": "#/definitions/file_binding"},
+    "raw_assessor_response": {
+      "$ref": "#/definitions/file_binding"
+    }
+  },
+  "definitions": {
+    "file_binding": {
+      "type": "object",
+      "required": ["path", "sha256", "bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "bytes": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

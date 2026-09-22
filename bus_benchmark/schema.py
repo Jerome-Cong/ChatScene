@@ -15,6 +15,7 @@ from typing import Any, Dict, Iterable, Mapping, Tuple
 from urllib.parse import urldefrag, urljoin
 
 from .errors import ValidationError
+from .paths import asset_path
 
 try:
     from jsonschema import Draft7Validator, FormatChecker, RefResolver, validators
@@ -28,7 +29,7 @@ else:
     _JSONSCHEMA_IMPORT_ERROR = None
 
 
-SCHEMA_DIRECTORY = Path(__file__).resolve().parents[1] / "benchmark_configs" / "schemas"
+SCHEMA_DIRECTORY = asset_path("schemas")
 
 SCHEMA_FILES: Mapping[str, str] = {
     "common_ontology": "common_ontology.schema.json",

@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/judge_calibration_roster.schema.json",
+  "title": "Precommitted judge calibration selection roster",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "decision_status",
+    "selection_algorithm",
+    "seed",
+    "items_per_platform",
+    "eligible_population_count_by_platform",
+    "eligible_population_sha256",
+    "items_sha256",
+    "items"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "decision_status": {"const": "confirmed"},
+    "selection_algorithm": {"const": "query_category_then_sha256_v0.1"},
+    "seed": {"const": "bus-judge-calibration-v0.1"},
+    "items_per_platform": {"const": 90},
+    "eligible_population_count_by_platform": {
+      "type": "object",
+      "required": ["carla", "metadrive"],
+      "properties": {
+        "carla": {"type": "integer", "minimum": 90},
+        "metadrive": {"type": "integer", "minimum": 90}
+      },
+      "additionalProperties": false
+    },
+    "eligible_population_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "items_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "items": {
+      "type": "array",
+      "minItems": 180,
+      "maxItems": 180,
+      "items": {
+        "type": "object",
+        "required": [
+          "item_id",
+          "platform",
+          "source_id",
+          "query_id",
+          "run_id",
+          "repetition",
+          "atom_id",
+          "category",
+          "surface_style",
+          "source_response_sha256",
+          "source_evidence_sha256"
+        ],
+        "properties": {
+          "item_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "platform": {"enum": ["carla", "metadrive"]},
+          "source_id": {"type": "string", "minLength": 1},
+          "query_id": {"type": "string", "minLength": 1},
+          "run_id": {"type": "string", "minLength": 1},
+          "repetition": {"type": "integer", "minimum": 0, "maximum": 4},
+          "atom_id": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
+          "category": {"enum": ["actor", "road", "spatial", "event", "temporal", "normative"]},
+          "surface_style": {"enum": ["precise", "partial", "vague"]},
+          "source_response_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "source_evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

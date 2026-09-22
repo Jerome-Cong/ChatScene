@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/human_platform_gold_record.schema.json",
+  "title": "Single-reviewer CARLA platform human gold",
+  "type": "object",
+  "required": [
+    "schema_version", "workflow_type", "gold_record_id", "subject_id",
+    "review_kind", "platform", "subject_sha256", "audit_subject_sha256",
+    "ontology_definition_sha256", "input_contract", "reviewer",
+    "review_status", "canonical_source_revalidated", "decision_status"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "workflow_type": {"const": "platform_fixture_capability_human_gold"},
+    "gold_record_id": {"$ref": "#/definitions/sha256"},
+    "subject_id": {"type": "string", "minLength": 1},
+    "review_kind": {"enum": ["fixture_case", "capability_status"]},
+    "platform": {"const": "carla"},
+    "subject_sha256": {"$ref": "#/definitions/sha256"},
+    "audit_subject_sha256": {"$ref": "#/definitions/sha256"},
+    "ontology_definition_sha256": {"$ref": "#/definitions/sha256"},
+    "input_contract": {"const": "raw_platform_artifact_v0.1"},
+    "reviewer": {
+      "type": "object",
+      "required": ["reviewer_id", "verdict", "reason"],
+      "properties": {
+        "reviewer_id": {"type": "string", "minLength": 1},
+        "verdict": {"const": "approve"},
+        "reason": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "review_status": {"const": "complete"},
+    "canonical_source_revalidated": {"const": true},
+    "decision_status": {"const": "confirmed"}
+  },
+  "definitions": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}

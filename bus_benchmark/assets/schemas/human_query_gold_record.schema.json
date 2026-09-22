@@ -1,0 +1,139 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/human_query_gold_record.schema.json",
+  "title": "Single-reviewer query-oracle human gold",
+  "type": "object",
+  "required": [
+    "schema_version", "workflow_type", "gold_record_id", "query_id",
+    "subject_sha256", "reviewer_id", "review_status",
+    "canonical_source_revalidated", "source_binding",
+    "review_payload", "decision_status"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "workflow_type": {"const": "query_oracle_human_gold"},
+    "gold_record_id": {"$ref": "#/definitions/sha256"},
+    "query_id": {"type": "string", "minLength": 1},
+    "subject_sha256": {"$ref": "#/definitions/sha256"},
+    "reviewer_id": {"type": "string", "minLength": 1},
+    "review_status": {"const": "complete"},
+    "canonical_source_revalidated": {"const": true},
+    "source_binding": {
+      "type": "object",
+      "required": [
+        "library_sha256",
+        "library_hash_scope",
+        "oracle_sha256",
+        "oracle_hash_scope",
+        "record_count"
+      ],
+      "properties": {
+        "library_sha256": {"$ref": "#/definitions/sha256"},
+        "library_hash_scope": {"enum": ["file_bytes", "canonical_records"]},
+        "oracle_sha256": {"$ref": "#/definitions/sha256"},
+        "oracle_hash_scope": {"enum": ["file_bytes", "canonical_records"]},
+        "record_count": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "review_payload": {"$ref": "#/definitions/review_payload"},
+    "decision_status": {"const": "confirmed"}
+  },
+  "definitions": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "draft_atom_review": {
+      "type": "object",
+      "required": [
+        "draft_atom_id",
+        "verdict",
+        "replacement_atom_ids",
+        "operation_group_id",
+        "reason",
+        "before_sha256",
+        "after_sha256",
+        "changed_fields"
+      ],
+      "properties": {
+        "draft_atom_id": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
+        "verdict": {"enum": ["accept", "reject", "modify", "split", "merge"]},
+        "replacement_atom_ids": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
+          "uniqueItems": true
+        },
+        "operation_group_id": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "string", "minLength": 1}
+          ]
+        },
+        "reason": {"type": "string", "minLength": 1},
+        "before_sha256": {"$ref": "#/definitions/sha256"},
+        "after_sha256": {"$ref": "#/definitions/sha256"},
+        "changed_fields": {
+          "type": "array",
+          "items": {
+            "enum": ["category", "predicate", "arguments", "layer", "polarity", "weight"]
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "added_atom_review": {
+      "type": "object",
+      "required": ["atom_id", "reason"],
+      "properties": {
+        "atom_id": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
+        "reason": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "review_payload": {
+      "type": "object",
+      "required": [
+        "status",
+        "reviewer_id",
+        "required_check_status",
+        "draft_atom_reviews",
+        "added_atom_reviews",
+        "decision"
+      ],
+      "properties": {
+        "status": {"const": "complete"},
+        "reviewer_id": {"type": "string", "minLength": 1},
+        "required_check_status": {
+          "type": "object",
+          "required": [
+            "support_and_response_disposition",
+            "cardinality_and_polarity",
+            "road_and_spatial_decomposition",
+            "event_graph_and_actor_binding",
+            "surface_layering",
+            "cpd_common_eligibility"
+          ],
+          "properties": {
+            "support_and_response_disposition": {"const": "complete"},
+            "cardinality_and_polarity": {"const": "complete"},
+            "road_and_spatial_decomposition": {"const": "complete"},
+            "event_graph_and_actor_binding": {"const": "complete"},
+            "surface_layering": {"const": "complete"},
+            "cpd_common_eligibility": {"const": "complete"}
+          },
+          "additionalProperties": false
+        },
+        "draft_atom_reviews": {
+          "type": "array",
+          "items": {"$ref": "#/definitions/draft_atom_review"}
+        },
+        "added_atom_reviews": {
+          "type": "array",
+          "items": {"$ref": "#/definitions/added_atom_review"}
+        },
+        "decision": {"$ref": "oracle_record.schema.json"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

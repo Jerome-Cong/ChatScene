@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/judge_request_record.schema.json",
+  "title": "Replayable semantic-atom Judge request",
+  "type": "object",
+  "required": [
+    "schema_version", "item_id", "query_id", "run_id", "atom_id", "platform",
+    "model_id", "judge_config_sha256", "judge_request_sha256",
+    "raw_judge_request", "provenance"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "item_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "query_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "atom_id": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
+    "platform": {"enum": ["carla", "metadrive"]},
+    "model_id": {"type": "string", "minLength": 1},
+    "judge_config_sha256": {"$ref": "#/definitions/sha256"},
+    "judge_request_sha256": {"$ref": "#/definitions/sha256"},
+    "raw_judge_request": {"$ref": "#/definitions/file_binding"},
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source_response_sha256", "source_evidence_sha256",
+        "source_artifact_sha256", "judge_rubric_sha256",
+        "runner_manifest_sha256", "freeze_manifest_sha256"
+      ],
+      "properties": {
+        "source_response_sha256": {"$ref": "#/definitions/sha256"},
+        "source_evidence_sha256": {"$ref": "#/definitions/sha256"},
+        "source_artifact_sha256": {"$ref": "#/definitions/sha256"},
+        "judge_rubric_sha256": {"$ref": "#/definitions/sha256"},
+        "runner_manifest_sha256": {"$ref": "#/definitions/sha256"},
+        "freeze_manifest_sha256": {"$ref": "#/definitions/sha256"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "file_binding": {
+      "type": "object",
+      "required": ["path", "sha256", "bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/definitions/sha256"},
+        "bytes": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    }
+  }
+}

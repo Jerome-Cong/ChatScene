@@ -1,0 +1,59 @@
+{
+  "validation_pass": true,
+  "created_date": "2026-07-15",
+  "v0_1_source_hashes": {
+    "dev_v0_1": "09b9e29c32315b866aaa082055ef01ea905c48beeccb05e227f1932855a4d2df",
+    "test_v0_1": "560bf74371309d24294685f5828a6c4591f3bed0a88717f0df9da80ae5455d52"
+  },
+  "source_query_text_top_down_2d_occurrences": 7,
+  "target_query_text_top_down_2d_occurrences": 0,
+  "target_query_and_canonical_platform_instruction_occurrences": 0,
+  "target_ego_reaction_language_occurrences": 0,
+  "development": {
+    "rows": 48,
+    "intents": 16,
+    "surface_styles": {
+      "precise": 16,
+      "partial": 16,
+      "vague": 16
+    },
+    "support_by_intent": {
+      "supported": 12,
+      "unsupported": 4
+    },
+    "support_by_query": {
+      "supported": 36,
+      "unsupported": 12
+    }
+  },
+  "test": {
+    "rows": 252,
+    "intents": 84,
+    "surface_styles": {
+      "precise": 84,
+      "partial": 84,
+      "vague": 84
+    },
+    "support_by_intent": {
+      "supported": 76,
+      "unsupported": 8
+    },
+    "support_by_query": {
+      "supported": 228,
+      "unsupported": 24
+    }
+  },
+  "mapping": {
+    "intent_mappings": 100,
+    "query_mappings": 300
+  },
+  "view_mode_definition": "Scenarios execute in the native simulation environment; semantic geometry metrics use ground-plane projection, and height features are excluded from method ranking.",
+  "exact_dev_test_core_signature_overlap_count": 0,
+  "issues": [],
+  "overlap": {
+    "pass": true,
+    "exact_core_overlaps": 0,
+    "near_core_flags": 0,
+    "near_template_flags": 0
+  }
+}

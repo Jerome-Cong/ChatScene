@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chatscene.local/schemas/freeze_protocol.schema.json",
+  "title": "Frozen benchmark protocol",
+  "type": "object",
+  "required": [
+    "repetitions",
+    "sv_seeds",
+    "sv_max_iterations",
+    "rollout_seconds",
+    "query_input_fields",
+    "post_output_repair",
+    "test_library_locked",
+    "benchmark_suite_visibility",
+    "held_out_generalization_claim"
+  ],
+  "properties": {
+    "repetitions": {"const": 5},
+    "sv_seeds": {"const": [0, 1, 2, 3, 4]},
+    "sv_max_iterations": {"const": 2000},
+    "rollout_seconds": {"const": 30.0},
+    "query_input_fields": {"const": ["query_text"]},
+    "post_output_repair": {"const": false},
+    "test_library_locked": {"const": true},
+    "benchmark_suite_visibility": {"const": "design_visible"},
+    "held_out_generalization_claim": {"const": false}
+  },
+  "additionalProperties": false
+}
