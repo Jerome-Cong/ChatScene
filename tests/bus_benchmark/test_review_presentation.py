@@ -1,3 +1,4 @@
+from bus_benchmark.paths import PACKAGE_ROOT
 import copy
 import unittest
 from pathlib import Path
@@ -83,7 +84,7 @@ class CompletePresentationTests(unittest.TestCase):
             self.assertIn("⚠", projection["statement"])
 
     def test_practice_cases_cover_positive_negative_and_exclusion(self):
-        packet = read_json(ROOT / "bus_benchmark/assets/review/practice.json")
+        packet = read_json(PACKAGE_ROOT / "assets/review/practice.json")
         self.assertFalse(packet["human_gold"])
         for case in packet["cases"]:
             with self.subTest(case=case["id"]):

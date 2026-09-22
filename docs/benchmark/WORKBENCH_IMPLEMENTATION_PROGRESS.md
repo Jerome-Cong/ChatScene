@@ -128,3 +128,17 @@ BW-06 补充：前端词典改为只查自身属性，未知 predicate/token 与
 验证：CPD/计分链、catalog、packet/model/migration 联合 51 项通过（4.174 秒）；真实离线 Chromium 15 项通过（5.536 秒）。独立复审无阻断。涵盖固定十对分母、失败惩罚、selector 不变、双字段一致、逐题策略不同、目录变化及旧无目录包触发重审、专家异议撤销确认。初轮新增顶层字段导致迁移拒绝，已修为 dictionary 内目录并加入反例测试；记录保留于本机测试日志。
 
 兼容性：没有修改 scorer、提取器、冻结材料或正式 finalizer。距离目录解释现有 10/30 米阈值，不接受 UI 自创阈值；未知维度/不同分箱须专家处理。普通页只确认或提出异议，不新增自由 JSON 编辑入口。未验证：真人理解/效率、Windows 真机、兼容内核 Judge 和真实平台校准。回滚：撤销目录投影代码但保留旧题包/备份；不同词典的确认不得无审阅沿用。
+
+## BW-09：唯一源码与完整 wheel 候选交付
+
+状态：完成；交付版本为 0.2.0rc1，未宣称最终发布验收。
+
+实际文件：唯一实现收敛至 `benchmark/src/bus_benchmark`，根目录副本已可恢复备份并退役；schema 使用此前生效的包资源。补齐 wheel 的全部审阅资源、query README、notebook optional extras；旧脚本改名 `scripts/bus-benchmark.py` 防止遮蔽安装包；legacy 工作区使用显式环境/cwd，路径相关脚本与测试使用导入包根目录。入口/构建说明见 `WHEEL_DELIVERY.md`，确切产物见 `WHEEL_RELEASE_CANDIDATE_MANIFEST.json`。
+
+验证：44 项核心/迁移/固定兼容测试通过（4.645 秒），52 项 schema/题库通过（0.795 秒）；旧 UI/widget/native-worker 合计90项，初轮86通过、2错误、2原条件跳过，脚本遮蔽修复后2错误定向复验通过（26.634秒）；真实离线浏览器15项通过（5.380秒）。最终wheel的161个包文件与唯一源码逐字节一致，无多余包文件；sdist不含私有输入/环境。独立复审通过，并修复其指出的旧文档入口命令。
+
+干净安装：新项目内 uv 环境只安装wheel及核心依赖，在仓库外新建目录用 `python -I` 执行可复现smoke；所有导入来自site-packages，无IPython/ipywidgets，paths/资源读取/两题合成确认传输/CLI校验及导入通过；失效确认和安装目录写状态被拒绝。合成收据不构成人工gold，未执行正式finalize。旧兼容脚本也从仓库外验证。
+
+困难处理：系统Python缺distutils，使用已有uv Python 3.8.20构建；初次目录审计发现query README漏打包，已补齐并重新构建、安装、验证最终wheel。最终产物保存在 `.review-workspace/bw09-verified-wheel/`，不把私有审阅工作区提交到Git。开发需先安装包或显式PYTHONPATH；旧冻结配置的源码路径/清单需重新准备和验证，不能复用旧hash冒充新安装。
+
+未验证/门槛：POSIX维护者持久化未声称支持Windows Python；Windows浏览器、真人效率/错误发现、第二真实方法及兼容内核Judge仍待后续验收。回滚：从Git历史恢复根目录和对应入口，或用本地源码备份；保留全部历史题包/进度与原失败记录，不能删除后冒充完成。

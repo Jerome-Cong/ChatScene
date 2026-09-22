@@ -36,7 +36,9 @@ from bus_benchmark.schema import validate_schema_instance
 
 EVIDENCE_TYPE = "metadrive_native_probe_evidence_v0.1"
 PROBE_ID = "metadrive_sequence_block_track_probe_v0.1"
-NATIVE_OBSERVER = ROOT / "bus_benchmark" / "native_observer.py"
+from bus_benchmark.paths import PACKAGE_ROOT
+
+NATIVE_OBSERVER = PACKAGE_ROOT / "native_observer.py"
 
 
 def _git(repository, *arguments):

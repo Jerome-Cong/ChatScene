@@ -1,0 +1,34 @@
+{
+  "distribution": "bus-scene-benchmark",
+  "version": "0.2.0rc1",
+  "status": "release_candidate_not_final_freeze",
+  "source_root": "benchmark/src/bus_benchmark",
+  "python": "3.8.20",
+  "platform": "Linux",
+  "package_files": 161,
+  "artifacts": [
+    {
+      "filename": "bus_scene_benchmark-0.2.0rc1-py3-none-any.whl",
+      "bytes": 594108,
+      "sha256": "103f4712f5a70b1ac9e2910d9c735b691c5694be0f43dbf1172d931561c08756"
+    },
+    {
+      "filename": "bus_scene_benchmark-0.2.0rc1.tar.gz",
+      "bytes": 508877,
+      "sha256": "2af7e225199f444887d92291203ae28ebd64f63c9f6aff89a5ea8302778ed479"
+    }
+  ],
+  "excluded": [
+    "private oracle/gold/review state",
+    "method source",
+    "runtime environments",
+    "CARLA/MetaDrive"
+  ],
+  "pending_gates": [
+    "compatible-kernel Judge",
+    "second real method closure",
+    "Windows browser",
+    "human pilot efficiency/error detection",
+    "final release acceptance"
+  ]
+}

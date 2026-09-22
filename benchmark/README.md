@@ -51,3 +51,37 @@ owner.
 The historic `chatscene_legacy` adapter remains available only as a backward
 compatibility integration; it is not required by, or bundled into, this
 package.
+
+## Offline review workbench (0.2.0rc1)
+
+The sole editable implementation is `benchmark/src/bus_benchmark`. The former
+repository-root package has been retired. Install before invoking Python or CLI
+commands, including from the checkout; development uses
+`python -m pip install -e ./benchmark`. No source-tree copy is needed by another
+method. `python -m pip install './benchmark[notebook]'` additionally installs the
+optional legacy notebook widgets; the HTML workbench needs only a browser.
+
+Maintainers prepare a caller-owned, private packet:
+
+```bash
+bus-benchmark review export --library /data/library.jsonl --oracle /private/oracle.jsonl --reviewer reviewer-label --output /private/new-packet
+```
+
+The reviewer opens `review.html` offline and exports a JSON progress backup.
+Maintainers use `review validate`, `review import`, and, only after all original
+human-review gates pass, `review finalize`. Each command takes explicit library,
+oracle, assignment and submission paths; inspect `--help` for its arguments.
+Never provide private packets, oracles or progress backups to a generator.
+
+All schemas, query libraries, HTML/CSS/JS, concise guide, practice cases and
+revision-proposal schema are wheel resources. Oracle/gold, method source,
+CARLA/MetaDrive, runtime environments and private review state are excluded.
+The old `launch_workbench` entry remains importable after installing the notebook
+extra. Its checkout-specific workflow uses `BUS_BENCHMARK_WORKSPACE` (or cwd);
+use the explicit `ReviewContext` or review CLI outside a prepared legacy workspace.
+
+Maintainer persistence uses POSIX file locks; Windows Python support is not
+claimed. The offline page has been tested in Linux Chromium; Windows browser
+and real human pilot acceptance remain pending. This release candidate is not
+a final benchmark freeze: compatible-kernel Judge validation and all original
+platform and human acceptance gates remain mandatory.

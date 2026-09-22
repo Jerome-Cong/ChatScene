@@ -1,3 +1,4 @@
+from bus_benchmark.paths import PACKAGE_ROOT
 import os
 import subprocess
 import sys
@@ -45,13 +46,13 @@ assert 'bus_benchmark.query_review_workbench' not in sys.modules
 assert 'bus_benchmark.review_field_widgets' not in sys.modules
 assert not s._state['human_gold']
 """
-        result = subprocess.run([sys.executable, "-c", code, str(self.library), str(self.oracle), str(self.workspace)], cwd=self.workspace, env={**os.environ, "PYTHONPATH": str(ROOT)}, capture_output=True, text=True)
+        result = subprocess.run([sys.executable, "-c", code, str(self.library), str(self.oracle), str(self.workspace)], cwd=self.workspace, env={**os.environ, "PYTHONPATH": str(PACKAGE_ROOT.parent)}, capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_invalid_contexts_fail_before_creating_state(self):
         cases = (
             {"workspace": self.workspace / "missing"},
-            {"workspace": ROOT / "bus_benchmark"},
+            {"workspace": PACKAGE_ROOT},
             {"library_source": self.workspace / "absent"},
             {"oracle_source": None},
             {"expected_subjects": 48},
@@ -74,9 +75,9 @@ assert not s._state['human_gold']
         from bus_benchmark.review_legacy import ensure_review_assignment
         with patch("bus_benchmark.review_legacy.subprocess.run") as run:
             with self.assertRaisesRegex(ValidationError, "outside package"):
-                ensure_review_assignment("synthetic-test-reviewer", ROOT / "bus_benchmark" / "unsafe-review")
+                ensure_review_assignment("synthetic-test-reviewer", PACKAGE_ROOT / "unsafe-review")
             run.assert_not_called()
-        self.assertFalse((ROOT / "bus_benchmark" / "unsafe-review").exists())
+        self.assertFalse((PACKAGE_ROOT / "unsafe-review").exists())
 
     def test_manifest_count_and_sources_are_checked_on_resume(self):
         first = self.context().open_session()

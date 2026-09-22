@@ -1,3 +1,4 @@
+from bus_benchmark.paths import PACKAGE_ROOT
 import json
 import os
 import subprocess
@@ -1528,7 +1529,7 @@ target.write_bytes({!r})
             repository_root = Path(__file__).resolve().parents[2]
             expected_paths = {
                 path.resolve()
-                for path in (repository_root / "bus_benchmark").rglob("*.py")
+                for path in (PACKAGE_ROOT).rglob("*.py")
                 if "__pycache__" not in path.parts
             }
             expected_paths.update(supported_schema_paths())
@@ -1543,23 +1544,23 @@ target.write_bytes({!r})
                 expected_paths,
             )
             relative_paths = {
-                str(path.relative_to(repository_root))
+                str(path.relative_to(PACKAGE_ROOT))
                 for path in required_paths
             }
             self.assertTrue(
                 {
-                    "bus_benchmark/__init__.py",
-                    "bus_benchmark/__main__.py",
-                    "bus_benchmark/cli.py",
-                    "bus_benchmark/generation.py",
-                    "bus_benchmark/adapters/__init__.py",
-                    "bus_benchmark/adapters/chatscene.py",
-                    "bus_benchmark/roster.py",
-                    "bus_benchmark/decisions.py",
-                    "benchmark_configs/schemas/method_config.schema.json",
-                    "benchmark_configs/schemas/response_record.schema.json",
-                    "benchmark_configs/schemas/generation_evidence.schema.json",
-                    "benchmark_configs/schemas/generation_run_manifest.schema.json",
+                    "__init__.py",
+                    "__main__.py",
+                    "cli.py",
+                    "generation.py",
+                    "adapters/__init__.py",
+                    "adapters/chatscene.py",
+                    "roster.py",
+                    "decisions.py",
+                    "assets/schemas/method_config.schema.json",
+                    "assets/schemas/response_record.schema.json",
+                    "assets/schemas/generation_evidence.schema.json",
+                    "assets/schemas/generation_run_manifest.schema.json",
                 }
                 <= relative_paths
             )

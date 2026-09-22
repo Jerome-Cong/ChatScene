@@ -1,3 +1,4 @@
+from bus_benchmark.paths import PACKAGE_ROOT
 import tempfile
 import unittest
 from pathlib import Path
@@ -174,7 +175,7 @@ class ProvenanceTests(unittest.TestCase):
     def test_score_is_bound_to_frozen_evaluator_and_oracle(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            evaluator_paths = sorted(Path("bus_benchmark").resolve().glob("*.py"))
+            evaluator_paths = sorted(PACKAGE_ROOT.glob("*.py"))
             schema_paths = list(supported_schema_paths())
             extractor = root / "extractor.json"
             roster = root / "roster.json"

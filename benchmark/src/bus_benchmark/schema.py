@@ -15,7 +15,7 @@ from typing import Any, Dict, Iterable, Mapping, Tuple
 from urllib.parse import urldefrag, urljoin
 
 from .errors import ValidationError
-from .paths import asset_path, PACKAGE_ROOT
+from .paths import asset_path
 
 try:
     from jsonschema import Draft7Validator, FormatChecker, RefResolver, validators
@@ -29,14 +29,7 @@ else:
     _JSONSCHEMA_IMPORT_ERROR = None
 
 
-# Retain the historical checkout path when it exists, while installed wheels
-# resolve the same immutable files from package data.
-_LEGACY_SCHEMA_DIRECTORY = PACKAGE_ROOT.parent / "benchmark_configs" / "schemas"
-SCHEMA_DIRECTORY = (
-    _LEGACY_SCHEMA_DIRECTORY
-    if _LEGACY_SCHEMA_DIRECTORY.is_dir()
-    else asset_path("schemas")
-)
+SCHEMA_DIRECTORY = asset_path("schemas")
 
 SCHEMA_FILES: Mapping[str, str] = {
     "common_ontology": "common_ontology.schema.json",

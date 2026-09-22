@@ -10,10 +10,10 @@ from .agent_query_review import (
 from .errors import ValidationError
 from .human_workflow import export_query_review_bundle, validate_human_document
 from .jsonio import canonical_json_bytes, read_json, sha256_file
-from .paths import review_state_path
+from .paths import review_state_path, workspace_root
 
 
-REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+REPOSITORY_ROOT = workspace_root()
 
 
 HUMAN_REVIEW_ROOT = REPOSITORY_ROOT / "benchmark_artifacts" / "human_review"

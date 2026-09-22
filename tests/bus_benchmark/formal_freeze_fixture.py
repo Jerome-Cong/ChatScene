@@ -1,5 +1,6 @@
 """Build a complete synthetic formal-freeze bundle over the real locked libraries."""
 
+from bus_benchmark.paths import PACKAGE_ROOT
 import copy
 import json
 import math
@@ -1068,7 +1069,7 @@ def build_formal_bundle(directory):
         paths[role] = root / "{}.json".format(role)
         role = "platform_config_{}".format(platform)
         paths[role] = root / "{}.json".format(role)
-        runtime_worker = ROOT / "bus_benchmark" / "runtime_worker.py"
+        runtime_worker = PACKAGE_ROOT / "runtime_worker.py"
         if platform == "carla":
             runtime_interpreter = CARLA_PYTHON.resolve()
             runtime_environment = {
@@ -1234,7 +1235,7 @@ def build_formal_bundle(directory):
         )
         role = "controller_config_{}".format(platform)
         paths[role] = root / "{}.json".format(role)
-        controller_source = ROOT / "bus_benchmark" / "runtime_worker.py"
+        controller_source = PACKAGE_ROOT / "runtime_worker.py"
         if platform == "carla":
             implementation_class = "FixedIDMPIDBehavior"
             proxy_id = "vehicle.chevrolet.impala"
@@ -1306,7 +1307,7 @@ def build_formal_bundle(directory):
 
     extractor_runtime = root / "extractor_runtime"
     extractor_runtime.mkdir()
-    source_directory = ROOT / "bus_benchmark"
+    source_directory = PACKAGE_ROOT
     for filename in (
         "fixture_extractor_carla.py",
         "fixture_extractor_metadrive.py",
@@ -1869,7 +1870,7 @@ def build_formal_bundle(directory):
     paths["platform_fixture_review"] = root / "platform_fixture_reviews.jsonl"
     write_jsonl(paths["platform_fixture_review"], platform_reviews)
 
-    evaluator_sources = sorted((ROOT / "bus_benchmark").glob("*.py"))
+    evaluator_sources = sorted((PACKAGE_ROOT).glob("*.py"))
     evaluator_schemas = list(supported_schema_paths())
     metadrive_runtime_fixture = next(
         case["input"]

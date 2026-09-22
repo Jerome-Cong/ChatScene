@@ -1,3 +1,4 @@
+from bus_benchmark.paths import PACKAGE_ROOT
 import json
 import os
 import shutil
@@ -16,7 +17,7 @@ from bus_benchmark.jsonio import (
 
 
 ROOT = Path(__file__).resolve().parents[2]
-WORKER = ROOT / "bus_benchmark" / "runtime_worker.py"
+WORKER = PACKAGE_ROOT / "runtime_worker.py"
 CARLA_PYTHON = ROOT / "chatscene" / "bin" / "python-frozen"
 METADRIVE_PYTHON = Path(
     read_json(ROOT / "benchmark_configs/platforms/metadrive_runtime_draft.json")[

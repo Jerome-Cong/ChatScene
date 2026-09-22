@@ -104,7 +104,7 @@ cells remain visible.
 ## Commands
 
 ```bash
-./chatscene/bin/python scripts/bus_benchmark.py method-result \
+./chatscene/bin/bus-benchmark method-result \
   --freeze-manifest FREEZE.json \
   --library TEST_LIBRARY.jsonl \
   --oracle TEST_ORACLE.jsonl \
@@ -131,7 +131,7 @@ Independent verification reconstructs the full live cell rather than merely
 checking the envelope's self-hash:
 
 ```bash
-./chatscene/bin/python scripts/bus_benchmark.py method-result-verify --input METHOD_RESULT.json
+./chatscene/bin/bus-benchmark method-result-verify --input METHOD_RESULT.json
 ```
 
 Frozen-manifest verification reads the bound human-gold asset as part of full

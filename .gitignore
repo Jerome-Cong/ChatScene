@@ -23,3 +23,7 @@ CARLA_0.9.13_safebench.tar.gz
 CARLA_0.9.13_safebench.single.partial
 CARLA.download.parts/
 *.egg-info
+
+# Local distribution build outputs
+/benchmark/build/
+/benchmark/dist/

@@ -4,11 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bus-scene-benchmark"
-version = "0.1.0"
+version = "0.2.0rc1"
 description = "Portable, query-only benchmark harness for CARLA and MetaDrive scene generators"
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = ["jsonschema>=3,<5"]
+
+[project.optional-dependencies]
+notebook = ["ipywidgets>=7,<9", "IPython>=7,<9"]
 
 [project.scripts]
 bus-benchmark = "bus_benchmark.cli:main"
@@ -22,7 +25,14 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 bus_benchmark = [
+  "query_review_workbench.css",
+  "assets/review/*.html",
+  "assets/review/*.css",
+  "assets/review/*.js",
+  "assets/review/*.json",
+  "assets/review/*.md",
   "assets/schemas/*.json",
+  "assets/query_lib/*.md",
   "assets/query_lib/*.json",
   "assets/query_lib/*.jsonl",
   "assets/query_lib/*.txt",

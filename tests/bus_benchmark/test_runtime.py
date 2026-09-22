@@ -1,3 +1,4 @@
+from bus_benchmark.paths import PACKAGE_ROOT
 import copy
 import json
 import subprocess
@@ -134,7 +135,7 @@ class RuntimePipelineTests(unittest.TestCase):
         self.metadrive_interpreter = Path(
             checked_runtime_config["worker"]["interpreter"]
         ).resolve()
-        source = Path("bus_benchmark/runtime_worker.py").resolve()
+        source = PACKAGE_ROOT / "runtime_worker.py"
         self.controller = {
             "schema_version": "0.1",
             "status": "frozen",

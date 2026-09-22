@@ -1,3 +1,4 @@
+from bus_benchmark.paths import PACKAGE_ROOT
 import copy
 import json
 import subprocess
@@ -577,7 +578,7 @@ class HumanWorkflowCliTests(unittest.TestCase):
             active_schemas,
             {path.name for path in supported_schema_paths()},
         )
-        freeze_source = (ROOT / "bus_benchmark" / "freeze.py").read_text(
+        freeze_source = (PACKAGE_ROOT / "freeze.py").read_text(
             encoding="utf-8"
         )
         for filename in (
