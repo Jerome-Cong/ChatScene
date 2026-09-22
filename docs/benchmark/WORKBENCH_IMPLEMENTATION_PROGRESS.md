@@ -142,3 +142,13 @@ BW-06 补充：前端词典改为只查自身属性，未知 predicate/token 与
 困难处理：系统Python缺distutils，使用已有uv Python 3.8.20构建；初次目录审计发现query README漏打包，已补齐并重新构建、安装、验证最终wheel。最终产物保存在 `.review-workspace/bw09-verified-wheel/`，不把私有审阅工作区提交到Git。开发需先安装包或显式PYTHONPATH；旧冻结配置的源码路径/清单需重新准备和验证，不能复用旧hash冒充新安装。
 
 未验证/门槛：POSIX维护者持久化未声称支持Windows Python；Windows浏览器、真人效率/错误发现、第二真实方法及兼容内核Judge仍待后续验收。回滚：从Git历史恢复根目录和对应入口，或用本地源码备份；保留全部历史题包/进度与原失败记录，不能删除后冒充完成。
+
+## BW-10：第二真实方法接入待提供工作区
+
+状态：阻碍，未完成；按用户要求在无法自行补齐的输入处停止，未跳过本包宣称 BW-11/BW-12 完成。
+
+已核对：公共 `MethodAdapter.generate(query_text, workdir)` 和 `AdapterOutcome` 已在唯一源码/wheel 中；ChatScene 旧 wrapper 仍在。计划指定的其他方法是 TTSG、Text2Scenario、Chat2Scenic，MetaDrive 是平台而不是第二生成方法，Talk2Traffic 不在本轮范围。已检查 `/home/ubuntu/Documents/shijie/` 及 `mdsn/` 的已知工作区目录，未找到上述三个方法的仓库；不据此推断整台机器绝对不存在。
+
+需要用户提供：优先接入的第二方法的本地仓库路径（或准确仓库地址/版本）及可实施修改的工作区；其余两个方法的路径可随后提供。推荐优先 Text2Scenario 以检验不同原生产物边界，但需先读实际接口，不能预设其输出就是 Scenic。真实生成需要的运行配置/交互规则/凭据仍需在对应工作区按现有安全规则核验；不要把密钥写入文档或 Git。
+
+尚未完成：本包 fake adapter 隔离/失败路径专项验收、ChatScene 当前运行配置重绑定、第二真实方法闭环、2D证据投影接口验收。旧 ChatScene 配置仍引用 `/home/shijie20/`，不会覆盖旧冻结配置来伪造当前可用性。BW-11 真人试标/Windows实测与 BW-12 最终发布仍待后续；Judge兼容内核门槛按用户授权延期补齐，保留原失败记录，不是此次停下的原因。
