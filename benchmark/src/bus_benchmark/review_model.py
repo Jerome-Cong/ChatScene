@@ -135,7 +135,7 @@ def _attested_form(form):
     decisions += [(d, CHECK_ACCEPT_REASON) for d in result["required_check_decisions"].values()]
     decisions.append((result["cpd_decision"], CPD_ACCEPT_REASON))
     for decision, standard in decisions:
-        if str(decision.get("reason", "")).startswith(MECHANICAL_REASON_PREFIX):
+        if str(decision.get("reason", "")).startswith((MECHANICAL_REASON_PREFIX, "Machine revision proposal:")):
             decision["reason"] = standard if decision.get("verdict") == "accept" else "Human attestation: explicitly accepted the displayed machine revision. Machine rationale: " + decision["reason"]
     return result
 

@@ -185,3 +185,28 @@ class OfflineBrowserTests(unittest.TestCase):
         self.page.get_by_role('button',name='显示参考解释').first.click()
         self.page.locator('#close-guide').click()
         self.assertEqual(self.backup(),before)
+
+    def test_literal_proposal_application_requires_explicit_resolution_and_confirmation(self):
+        self.library=self.library[:1];self.oracle=self.oracle[:1]
+        self.library[0]['query_text']='Two cyclists cross.'
+        # A new synthetic query has no original numeric text span to preserve.
+        self.oracle[0]['atoms']=[a for a in self.oracle[0]['atoms'] if a['provenance']['source']!='query_text_regex']
+        exported=export_packet(self.library,self.oracle,'synthetic-browser-test',self.root/'suggestions',with_suggestions=True)
+        self.packet=read_json(exported['assignment']);self.url=Path(exported['html']).as_uri()
+        self.open();self.page.locator('#confirm').click()
+        self.assertIn('仍有疑问',self.page.locator('#message').inner_text())
+        self.page.get_by_role('button',name='采用此修订草稿').first.click()
+        state=self.page.evaluate('ReviewWorkbench.getState()')
+        self.assertEqual(state['entries'][0]['edit_sources'][-1]['origin'],'machine_proposal')
+        self.assertFalse(state['entries'][0]['human_gold'])
+        self.assertEqual(state['entries'][0]['receipts'],[])
+        self.assertEqual(json.loads(state['entries'][0]['form']['atom_decisions'][0]['replacement_atoms_json'])[0]['arguments']['count'],'2')
+        while self.page.get_by_role('button',name='我已核对这条疑问，使用当前编辑').count():
+            self.page.get_by_role('button',name='我已核对这条疑问，使用当前编辑').first.click()
+        self.page.locator('#confirm').click()
+        wait(self.page,"ReviewWorkbench.getState().entries[0].status==='submitted'")
+        result=validate_browser_submission(self.packet,self.backup(),self.library,self.oracle)
+        self.assertEqual(result['subjects_submitted'],1)
+        reason=result['responses'][0]['response']['atom_decisions'][0]['reason']
+        self.assertIn('Human attestation:',reason)
+        self.assertIn('Machine rationale:',reason)

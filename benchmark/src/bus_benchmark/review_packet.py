@@ -17,12 +17,20 @@ PACKET_VERSION = "1"
 UI_VERSION = "1"
 
 
-def build_packet(library_source, oracle_source, reviewer_id):
+def build_packet(library_source, oracle_source, reviewer_id, *, with_suggestions=False):
     bundle = export_query_review_bundle(library_source, oracle_source, reviewer_id=reviewer_id)
     items = []
     for task in bundle["reviewer_packet"]["tasks"]:
         proposal = make_proposal(task)
-        items.append({"task": task, "proposal": proposal, "initial_draft": new_draft(task, proposal, reviewer_id)})
+        item = {"task": task, "proposal": proposal, "initial_draft": new_draft(task, proposal, reviewer_id)}
+        if with_suggestions:
+            from .review_proposals import build_revision_proposals
+            item["revision_proposals"] = build_revision_proposals(task)
+            item["initial_draft"]["issues"] = [
+                {"code": "machine_unresolved", "atom_id": entry["source_atom_id"], "reason": entry["machine_rationale"]}
+                for entry in item["revision_proposals"]["items"] if entry["status"] == "unresolved"
+            ]
+        items.append(item)
     core = {
         "packet_version": PACKET_VERSION, "ui_version": UI_VERSION,
         "reviewer_id": reviewer_id, "human_gold": False,
@@ -33,17 +41,23 @@ def build_packet(library_source, oracle_source, reviewer_id):
         "practice": read_json(asset_path("review", "practice.json")),
         "ui_sha256": {name: sha256_file(asset_path("review", name)) for name in ("app.js", "app.css", "template.html")},
     }
+    if with_suggestions:
+        from .review_proposals import PROFILE
+        core["proposal_profile"] = PROFILE
     # JSON makes tuples transport lists before the typed wire hash.
     core = json.loads(canonical_json_bytes(core))
     return {**core, "packet_id": wire_hash(core)}
 
 
-def browser_snapshot(packet_id, task, proposal, draft):
-    return {"packet_id": packet_id, "task": task, "proposal": proposal, "draft_content": {k: v for k, v in draft.items() if k not in ("receipts", "status", "human_gold")}}
+def browser_snapshot(packet_id, task, proposal, draft, revision_proposals=None):
+    snapshot = {"packet_id": packet_id, "task": task, "proposal": proposal, "draft_content": {k: v for k, v in draft.items() if k not in ("receipts", "status", "human_gold")}}
+    if revision_proposals is not None:
+        snapshot["revision_proposals"] = revision_proposals
+    return snapshot
 
 
-def export_packet(library_source, oracle_source, reviewer_id, output_dir):
-    packet = build_packet(library_source, oracle_source, reviewer_id)
+def export_packet(library_source, oracle_source, reviewer_id, output_dir, *, with_suggestions=False):
+    packet = build_packet(library_source, oracle_source, reviewer_id, with_suggestions=with_suggestions)
     output = review_state_path(output_dir)
     output.parent.mkdir(parents=True, exist_ok=True)
     try:
@@ -66,7 +80,8 @@ def validate_browser_submission(assignment, submission, library_source, oracle_s
     """Rebuild trusted task sources; browser hashes alone are never trusted."""
     if not isinstance(assignment, dict) or not isinstance(assignment.get("reviewer_id"), str):
         raise ValidationError("trusted assignment is malformed")
-    expected = build_packet(library_source, oracle_source, assignment["reviewer_id"])
+    from .review_proposals import PROFILE
+    expected = build_packet(library_source, oracle_source, assignment["reviewer_id"], with_suggestions=assignment.get("proposal_profile") == PROFILE)
     if canonical_json_bytes(assignment) != canonical_json_bytes(expected):
         raise ValidationError("assignment differs from trusted current sources, guide or UI")
     keys = {"artifact_type", "packet_version", "packet_id", "reviewer_id", "generation", "entries", "human_gold", "backup_sha256"}
@@ -91,7 +106,7 @@ def validate_browser_submission(assignment, submission, library_source, oracle_s
         draft["receipts"] = []
         draft["status"] = incoming["status"] if incoming["status"] in ("deferred", "requires_source_fix") else "draft"
         if incoming["receipts"]:
-            expected_digest = wire_hash(browser_snapshot(expected["packet_id"], task, proposal, incoming))
+            expected_digest = wire_hash(browser_snapshot(expected["packet_id"], task, proposal, incoming, item.get("revision_proposals")))
             for receipt in incoming["receipts"]:
                 receipt_keys = {"action", "content_sha256", "covered_units", "reviewer_id", "revision"}
                 if not isinstance(receipt, dict) or set(receipt) != receipt_keys or receipt["action"] != "explicit_confirm" or receipt["content_sha256"] != expected_digest or receipt["reviewer_id"] != expected["reviewer_id"] or type(receipt["revision"]) is not int or receipt["revision"] != draft["revision"]:

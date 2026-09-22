@@ -25,7 +25,7 @@ PYTHONPATH=tests/bus_benchmark .carla-runtime/benchmark/bin/python -m unittest \
 
 ## 后续工作包
 
-BW-05 至 BW-12 尚未开始。每包完成后在此追加实际文件、检查结果、未验证事项、兼容性变化和回滚方式；正式发布仍受 Judge/仿真及真人试标验收约束。
+BW-06 至 BW-12 尚未开始。每包完成后在此追加实际文件、检查结果、未验证事项、兼容性变化和回滚方式；正式发布仍受 Judge/仿真及真人试标验收约束。
 
 ## BW-01：可移植审阅服务与显式上下文
 
@@ -76,3 +76,17 @@ BW-05 至 BW-12 尚未开始。每包完成后在此追加实际文件、检查�
 兼容性：浏览器备份是新格式，不能冒充旧 checkpoint 或 gold；未知字段、坏原文依据、陈旧备份、来源/身份错误、双标签编辑、存储拒绝均有明确处理。正式 hash 规则不改；跨语言收据使用独立 wire 编码并有 Unicode/浮点共享向量。回滚：撤销新入口与资源，不删除本地题包/备份，继续使用原 notebook。
 
 未验证：Windows 浏览器实测、真实人工效率、全量候选版性能与最终发布按 BW-11/BW-12 验收；不能将当前 12 题开发子包视为整套 confirmed oracle。所有审阅资产仍与生成器输入分离，实际方法进程可见性由 BW-10 检查。
+
+## BW-05：具体修订提案与覆盖报告
+
+状态：完成；仅保守规则能力，未证明真实效率或语义准确率改善。
+
+实际文件：两套源码新增 `review_proposals.py`、`assets/review/revision_proposals.schema.json`；修改 `review_cli.py`、`review_packet.py`、`review_model.py` 与前端；新增 `test_review_proposals.py`、扩展真实浏览器提案应用测试；交付 `REVIEW_PROPOSALS.md`。CLI `review propose` 可适配旧 Agent 源绑定，`review export --suggestions` 可选生成离线建议视图。
+
+机器替换项保留 query_text_regex 来源及精确引文，未伪装为 human_review；每个源 atom 都有记录。未知源字段不允许通过提案删除；数量范围、条件、可选否定、静态角色描述与另一个对象的动作均保留疑问。采用建议只产生机器来源的草稿编辑，疑问仍需逐条处理，最后才明确确认。
+
+验证：Python proposals/packet/model/固定向量 25 项通过（1.966 秒）；浏览器全回归 11 项通过（4.032 秒），最终规则收紧后又定向复验提案应用至可信导入路径通过。独立复审无剩余阻断。
+
+覆盖：完整开发集 48 题、538 原 atom，最终 5 条具体修订提案、26 条局部文字依据、507 条未解决；这些是规则分流数量，不是准确率。原文仅描述“through cyclist”等角色时不能证明穿越动作，复审后已从此前7条候选中剔除2条。LLM调用为0；输出记录配置和实现hash，制品在忽略入库的 `.review-workspace/bw05-development-proposals-verified/`。
+
+兼容性：旧 oracle、题库、Agent 制品和计分不改；普通导出默认不开启该高疑问量配置。新题包字节绑定变化，旧包不得覆盖，BW-07 处理迁移。未验证：真实人工提案准确性、操作耗时、未覆盖措辞，不能把有限规则扩展成一般语言理解声明。回滚：撤销提案模块/可选入口并保留已有报告作审计，既有人工进度不删除。

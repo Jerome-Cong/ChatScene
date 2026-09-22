@@ -67,12 +67,12 @@
       const list=node('div',undefined,'value-tree');for(const [k,x]of Object.entries(v))showTree(list,x,k);parent.append(list);
     }else parent.append(node('p',(key?fieldLabel(key)+'：':'')+text(v),'value-tree'));
   }
-  function snapshot(entry,index){const content={};for(const [k,v]of Object.entries(entry))if(!['receipts','status','human_gold'].includes(k))content[k]=v;return {packet_id:packet.packet_id,task:packet.items[index].task,proposal:packet.items[index].proposal,draft_content:content};}
+  function snapshot(entry,index){const content={};for(const [k,v]of Object.entries(entry))if(!['receipts','status','human_gold'].includes(k))content[k]=v;const result={packet_id:packet.packet_id,task:packet.items[index].task,proposal:packet.items[index].proposal,draft_content:content};if(packet.items[index].revision_proposals)result.revision_proposals=packet.items[index].revision_proposals;return result;}
   function coverage(index){return [...packet.items[index].task.oracle_draft.atoms.map(a=>'atom:'+a.atom_id),'support','cpd','additions','notes'];}
   function controls(){ $('editor').disabled=readonly||busy;$('confirm').disabled=readonly||busy||composing; $('defer').disabled=readonly||busy||composing; $('restore').disabled=readonly||busy;for(const id of ['queue','filter','previous','next'])$(id).disabled=busy; }
-  function markChanged(origin='human'){
+  function markChanged(origin='human',audit={}){
     if(readonly||busy)return false;
-    const d=draft();d.revision++;d.receipts=[];d.status=d.issues.length?'deferred':'draft';d.edit_sources.push({revision:d.revision,origin});
+    const d=draft();d.revision++;d.receipts=[];d.status=d.issues.length?'deferred':'draft';d.edit_sources.push({revision:d.revision,origin,...audit});
     state.generation++;$('storage').textContent='有未保存修改；正在自动保存到浏览器…';queueUpdate();scheduleSave();return true;
   }
   function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{saveTimer=null;save().catch(e=>notify(e.message));},150);}
@@ -143,6 +143,15 @@
       const decision=d.form.atom_decisions[index],card=node('article',undefined,'card');card.append(node('h3',`${index+1}. ${(packet.dictionary.predicates[source.predicate]||[])[1]||source.predicate}`),node('p',statement(source)));
       const warnings=atomWarnings(source,item().task.query_text);if(warnings.length)card.append(node('p',warnings.join('；'),'warning'));
       const p=source.provenance;let evidence='机器元数据建议，需对照原文核实';if(p?.source==='query_text_regex')evidence=warnings.includes('原文依据位置无效')?'原文依据位置无效':`精确原文：“${Array.from(item().task.query_text).slice(p.span[0],p.span[1]).join('')}”`;else if(p?.field)evidence+='；来源字段：'+p.field;card.append(node('p',evidence,'source'));
+      const suggestion=item().revision_proposals?.items.find(x=>x.source_atom_id===source.atom_id);
+      if(suggestion){
+        const panel=node('div',undefined,'source');panel.append(node('strong',suggestion.status==='proposed'?'机器修订提案（尚未采用）':suggestion.status==='supported'?'机器找到的文字依据，仍需人工核对':'机器未解决的疑问'),node('p',suggestion.machine_rationale));
+        for(const e of suggestion.evidence)panel.append(node('p','原文：“'+e.quote+'”'));
+        if(suggestion.legacy_advisory)panel.append(node('p','旧 Agent 提示（机器）：'+suggestion.legacy_advisory.reason));
+        if(suggestion.status==='proposed'){for(const target of suggestion.replacement_atoms)panel.append(node('p','建议改为：'+statement(target)));panel.append(button('采用此修订草稿',()=>{decision.verdict=suggestion.operation;decision.replacement_atoms_json=JSON.stringify(suggestion.replacement_atoms);decision.reason='Machine revision proposal: '+suggestion.machine_rationale;d.issues=d.issues.filter(x=>x.atom_id!==source.atom_id);markChanged('machine_proposal',{proposal_report_id:item().revision_proposals.report_id,source_atom_id:source.atom_id});render();}));}
+        if(d.issues.some(x=>x.code==='machine_unresolved'&&x.atom_id===source.atom_id))panel.append(button('我已核对这条疑问，使用当前编辑',()=>{d.issues=d.issues.filter(x=>!(x.code==='machine_unresolved'&&x.atom_id===source.atom_id));markChanged();render();}));
+        card.append(panel);
+      }
       const verdict=node('select');for(const [value,label]of [['accept','保留草稿'],['modify','修改要求'],['reject','排除此草稿要求'],['split','拆分要求'],['merge','合并要求']]){const o=node('option',label);o.value=value;verdict.append(o);}verdict.value=decision.verdict;verdict.setAttribute('aria-label','要求处理');
       verdict.onchange=()=>{if(readonly||busy)return;decision.verdict=verdict.value;decision.reason=verdict.value==='accept'?packet.items[current].initial_draft.form.atom_decisions[index].reason:'Human rationale code: explicit '+verdict.value+' of displayed requirement.';decision.replacement_atoms_json=JSON.stringify(['modify','split','merge'].includes(verdict.value)?(verdict.value==='split'?[clone(source),clone(source)]:[clone(source)]):[]);markChanged();render();};card.append(verdict);
       if(decision.verdict==='merge'){
@@ -188,8 +197,8 @@
   $('queue').onchange=()=>{current=Number($('queue').value);render();notify('');};$('filter').onchange=queueUpdate;
   $('previous').onclick=()=>navigate(-1);$('next').onclick=()=>navigate(1);
   $('confirm').onclick=()=>confirm().catch(e=>notify(e.message));
-  $('defer').onclick=()=>{if(readonly||busy||composing)return;const reason=$('issue').selectedOptions[0].textContent;if($('issue').value==='other'&&!draft().form.notes.trim()){notify('其他原因请在备注中说明');return;}draft().issues=[{code:$('issue').value,reason}];markChanged();if($('issue').value==='source_error')draft().status='requires_source_fix';scheduleSave();navigate(1);};
-  $('resume').onclick=()=>{draft().issues=[];markChanged();render();};
+  $('defer').onclick=()=>{if(readonly||busy||composing)return;const reason=$('issue').selectedOptions[0].textContent;if($('issue').value==='other'&&!draft().form.notes.trim()){notify('其他原因请在备注中说明');return;}draft().issues=draft().issues.filter(x=>x.code==='machine_unresolved');draft().issues.push({code:$('issue').value,reason});markChanged();if($('issue').value==='source_error')draft().status='requires_source_fix';scheduleSave();navigate(1);};
+  $('resume').onclick=()=>{draft().issues=draft().issues.filter(x=>x.code==='machine_unresolved');markChanged();render();};
   $('add').onclick=()=>{const added=decode(draft().form.added_atoms_json,'list');added.push({category:'actor',predicate:'actor_role_count',arguments:{count:'1',role:'',type:'pedestrian'},layer:'surface_required',polarity:'present',weight:1,notes:''});draft().form.added_atoms_json=JSON.stringify(added);markChanged();render();};
   $('export').onclick=async()=>{try{const b=await backup(),blob=new Blob([JSON.stringify(b,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=node('a');a.href=url;a.download='review-'+packet.packet_id.slice(0,12)+'-v'+state.generation+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);notify('已发起备份下载，请在浏览器下载记录中确认文件保存。');}catch(e){notify('备份导出失败：'+e.message);}};
   $('restore').onchange=async()=>{try{const file=$('restore').files[0];if(!file)return;fail(file.size<=64*1024*1024,'备份文件过大');await restore(JSON.parse(await file.text()));}catch(e){notify(e.message);}finally{$('restore').value='';}};
