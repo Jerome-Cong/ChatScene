@@ -1,0 +1,13 @@
+# BW-00 兼容性样例索引
+
+状态：已有测试定位完成；完整独立固定向量尚未交付。来源均为仓库已有开发材料与合成测试，不是真实人工 gold。
+
+以下名称均位于 `tests/bus_benchmark/test_query_review_workbench.py`，该文件的 59 项测试在本次基线中通过。
+
+- accept／明确确认：`test_machine_prefill_accept_reasons_become_human_attestations_on_complete`；`test_checkpoint_and_explicit_completion_never_claim_gold`。
+- permitted／已有编辑保护：`test_allowed_not_required_shortcut_builds_auditable_target`；`test_permitted_shortcut_reopens_existing_or_invalid_edit_without_overwrite`。
+- exclude／源处理映射：`test_rejected_source_reintroduced_by_another_target_is_localized`。独立合法排除的固定输入输出仍需补齐。
+- modify／split／merge／新增：`test_graphical_atom_revision_passes_production_subject_validation`、`test_completion_issues_cover_formal_target_invariants`、`test_cross_source_merge_wizard_builds_one_production_merge_group`、`test_added_requirement_sources_are_attributed_individually`。split 的有效双目标固定向量仍需补齐，不能用非法单目标拒绝测试代替。
+- support 源错误／CPD／继承／冲突：`test_source_correction_decision_cannot_be_marked_complete`、`test_structured_cpd_revision_reason_passes_production_validation`、`test_precise_inheritance_never_overwrites_existing_surface_work`、`test_concurrent_session_cannot_silently_overwrite_newer_checkpoint`。
+
+恢复实施后，固定每个案例的 query/oracle 源绑定、旧表单和 canonical payload；同一固定向量同时运行旧入口与新服务。加载、继承、自动保存、疑问暂存必须单独验证零 gold，不可只比较最终成功路径。
