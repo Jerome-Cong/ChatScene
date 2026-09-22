@@ -210,3 +210,17 @@ class OfflineBrowserTests(unittest.TestCase):
         reason=result['responses'][0]['response']['atom_decisions'][0]['reason']
         self.assertIn('Human attestation:',reason)
         self.assertIn('Machine rationale:',reason)
+
+    def test_unknown_predicate_named_like_object_property_remains_visible(self):
+        from bus_benchmark.atoms import make_atom
+        atom=self.oracle[0]['atoms'][0]
+        self.oracle[0]['atoms'][0]=make_atom(atom['category'],'constructor',atom['arguments'],layer=atom['layer'],polarity=atom['polarity'],provenance=atom['provenance'])
+        exported=export_packet(self.library,self.oracle,'synthetic-browser-test',self.root/'unknown-predicate')
+        self.packet=read_json(exported['assignment']);self.url=Path(exported['html']).as_uri()
+        self.open()
+        index=next(i for i,item in enumerate(self.packet['items']) if item['task']['query_record']['surface_style']=='precise')
+        self.page.locator('#queue').select_option(str(index))
+        self.assertIn('未登记要求',self.page.locator('.card').first.inner_text())
+        self.page.locator('#confirm').click()
+        self.assertIn('未登记要求类型',self.page.locator('#message').inner_text())
+        self.assertEqual(self.errors,[])

@@ -25,17 +25,18 @@
   let state={artifact_type:'browser_review_backup',packet_version:packet.packet_version,packet_id:packet.packet_id,reviewer_id:packet.reviewer_id,generation:0,entries:packet.items.map(i=>clone(i.initial_draft)),human_gold:false};
   let current=0,readonly=true,busy=false,composing=false,saveTimer=null,storedDigest=null,storedGeneration=null,storageFailed=false,savesPending=0;
   const item=()=>packet.items[current], draft=()=>state.entries[current];
+  const lookup=(mapping,key)=>Object.prototype.hasOwnProperty.call(mapping,key)?mapping[key]:undefined;
   const policyLabels={candidate:'是否存在合理变化',eligible:'是否纳入多样性评价',cross_platform_judgeable:'跨平台能否一致判断',decision_status:'材料状态',dimensions:'允许变化的维度',name:'维度名称',reason:'理由',allowed_values:'允许取值',bin_definition:'数值分档规则',target_selector:'目标选择规则（专家设置）',cardinality:'目标数量条件',common_semantic:'跨平台共有语义',query_blind:'不读取题目元数据',candidate_scope:'候选对象范围',missing_target:'目标缺失时的处理',target_signature:'目标特征',actor_class:'参与者类型',platforms:'适用平台',near_max:'近距离上界',medium_max:'中距离上界'};
-  const fieldLabel=k=>(packet.dictionary.fields[k]||[policyLabels[k]||k])[0];
+  const fieldLabel=k=>(lookup(packet.dictionary.fields,k)||[lookup(policyLabels,k)||k])[0];
   const tokens={...packet.dictionary.tokens,supported:'应生成场景',unsupported:'应明确拒绝',generate_scene:'生成场景',draft:'机器草稿',near:'近',far:'远',exactly_one:'恰好一个可识别目标'};
-  function text(v){if(v===null)return '草稿未明确';if(v===true)return '是';if(v===false)return '否';if(Array.isArray(v))return v.length?v.map(text).join('、'):'空列表';if(typeof v==='object')return Object.entries(v).map(([k,x])=>fieldLabel(k)+'：'+text(x)).join('；');return tokens[String(v)]||String(v);}
+  function text(v){if(v===null)return '草稿未明确';if(v===true)return '是';if(v===false)return '否';if(Array.isArray(v))return v.length?v.map(text).join('、'):'空列表';if(typeof v==='object')return Object.entries(v).map(([k,x])=>fieldLabel(k)+'：'+text(x)).join('；');return lookup(tokens,String(v))||String(v);}
   function node(tag,value,cls){const n=document.createElement(tag);if(value!==undefined)n.textContent=value;if(cls)n.className=cls;return n;}
   function button(label,action){const b=node('button',label);b.type='button';b.addEventListener('click',action);return b;}
   function notify(message){$('message').textContent=message;}
   function originalAtoms(){return item().task.oracle_draft.atoms;}
   function decode(s,type){const v=JSON.parse(s);fail(type==='list'?Array.isArray(v):v&&typeof v==='object'&&!Array.isArray(v),'修订格式不正确');return v;}
   function atomWarnings(atom,query){
-    const out=[],spec=packet.dictionary.predicates[atom.predicate],args=atom.arguments;
+    const out=[],spec=lookup(packet.dictionary.predicates,atom.predicate),args=atom.arguments;
     if(!spec)out.push('未登记要求类型：'+atom.predicate);
     else if(atom.category!==spec[0])out.push('类别与要求类型不一致');
     if(!args||typeof args!=='object'||Array.isArray(args))return [...out,'参数结构无效'];
@@ -57,7 +58,7 @@
   function statement(a){
     const layer={core_required:'同一意图各表述必须满足',surface_required:'当前文字必须满足',permitted:'允许但不强制，缺失不扣分',forbidden:'禁止项，不额外取反'}[a.layer]||a.layer;
     const polarity={present:'出现或成立',absent:'不出现或不成立'}[a.polarity]||a.polarity;
-    const label=(packet.dictionary.predicates[a.predicate]||[])[1]||('未登记要求：'+a.predicate);
+    const label=(lookup(packet.dictionary.predicates,a.predicate)||[])[1]||('未登记要求：'+a.predicate);
     const extras=Object.fromEntries(Object.entries(a).filter(([k])=>!['atom_id','category','predicate','arguments','layer','polarity','weight','provenance','decision_status','notes'].includes(k)));
     return layer+'；'+polarity+'；'+label+'。'+text(a.arguments)+(a.notes?'；备注：'+a.notes:'')+(a.weight!==undefined&&a.weight!==1?'；权重：'+a.weight:'')+(Object.keys(extras).length?'；未登记原值：'+text(extras):'')+(a.predicate==='event_spec'?'；草稿未给出的参与者绑定、触发和结束条件不在展示层补写':'');
   }
@@ -130,7 +131,7 @@
       const label=node('label',fieldLabel(key)),input=typeof value==='boolean'?node('select'):node('input');
       if(typeof value==='boolean'){for(const [v,t]of [['true','是'],['false','否']]){const o=node('option',t);o.value=v;input.append(o);}input.value=String(value);}
       else {input.type=typeof value==='number'?'number':'text';if(input.type==='number')input.step='any';input.value=Array.isArray(value)?value.join('、'):(value??'');}
-      input.title=(packet.dictionary.fields[key]||['','未知字段，须专家处理'])[1];input.setAttribute('aria-label',fieldLabel(key));
+      input.title=(lookup(packet.dictionary.fields,key)||['','未知字段，须专家处理'])[1];input.setAttribute('aria-label',fieldLabel(key));
       input.addEventListener('input',()=>{if(readonly||busy)return;let v=input.value;if(typeof value==='boolean')v=v==='true';else if(typeof value==='number')v=v===''?'':Number(v);else if(Array.isArray(value))v=v.split('、').map(x=>x.trim()).filter(Boolean);atom.arguments[key]=v;update(atom);});label.append(input);box.append(label);
     }
     const layerLabel=node('label','计分层级'),layer=node('select');for(const [value,label]of [['core_required','各表述必须'],['surface_required','当前文字必须'],['permitted','允许但不强制'],['forbidden','禁止项']]){const o=node('option',label);o.value=value;layer.append(o);}layer.value=atom.layer;layer.onchange=()=>{atom.layer=layer.value;update(atom);};layerLabel.append(layer);box.append(layerLabel);
@@ -140,7 +141,7 @@
     queueUpdate();$('subject').textContent=item().task.subject_id;$('query').textContent=item().task.query_text;$('cards').replaceChildren();
     const d=draft();$('surface-diff').replaceChildren();const diff=item().surface_diff;if(diff){const details=node('details');details.append(node('summary','与精确表述的差异：'+(diff.category_labels.join('、')||'文字相同，仍须核对来源要求')),node('p','差异分类只用于导航；每个表述独立提交，有差异时不自动继承。'));for(const change of diff.changes)details.append(node('p',(change.source_tokens.join(' ')||'（空）')+' → '+(change.target_tokens.join(' ')||'（空）')));for(const change of diff.atom_changes||[])details.append(node('p','要求差异：'+(change.source?statement(change.source):'精确版无此要求')+' → '+(change.target?statement(change.target):'当前草稿无此要求')));$('surface-diff').append(details);}
     originalAtoms().forEach((source,index)=>{
-      const decision=d.form.atom_decisions[index],card=node('article',undefined,'card');card.append(node('h3',`${index+1}. ${(packet.dictionary.predicates[source.predicate]||[])[1]||source.predicate}`),node('p',statement(source)));
+      const decision=d.form.atom_decisions[index],card=node('article',undefined,'card');card.append(node('h3',`${index+1}. ${(lookup(packet.dictionary.predicates,source.predicate)||[])[1]||source.predicate}`),node('p',statement(source)));
       const warnings=atomWarnings(source,item().task.query_text);if(warnings.length)card.append(node('p',warnings.join('；'),'warning'));
       const p=source.provenance;let evidence='机器元数据建议，需对照原文核实';if(p?.source==='query_text_regex')evidence=warnings.includes('原文依据位置无效')?'原文依据位置无效':`精确原文：“${Array.from(item().task.query_text).slice(p.span[0],p.span[1]).join('')}”`;else if(p?.field)evidence+='；来源字段：'+p.field;card.append(node('p',evidence,'source'));
       const suggestion=item().revision_proposals?.items.find(x=>x.source_atom_id===source.atom_id);
