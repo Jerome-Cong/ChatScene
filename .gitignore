@@ -5,6 +5,7 @@
 # Local P0 human-review checkpoints and finalized gold (external custody)
 /benchmark_artifacts/human_review/workbench_assignment/
 /benchmark_artifacts/human_review/workbench_assignment_v0_2/
+/.review-workspace/
 
 # Ignore Jupyter notebook checkpoints
 .ipynb_checkpoints/

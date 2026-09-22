@@ -25,7 +25,7 @@ PYTHONPATH=tests/bus_benchmark .carla-runtime/benchmark/bin/python -m unittest \
 
 ## 后续工作包
 
-BW-04 至 BW-12 尚未开始。每包完成后在此追加实际文件、检查结果、未验证事项、兼容性变化和回滚方式；正式发布仍受 Judge/仿真及真人试标验收约束。
+BW-05 至 BW-12 尚未开始。每包完成后在此追加实际文件、检查结果、未验证事项、兼容性变化和回滚方式；正式发布仍受 Judge/仿真及真人试标验收约束。
 
 ## BW-01：可移植审阅服务与显式上下文
 
@@ -64,3 +64,15 @@ BW-04 至 BW-12 尚未开始。每包完成后在此追加实际文件、检查�
 兼容性：旧 checkpoint 和 notebook 未迁移；新模型为独立 API/状态文件。确认理由只在明确确认后的编译阶段展开；旧 formal validator/finalizer、评分公式与整套闭合不变。收据不证明人工身份，维护者可信源与真实人工控制仍必要。
 
 未验证：新模型尚未接入离线浏览器（BW-04），未执行真实人工试标。回滚：撤销本包新增模块、测试和 ADR；旧工作流不受影响，新草稿保留供审计，不能改名当旧 checkpoint。
+
+## BW-04：离线 HTML 与维护者题包流程
+
+状态：独立实现与 Linux 浏览器验证完成；Windows 人工复验保留至 BW-11，未宣称跨平台实测通过。
+
+实际文件：两套源码新增 `review_wire.py`、`review_packet.py`、`review_cli.py` 与三份 HTML/JS/CSS 资源，`cli.py` 注册 `review export/validate/import/finalize`；新增 `test_review_packet.py`、`test_review_browser.py`、`OFFLINE_REVIEW_WORKFLOW.md`；`.gitignore` 排除 `.review-workspace/`。12 题开发试标包已生成于本机 `.review-workspace/bw04-dev-pilot/packet/review.html`，未提交私人题包或生成任何真实 gold。
+
+验证：Python packet/model/context/固定向量共 22 项通过（2.026 秒）；真实离线 Chromium 10 项全部通过（3.079 秒）。命令为 `BUS_BENCHMARK_BROWSER_TESTS=1 PLAYWRIGHT_BROWSERS_PATH=.../.carla-runtime/browsers PYTHONPATH=tests/bus_benchmark chatscene/bin/python-frozen -m unittest test_review_browser -v`。浏览器在沙箱外启动、测试 context 禁网；首次测试遇到严格 CSP 与 Playwright 等待器不兼容，修正测试等待方式，没有放宽应用 CSP。确认整套导入与部分拒绝仍由原正式 validator/finalizer 决定；复审发现的无实际变化/重复拆分已修复并有真实浏览器拒绝后修正成功测试。
+
+兼容性：浏览器备份是新格式，不能冒充旧 checkpoint 或 gold；未知字段、坏原文依据、陈旧备份、来源/身份错误、双标签编辑、存储拒绝均有明确处理。正式 hash 规则不改；跨语言收据使用独立 wire 编码并有 Unicode/浮点共享向量。回滚：撤销新入口与资源，不删除本地题包/备份，继续使用原 notebook。
+
+未验证：Windows 浏览器实测、真实人工效率、全量候选版性能与最终发布按 BW-11/BW-12 验收；不能将当前 12 题开发子包视为整套 confirmed oracle。所有审阅资产仍与生成器输入分离，实际方法进程可见性由 BW-10 检查。

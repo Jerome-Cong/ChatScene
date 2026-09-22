@@ -1472,6 +1472,8 @@ def _add_scoring_generation_chain_arguments(
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Unified bus-scene benchmark tooling")
     subparsers = parser.add_subparsers(dest="command", required=True)
+    from .review_cli import add_review_parser
+    add_review_parser(subparsers)
 
     command = subparsers.add_parser(
         "paths", help="print installed benchmark asset paths for scripts and CI"
