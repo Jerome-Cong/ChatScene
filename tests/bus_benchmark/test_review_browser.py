@@ -84,6 +84,23 @@ class OfflineBrowserTests(unittest.TestCase):
         self.assertEqual(json.loads(target.read_text())['backup_sha256'],backup['backup_sha256'])
         self.assertEqual(self.errors,[])
 
+    def test_cpd_projection_expert_queue_and_reconfirmation(self):
+        self.open();index=next(i for i,item in enumerate(self.packet['items']) if item['task']['oracle_draft']['cpd_policy']['eligible'])
+        self.page.locator('#queue').select_option(str(index))
+        panel=self.page.locator('#cpd')
+        self.assertIn('近：不超过 10 米', panel.inner_text())
+        self.assertFalse(panel.get_by_text('selector_id',exact=True).is_visible())
+        self.page.locator('#confirm').click()
+        wait(self.page, f"ReviewWorkbench.getState().entries[{index}].status==='submitted'")
+        panel.get_by_role('button',name='对 CPD 有异议，交专家处理').click()
+        entry=self.backup()['entries'][index]
+        self.assertEqual(entry['receipts'],[])
+        self.assertEqual(entry['issues'][0]['code'],'cpd_expert')
+        self.page.locator('#confirm').click()
+        self.assertIn('仍有疑问',self.page.locator('#message').inner_text())
+        self.assertFalse(self.backup()['human_gold'])
+        self.assertEqual(self.errors,[])
+
     def test_reload_stale_and_foreign_backups_preserve_newer_work(self):
         self.open();self.page.locator('#notes').fill('first edit')
         wait(self.page, "document.getElementById('storage').textContent.startsWith('已保存')")

@@ -89,6 +89,26 @@ class ReviewMigrationTests(unittest.TestCase):
         packet=read_json(self.root/'migrated/packet/assignment.json')
         self.assertTrue(all('/dictionary/fields/count/0' in r['changed_paths'] for r in packet['migration']['subjects'].values()))
 
+    def test_cpd_catalog_change_requires_review(self):
+        old=copy.deepcopy(self.packet)
+        old['dictionary']['cpd_catalog']['preservation']='Different prior explanation'
+        old['packet_id']=wire_hash({k:v for k,v in old.items() if k!='packet_id'})
+        self.store_browser(old)
+        result=self.migrate()
+        self.assertEqual(result['carried_confirmations'],0)
+        self.assertEqual(result['requires_review'],2)
+
+    def test_pre_catalog_packet_preserves_drafts_but_reopens_confirmation(self):
+        old=copy.deepcopy(self.packet)
+        del old['dictionary']['cpd_catalog']
+        old['packet_id']=wire_hash({k:v for k,v in old.items() if k!='packet_id'})
+        self.store_browser(old)
+        result=self.migrate()
+        self.assertEqual(result['carried_confirmations'],0)
+        self.assertEqual(result['requires_review'],2)
+        migrated=read_json(self.root/'migrated/packet/assignment.json')
+        self.assertTrue(all(r['previous_form'] for r in migrated['migration']['subjects'].values()))
+
     def test_legacy_checkpoint_preserves_forms_but_missing_guide_requires_confirmation(self):
         bundle=export_query_review_bundle(self.lib,self.ora,reviewer_id='synthetic-migration-reviewer')
         path=self.root/'legacy.json'

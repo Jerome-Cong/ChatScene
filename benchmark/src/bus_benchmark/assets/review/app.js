@@ -144,6 +144,30 @@ fail(Array.isArray(r.covered_units)&&r.covered_units.length&&new Set(r.covered_u
     const layerLabel=node('label','计分层级'),layer=node('select');for(const [value,label]of [['core_required','各表述必须'],['surface_required','当前文字必须'],['permitted','允许但不强制'],['forbidden','禁止项']]){const o=node('option',label);o.value=value;layer.append(o);}layer.value=atom.layer;layer.onchange=()=>{atom.layer=layer.value;update(atom);};layerLabel.append(layer);box.append(layerLabel);
     const polarityLabel=node('label','出现方向'),polarity=node('select');for(const [v,t]of [['present','要求出现或成立'],['absent','要求不出现或不成立']]){const o=node('option',t);o.value=v;polarity.append(o);}polarity.value=atom.polarity;polarity.onchange=()=>{atom.polarity=polarity.value;update(atom);};polarityLabel.append(polarity);box.append(polarityLabel);parent.append(box);
   }
+  function renderCPD(){
+    const parent=$('cpd'),d=draft(),catalog=packet.dictionary.cpd_catalog;
+    const policy=d.form.cpd_decision.verdict==='revise'?decode(d.form.cpd_decision.replacement_policy_json,'object'):item().task.oracle_draft.cpd_policy;
+    parent.replaceChildren(node('h3','允许的合理变化（CPD）'),node('p',policy.eligible?'本题草稿允许下列变化，仍需逐题人工核对。':'本题草稿不纳入 CPD 主指标；这不改变其他指标。'));
+    parent.append(node('p',catalog.preservation),node('p','文字锁定要求以本页要求卡片的当前编辑为准；修改要求后也须重新核对 CPD。'));
+    const warnings=[];
+    for(const dimension of policy.dimensions||[]){
+      const spec=lookup(catalog.dimensions,dimension.name),box=node('article',undefined,'cpd-dimension');
+      box.append(node('strong',spec?.label||('未登记维度：'+dimension.name)));
+      if(!spec)warnings.push('未登记 CPD 维度，须专家核对');
+      box.append(node('p','允许值：'+(dimension.allowed_values||[]).map(v=>lookup(spec?.values||{},v)||text(v)).join('、')));
+      if(spec)box.append(node('p',spec.explanation));
+      if(dimension.target_selector)box.append(node('p','作用对象：'+text(dimension.target_selector.target_signature?.actor_class||'未明确')));
+      if(dimension.reason)box.append(node('p','本题依据：'+dimension.reason));
+      if(spec?.bin_definition_m&&JSON.stringify(wireTree(dimension.bin_definition_m))!==JSON.stringify(wireTree(spec.bin_definition_m)))warnings.push('距离分箱与现有提取器不一致，须专家处理');
+      parent.append(box);
+    }
+    for(const warning of warnings)parent.append(node('p',warning,'warning'));
+    parent.append(node('p',catalog.platforms));
+    const expert=node('details');expert.append(node('summary','专家规则与完整本题策略（只读）'),node('p','高级修订使用既有 CPDPolicyEditor；这里不逐题重配共享 selector。'));
+    showTree(expert,policy);const shared=node('details');shared.append(node('summary','共享维度目录与 selector'));showTree(shared,catalog);expert.append(shared);parent.append(expert);
+    parent.append(button('对 CPD 有异议，交专家处理',()=>{if(readonly||busy)return;d.issues=d.issues.filter(x=>x.code!=='cpd_expert');d.issues.push({code:'cpd_expert',reason:'CPD 策略有异议，需专家核对；详见本题备注。'});markChanged();render();}));
+    return warnings;
+  }
   function render(){
     queueUpdate();$('subject').textContent=item().task.subject_id;$('query').textContent=item().task.query_text;$('cards').replaceChildren();
     const d=draft();if(d.status==='submitted'&&d.receipts.some(r=>r.action==='carried_confirmation'))$('subject').textContent+=' · 沿用原确认（非新作答）';$('surface-diff').replaceChildren();const diff=item().surface_diff;if(diff){const details=node('details');details.append(node('summary','与精确表述的差异：'+(diff.category_labels.join('、')||'文字相同，仍须核对来源要求')),node('p','差异分类只用于导航；每个表述独立提交，有差异时不自动继承。'));for(const change of diff.changes)details.append(node('p',(change.source_tokens.join(' ')||'（空）')+' → '+(change.target_tokens.join(' ')||'（空）')));for(const change of diff.atom_changes||[])details.append(node('p','要求差异：'+(change.source?statement(change.source):'精确版无此要求')+' → '+(change.target?statement(change.target):'当前草稿无此要求')));$('surface-diff').append(details);}
@@ -174,13 +198,13 @@ fail(Array.isArray(r.covered_units)&&r.covered_units.length&&new Set(r.covered_u
     });
     const added=decode(d.form.added_atoms_json,'list');added.forEach((a,i)=>{const card=node('article',undefined,'card');card.append(node('h3','新增要求 '+(i+1)));fieldEditor(card,a,()=>{d.form.added_atoms_json=JSON.stringify(added);markChanged();});card.append(button('移除此新增草稿',()=>{added.splice(i,1);d.form.added_atoms_json=JSON.stringify(added);markChanged();render();}));$('cards').append(card);});
     $('support').replaceChildren(node('h3','请求处理方式'),node('p','当前源材料：'+text(item().task.oracle_draft.expected_support)+'；'+text(item().task.oracle_draft.acceptable_response)),node('p','若源材料标错，请选择“原文或源材料有误”并暂存。'));
-    $('cpd').replaceChildren(node('h3','允许的合理变化（CPD）'),node('p','以下内容也在本题确认范围内；有异议请暂存交由专家处理。'));showTree($('cpd'),d.form.cpd_decision.verdict==='revise'?decode(d.form.cpd_decision.replacement_policy_json,'object'):item().task.oracle_draft.cpd_policy);
+    renderCPD();
     $('notes').value=d.form.notes;$('issue-list').textContent=d.issues.map(x=>x.reason||String(x)).join('；');$('resume').hidden=!d.issues.length;controls();
   }
   const semanticKey=a=>JSON.stringify(wireTree(Object.fromEntries(['category','predicate','arguments','layer','polarity','weight'].map(k=>[k,a[k]??(k==='weight'?1:null)]))));
   const identityKey=a=>JSON.stringify(wireTree(Object.fromEntries(['category','predicate','arguments','polarity'].map(k=>[k,a[k]??null]))));
   function confirmProblems(){
-    const d=draft(),problems=[];if(d.issues.length)problems.push('本题仍有疑问，请先处理或返回审阅');
+    const d=draft(),problems=renderCPD();if(d.issues.length)problems.push('本题仍有疑问，请先处理或返回审阅');
     const finals=[];
     for(let i=0;i<d.form.atom_decisions.length;i++){
       const dec=d.form.atom_decisions[i];if(!dec.reason?.trim())problems.push('第'+(i+1)+'条缺少修订依据');

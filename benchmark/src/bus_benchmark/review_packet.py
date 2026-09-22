@@ -12,6 +12,7 @@ from .review_model import make_proposal, new_draft, validate_draft, confirmation
 from .review_registry import FIELD_DEFINITIONS, PREDICATE_DEFINITIONS, TOKEN_TRANSLATIONS
 from .review_vocabulary import TOKEN_LABELS
 from .review_wire import wire_hash, ensure_browser_form
+from .review_cpd import policy_catalog
 
 PACKET_VERSION = "1"
 UI_VERSION = "1"
@@ -43,7 +44,7 @@ def build_packet(library_source, oracle_source, reviewer_id, *, with_suggestions
         "reviewer_id": reviewer_id, "human_gold": False,
         "source_binding": bundle["reviewer_packet"]["source_binding"],
         "bundle_sha256": wire_hash(bundle), "items": items,
-        "dictionary": {"fields": FIELD_DEFINITIONS, "predicates": PREDICATE_DEFINITIONS, "tokens": {**TOKEN_LABELS, **TOKEN_TRANSLATIONS}},
+        "dictionary": {"cpd_catalog": policy_catalog(), "fields": FIELD_DEFINITIONS, "predicates": PREDICATE_DEFINITIONS, "tokens": {**TOKEN_LABELS, **TOKEN_TRANSLATIONS}},
         "guide": asset_path("review", "guide_zh.md").read_text(encoding="utf-8"),
         "practice": read_json(asset_path("review", "practice.json")),
         "ui_sha256": {name: sha256_file(asset_path("review", name)) for name in ("app.js", "app.css", "template.html")},
