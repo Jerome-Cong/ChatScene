@@ -18,6 +18,7 @@ chatscene/
 .carla-runtime/
 CARLA_0.9.13/
 CARLA_0.9.13_safebench.tar.gz
+/CARLA_0.9.13_safebench.tar.gz*.part
 CARLA_0.9.13_safebench.single.partial
 CARLA.download.parts/
 *.egg-info

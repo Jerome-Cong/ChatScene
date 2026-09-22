@@ -20,7 +20,6 @@ from .metrics import (
     validate_uqh_response_producers,
 )
 from .schema import validate_schema_instance, validate_schema_records
-from .paths import PACKAGE_ROOT
 
 
 def _jsonl_bytes(records: Sequence[Mapping[str, Any]]) -> bytes:
@@ -164,7 +163,25 @@ def _openssl(args: Sequence[str], *, payload: Optional[bytes] = None) -> bytes:
 def _validate_external_private_key(
     private_key_path: Path, public_key_path: Path
 ) -> None:
-    repository_root = PACKAGE_ROOT
+    module_path = Path(__file__).resolve()
+    # Source checkouts may import either the root package or benchmark/src.
+    # A .git file is also a repository marker (e.g. linked worktrees).
+    repository_root = next(
+        (
+            parent for parent in module_path.parents
+            if (parent / ".git").is_file() or (parent / ".git" / "HEAD").is_file()
+        ),
+        None,
+    )
+    if repository_root is None:
+        package_parent = module_path.parents[1]
+        if package_parent.name == "src" and package_parent.parent.name == "benchmark":
+            # Preserve the same boundary for a source archive without .git.
+            repository_root = package_parent.parent.parent
+        else:
+            # Standalone wheels have no checkout: exclude the installation
+            # directory; root-layout source archives exclude their source root.
+            repository_root = package_parent
     private_key_path = Path(private_key_path).resolve()
     try:
         private_key_path.relative_to(repository_root)
@@ -172,7 +189,7 @@ def _validate_external_private_key(
         pass
     else:
         raise ValidationError(
-            "UQH assessor private key must be mounted outside the benchmark repository"
+            "UQH assessor private key must be mounted outside the benchmark repository or installation directory"
         )
     if not private_key_path.is_file():
         raise ValidationError("UQH assessor private key is missing")

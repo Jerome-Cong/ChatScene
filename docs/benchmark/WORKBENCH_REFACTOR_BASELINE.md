@@ -1,6 +1,6 @@
 # Workbench 重构基线（BW-00）
 
-核实日期：2026-09-22。源码基点：`ca6ecdb4a942d79154f6e4ee738b51522a5f0f5b`。
+首次核实日期：2026-09-22；环境恢复记录更新于 2026-09-23。原始源码基点：`ca6ecdb4a942d79154f6e4ee738b51522a5f0f5b`。
 
 状态：**BW-00 阻塞，未验收完成；BW-01 至 BW-12 未开始。** 本文记录实际执行结果，不表示原实施计划已经实现。维护者需要先提供可复现的基线运行环境及缺失资产，才能区分后续重构回归与既有失败。
 
@@ -53,3 +53,31 @@ GitHub 只读连接已在沙箱外验证成功，远端 HEAD 与上述基点一�
 本次只新增审计文档并更新计划状态；没有修改生产源码、题库、oracle、metrics、环境、旧 checkpoint 或绑定配置。无需数据迁移。撤销这些文档增补即可回到原有行为，保留原实施计划的规划正文。
 
 下一步：恢复上述真实开发环境及资产，复测失败并完成固定兼容样例，再验收 BW-00；验收前不开始 BW-01。
+
+## 2026-09-23：获准环境准备与进一步定位
+
+用户提供 MetaDrive 源码 `/home/ubuntu/Documents/shijie/mdsn/metadrive`，并允许在项目内使用 uv 创建环境、下载 CARLA 0.9.13。该源码报告版本 0.4.3，Git HEAD 为 `85e5dadc6c7436d324348f6e3d8f8e680c06b4db`；本轮没有改动它，也没有将旧绑定的 hash 套用到新路径。
+
+### 已执行
+
+- 创建忽略入库的 `chatscene/` 环境，使用 uv 管理的 Python 3.8.20，并新增真实普通文件 `bin/python-frozen` 及其所需 `libpython3.8.so.1.0`；没有替换进程的 `sys.executable`。通过 uv 安装 CARLA Python API 0.9.13、仓库 Scenic 2.1.0b4、测试依赖和下载工具。
+- uv 管理的 Python 与先前 Conda Python 均未暴露本测试所需的 memfd/seal 接口。系统 Python 3.8.10 有这些接口，但系统缺少打包用 distutils；因此用标准库 `venv --copies --without-pip` 在 `.carla-runtime/benchmark/` 创建独立的基线环境，再用 uv 的 `--target` 安装 setuptools 和测试依赖。两个环境用途不同，不修改系统 Python 或既有 BusScene 环境。
+- 项目 README 指定的 Google Drive CARLA 0.9.13 SafeBench 发布包已启动下载，目标为 `CARLA_0.9.13_safebench.tar.gz`。下载日志为 `/tmp/bw-carla-download.log`；**此记录时下载未完成，未解压，未运行服务器**。CARLA Python API 安装不代表完整仿真服务器已可用。官方发布说明的 CDN 链接返回 403，故采用仓库指定发布包。
+- 修复既有 UQH 私钥边界回归：此前打包改动把禁止放置私钥的范围缩至包目录。现在源码 checkout 识别 Git 根目录，源码归档识别 `benchmark/src` 布局，wheel 使用安装目录边界；仍保留权限、公私钥匹配和解析符号链接的校验。两份当前源码保持一致。该改动不更改计分公式。
+
+### 验证与剩余阻碍
+
+```bash
+PYTHONPATH=tests/bus_benchmark .carla-runtime/benchmark/bin/python -m unittest \
+  test_uqh_key_boundary \
+  test_metrics.RobustnessMetricTests.test_uqh_attest_private_key_permissions_wrong_key_and_repo_path
+PYTHONPATH=tests/bus_benchmark .carla-runtime/benchmark/bin/python -m unittest test_judge_pipeline
+```
+
+私钥检查 2 项通过，其中新增测试覆盖根目录、src、源码归档、wheel 四种布局，并检查合法外部路径；独立复审无阻断发现。随后运行完整 `test_metrics`，52 项全部通过（7.625 秒）。CARLA Python API 与仓库 Scenic 导入验证成功。
+
+Judge 的 15 项测试在沙箱内外均为 14 项错误、1 项失败。现在根因已经定位为本机 Linux `5.15.0-139-generic` 对 `MFD_EXEC` / `MFD_NOEXEC_SEAL` 执行策略标志返回 `EINVAL`，不是 Python 模块缺失或单纯沙箱限制。现有 `_sealed_memfd` 明确选择在旧内核不支持时失败阻断；未删除执行封印、未改为普通临时文件、未伪造测试通过。
+
+BW-00 仍未验收，后续包未开始。已请求用户提供兼容执行环境，或明确允许将 Judge/仿真验证登记为环境限制、先继续审阅与打包工作；未收到回答前不自行豁免。
+
+本次实际文件：两份 `uqh.py`、`test_uqh_key_boundary.py`、`.gitignore` 及本记录。环境和下载均忽略入库。撤回代码修复时应使用反向补丁或新提交，不改写历史；本地环境可保留作诊断，未触及旧题库、oracle、checkpoint 和冻结绑定。
