@@ -244,34 +244,26 @@ the safe resolution is only to correct the derivative verdict, the report
 offers an explicit synchronization button; it never edits the CPD policy on
 the reviewer's behalf.
 
-Within one intent triplet, complete the `precise` surface first. When that
-subject passes formal per-query validation, the workbench atomically creates
-drafts for blank `partial` and `vague` siblings:
+BW-06 replaces ID-only inheritance with a conservative applicability gate. Shared
+atom IDs alone never establish that another surface asks for the same content.
+Any wording difference, source/target requirement difference, dataset-split
+mismatch, unknown field or invalid text evidence leaves the target for full
+review; existing target edits and completed subjects are preserved.
 
-- decisions for source requirement cards with the same stable atom ID are
-  copied from the completed precise review;
-- precise-only cards, such as a numeric distance stated only by the precise
-  query, are not inserted into the other surfaces;
-- a merge is inherited only when its complete source group exists on the
-  target surface; a surviving fragment of a cross-surface merge falls back to
-  that target's mechanical card decision;
-- any target-only card keeps that target surface's mechanical default;
-- high-level closure summaries are re-derived against each target oracle, so
-  they cannot claim a structural revision which the target does not contain;
-- CPD `accept` means accepting each target surface's own CPD source policy;
-- a precise CPD revision which already equals the target surface's source
-  policy is re-based to `accept`, rather than creating a false target revision;
-- both sibling entries remain `human_confirmed: false` and create no gold.
+Automatic draft inheritance is limited to whitespace-equivalent query text and
+identical source requirements. Human additions receive an explicit target-text
+applicability record. Different CPD source policies remain independently
+undecided. Inherited targets always remain `human_confirmed: false`; no source
+completion can confirm another subject. The UI shows lexical and requirement
+differences, including nonnumeric changes, and keeps every surface in the queue.
 
-Automatic inheritance never overwrites a complete sibling or a populated
-decision slot. If batch review has already filled some partial/vague slots,
-precise inheritance fills only the untouched atom, support, CPD, summary, note,
-or added-atom slots and preserves every instance-level exception. For a precise
-subject completed before this feature existed, a partial/vague surface with
-safe untouched slots offers an explicit `从 precise 创建未完成草稿` button.
-Inherited values are only a review starting point: the reviewer must compare
-the current surface text, change any missing or weaker requirements, and
-explicitly complete that subject.
+Atom/CPD batch drafts are dataset-split-local, opt-in, and still require reading
+all covered original queries. Audit sidecars preserve before/after forms and
+source bindings. Undo restores only unchanged, unconfirmed drafts; later edits
+and human confirmations are never overwritten. A failed compare-and-swap leaves
+only a preparation record, not an undoable committed action. See
+[the BW-06 decision record](ADR_BW_003_SURFACE_INHERITANCE.md) for compatibility
+changes and recovery boundaries.
 
 In the advanced editor, **source** means the machine-drafted candidate and
 **target** means the human-reviewed final requirement. Accepting or excluding a

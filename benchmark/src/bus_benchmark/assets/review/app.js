@@ -67,7 +67,7 @@
       const list=node('div',undefined,'value-tree');for(const [k,x]of Object.entries(v))showTree(list,x,k);parent.append(list);
     }else parent.append(node('p',(key?fieldLabel(key)+'：':'')+text(v),'value-tree'));
   }
-  function snapshot(entry,index){const content={};for(const [k,v]of Object.entries(entry))if(!['receipts','status','human_gold'].includes(k))content[k]=v;const result={packet_id:packet.packet_id,task:packet.items[index].task,proposal:packet.items[index].proposal,draft_content:content};if(packet.items[index].revision_proposals)result.revision_proposals=packet.items[index].revision_proposals;return result;}
+  function snapshot(entry,index){const content={};for(const [k,v]of Object.entries(entry))if(!['receipts','status','human_gold'].includes(k))content[k]=v;const result={packet_id:packet.packet_id,task:packet.items[index].task,proposal:packet.items[index].proposal,draft_content:content};if(packet.items[index].revision_proposals)result.revision_proposals=packet.items[index].revision_proposals;if(packet.items[index].surface_diff)result.surface_diff=packet.items[index].surface_diff;return result;}
   function coverage(index){return [...packet.items[index].task.oracle_draft.atoms.map(a=>'atom:'+a.atom_id),'support','cpd','additions','notes'];}
   function controls(){ $('editor').disabled=readonly||busy;$('confirm').disabled=readonly||busy||composing; $('defer').disabled=readonly||busy||composing; $('restore').disabled=readonly||busy;for(const id of ['queue','filter','previous','next'])$(id).disabled=busy; }
   function markChanged(origin='human',audit={}){
@@ -120,7 +120,7 @@
     try{const candidate=await validateBackup(value);fail(state.generation===generation,'当前内容已改变，恢复已取消');fail(candidate.generation>=state.generation,'这是较旧备份，不能覆盖当前进度');if(candidate.generation===state.generation)fail(await hash(candidate)===await hash(state),'同版本备份内容冲突，原进度保留');state=candidate;await save();render();notify('备份恢复完成；仍须由维护者正式校验。');}finally{busy=false;controls();}
   }
   function queueUpdate(){
-    const select=$('queue'),filter=$('filter').value;select.replaceChildren();state.entries.forEach((e,i)=>{if(filter==='pending'&&e.status==='submitted'||filter==='issues'&&!e.issues.length||filter==='submitted'&&e.status!=='submitted')return;const o=node('option',`${i+1}. ${e.status==='submitted'?'已提交':e.issues.length?'有疑问':'待审阅'} · ${packet.items[i].task.query_record.surface_style}`);o.value=String(i);select.append(o);});select.value=String(current);
+    const select=$('queue'),filter=$('filter').value;select.replaceChildren();const groups=new Map();state.entries.forEach((e,i)=>{if(filter==='pending'&&e.status==='submitted'||filter==='issues'&&!e.issues.length||filter==='submitted'&&e.status!=='submitted')return;const o=node('option',`${i+1}. ${e.status==='submitted'?'已提交':e.issues.length?'有疑问':'待审阅'} · ${packet.items[i].task.query_record.surface_style}`);o.value=String(i);const rec=packet.items[i].task.query_record,key=rec.dataset_split+' / '+rec.intent_group_id;if(!groups.has(key)){const group=node('optgroup');group.label=key;groups.set(key,group);select.append(group);}groups.get(key).append(o);});select.value=String(current);
     $('progress').textContent=`已提交 ${state.entries.filter(e=>e.status==='submitted').length} / ${state.entries.length}；疑问 ${state.entries.filter(e=>e.issues.length).length}`;
   }
   function fieldEditor(parent,atom,update){
@@ -138,7 +138,7 @@
   }
   function render(){
     queueUpdate();$('subject').textContent=item().task.subject_id;$('query').textContent=item().task.query_text;$('cards').replaceChildren();
-    const d=draft();
+    const d=draft();$('surface-diff').replaceChildren();const diff=item().surface_diff;if(diff){const details=node('details');details.append(node('summary','与精确表述的差异：'+(diff.category_labels.join('、')||'文字相同，仍须核对来源要求')),node('p','差异分类只用于导航；每个表述独立提交，有差异时不自动继承。'));for(const change of diff.changes)details.append(node('p',(change.source_tokens.join(' ')||'（空）')+' → '+(change.target_tokens.join(' ')||'（空）')));for(const change of diff.atom_changes||[])details.append(node('p','要求差异：'+(change.source?statement(change.source):'精确版无此要求')+' → '+(change.target?statement(change.target):'当前草稿无此要求')));$('surface-diff').append(details);}
     originalAtoms().forEach((source,index)=>{
       const decision=d.form.atom_decisions[index],card=node('article',undefined,'card');card.append(node('h3',`${index+1}. ${(packet.dictionary.predicates[source.predicate]||[])[1]||source.predicate}`),node('p',statement(source)));
       const warnings=atomWarnings(source,item().task.query_text);if(warnings.length)card.append(node('p',warnings.join('；'),'warning'));

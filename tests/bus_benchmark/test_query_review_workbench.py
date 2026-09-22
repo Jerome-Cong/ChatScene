@@ -1,4 +1,5 @@
 import gc
+import copy
 import json
 import tempfile
 import unittest
@@ -98,7 +99,7 @@ class QueryReviewWorkbenchTests(unittest.TestCase):
         self.addCleanup(workbench.close)
         return workbench
 
-    def _triplet_session(self, intent_group_id="BSG_DEV_v0_2_S01"):
+    def _triplet_session(self, intent_group_id="BSG_DEV_v0_2_S01", identical_text=False):
         library = [
             row
             for row in read_jsonl(DEV_LIBRARY)
@@ -109,6 +110,15 @@ class QueryReviewWorkbenchTests(unittest.TestCase):
             for row in read_jsonl(DEV_ORACLE)
             if row["intent_group_id"] == intent_group_id
         ]
+        if identical_text:
+            precise = next(row for row in library if row["surface_style"] == "precise")
+            source_atoms = next(row for row in oracle if row["surface_style"] == "precise")["atoms"]
+            for row in library:
+                row["query_text"] = precise["query_text"]
+            for row in oracle:
+                row["atoms"] = copy.deepcopy(source_atoms)
+                for atom in row["atoms"]:
+                    atom["provenance"]["query_id"] = row["query_id"]
         bundle = export_query_review_bundle(
             library, oracle, reviewer_id="human-reviewer"
         )
@@ -395,52 +405,15 @@ class QueryReviewWorkbenchTests(unittest.TestCase):
         self.assertIn(_human_atom_statement(lane_count), mapping_guide)
         self.assertIn(_human_atom_statement(risk), mapping_guide)
 
-    def test_completing_precise_seeds_incomplete_partial_and_vague_drafts(self):
-        try:
-            import ipywidgets  # noqa: F401
-        except ImportError:
-            self.skipTest("ipywidgets is not installed")
-
+    def test_completing_precise_requires_full_review_of_different_surfaces(self):
         session = self._triplet_session()
-        workbench = self._workbench(session)
-        workbench.filter.value = "all"
         precise_id, partial_id, vague_id = session.ordered_query_ids
-        self.assertEqual(workbench.current_query_id, precise_id)
-        workbench.mechanical_ack.value = True
-        workbench._load_mechanical(None)
-        self.assertTrue(workbench._save_current(True))
-
+        self.assertEqual(session.mark_complete_and_seed_siblings(precise_id, session.mechanical_form(precise_id)), [])
         self.assertEqual(session.status(precise_id), "complete")
         for target_id in (partial_id, vague_id):
-            self.assertNotEqual(session.status(target_id), "complete")
+            self.assertEqual(session.status(target_id), "pending")
             self.assertFalse(session._entry(target_id)["human_confirmed"])
-            target_form = session.form(target_id)
-            self.assertTrue(
-                all(item["verdict"] for item in target_form["atom_decisions"])
-            )
-            self.assertTrue(
-                all(
-                    item["verdict"]
-                    for item in target_form["required_check_decisions"].values()
-                )
-            )
-            self.assertTrue(target_form["cpd_decision"]["verdict"])
-
-            precise_decisions = {
-                item["atom_id"]: item for item in session.form(precise_id)["atom_decisions"]
-            }
-            for target_decision in target_form["atom_decisions"]:
-                if target_decision["atom_id"] in precise_decisions:
-                    self.assertEqual(
-                        target_decision, precise_decisions[target_decision["atom_id"]]
-                    )
-            self.assertNotIn(
-                "surface_numeric_constraint",
-                {
-                    atom["predicate"]
-                    for atom in session.task(target_id)["oracle_draft"]["atoms"]
-                },
-            )
+            self.assertFalse(session._form_has_content(session.form(target_id)))
         self.assertEqual(session.progress()["human_gold_records"], 0)
 
     def test_precise_inheritance_never_overwrites_existing_surface_work(self):
@@ -449,24 +422,16 @@ class QueryReviewWorkbenchTests(unittest.TestCase):
         partial_form = session.form(partial_id)
         partial_form["notes"] = "reviewer already started this surface"
         session.save_form(partial_id, partial_form)
-
-        seeded = session.mark_complete_and_seed_siblings(
-            precise_id, session.mechanical_form(precise_id)
-        )
-
-        self.assertEqual(seeded, [partial_id, vague_id])
-        self.assertEqual(
-            session.form(partial_id)["notes"], "reviewer already started this surface"
-        )
-        self.assertTrue(
-            all(item["verdict"] for item in session.form(partial_id)["atom_decisions"])
-        )
-        self.assertFalse(session._entry(partial_id)["human_confirmed"])
-        self.assertTrue(session._form_has_content(session.form(vague_id)))
-        self.assertFalse(session._entry(vague_id)["human_confirmed"])
+        session.mark_complete(vague_id, session.mechanical_form(vague_id))
+        vague_form = session.form(vague_id)
+        seeded = session.mark_complete_and_seed_siblings(precise_id, session.mechanical_form(precise_id))
+        self.assertEqual(seeded, [])
+        self.assertEqual(session.form(partial_id), partial_form)
+        self.assertEqual(session.form(vague_id), vague_form)
+        self.assertTrue(session._entry(vague_id)["human_confirmed"])
 
     def test_existing_completed_precise_can_explicitly_seed_one_blank_surface(self):
-        session = self._triplet_session()
+        session = self._triplet_session(identical_text=True)
         precise_id, partial_id, vague_id = session.ordered_query_ids
         session.mark_complete(precise_id, session.mechanical_form(precise_id))
         self.assertTrue(session.can_seed_from_precise(partial_id))
@@ -677,77 +642,26 @@ class QueryReviewWorkbenchTests(unittest.TestCase):
         precise_id, partial_id, vague_id = session.ordered_query_ids
         task = session.task(precise_id)
         form = session.mechanical_form(precise_id)
-        atoms = task["oracle_draft"]["atoms"]
-        precise_only = next(
-            atom for atom in atoms if atom["predicate"] == "surface_numeric_constraint"
-        )
-        common = next(atom for atom in atoms if atom["category"] == "actor")
-        target = {
-            key: common[key]
-            for key in (
-                "category",
-                "predicate",
-                "arguments",
-                "layer",
-                "polarity",
-                "notes",
-            )
-        }
+        precise_only = next(a for a in task["oracle_draft"]["atoms"] if a["predicate"] == "surface_numeric_constraint")
+        common = next(a for a in task["oracle_draft"]["atoms"] if a["category"] == "actor")
+        target = copy.deepcopy(common)
         target["layer"] = "permitted"
-        replacement_json = json.dumps([target])
         for decision in form["atom_decisions"]:
             if decision["atom_id"] in (precise_only["atom_id"], common["atom_id"]):
-                decision.update(
-                    {
-                        "verdict": "merge",
-                        "reason": "这两张 precise source 卡由同一个最终要求表达",
-                        "replacement_atoms_json": replacement_json,
-                    }
-                )
-        self._align_required_checks(task, form)
+                decision.update(verdict="merge", reason="synthetic source merge", replacement_atoms_json=json.dumps([target]))
+        self.assertEqual(session.mark_complete_and_seed_siblings(precise_id, form), [])
+        for qid in (partial_id, vague_id):
+            self.assertFalse(session._form_has_content(session.form(qid)))
 
-        seeded = session.mark_complete_and_seed_siblings(precise_id, form)
-
-        self.assertEqual(seeded, [partial_id, vague_id])
-        for target_id in seeded:
-            target_decision = next(
-                item
-                for item in session.form(target_id)["atom_decisions"]
-                if item["atom_id"] == common["atom_id"]
-            )
-            self.assertEqual(target_decision["verdict"], "accept")
-            self.assertNotEqual(session.status(target_id), "draft")
-
-    def test_inherited_cpd_revision_becomes_accept_when_target_already_matches(self):
+    def test_cpd_revision_does_not_bypass_surface_text_review(self):
         session = self._triplet_session()
         precise_id, partial_id, vague_id = session.ordered_query_ids
-        precise_task = session.task(precise_id)
-        partial_policy = session.task(partial_id)["oracle_draft"]["cpd_policy"]
         form = session.mechanical_form(precise_id)
-        form["cpd_decision"] = {
-            "verdict": "revise",
-            "reason": CPD_REVISION_REASON_TEXT["candidate_classification"],
-            "replacement_policy_json": json.dumps(partial_policy),
-        }
-        form["required_check_decisions"]["cpd_common_eligibility"] = {
-            "verdict": "revise",
-            "reason": CPD_REVISION_REASON_TEXT["candidate_classification"],
-        }
-        self._align_required_checks(precise_task, form)
-
-        seeded = session.mark_complete_and_seed_siblings(precise_id, form)
-
-        self.assertEqual(seeded, [partial_id, vague_id])
-        for target_id in seeded:
-            inherited = session.form(target_id)
-            self.assertEqual(inherited["cpd_decision"]["verdict"], "accept")
-            self.assertEqual(
-                inherited["required_check_decisions"]["cpd_common_eligibility"][
-                    "verdict"
-                ],
-                "accept",
-            )
-            self.assertNotEqual(session.status(target_id), "draft")
+        form["cpd_decision"] = {"verdict":"revise", "reason":CPD_REVISION_REASON_TEXT["candidate_classification"], "replacement_policy_json":json.dumps(session.task(partial_id)["oracle_draft"]["cpd_policy"])}
+        self.assertEqual(session.mark_complete_and_seed_siblings(precise_id, form), [])
+        for qid in (partial_id, vague_id):
+            self.assertEqual(session.form(qid)["cpd_decision"]["verdict"], "")
+            self.assertFalse(session._entry(qid)["human_confirmed"])
 
     def test_allowed_not_required_shortcut_builds_auditable_target(self):
         try:

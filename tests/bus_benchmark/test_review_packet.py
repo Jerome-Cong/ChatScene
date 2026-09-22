@@ -16,7 +16,7 @@ def browser_backup(packet, submitted=False):
     entries = [copy.deepcopy(i['initial_draft']) for i in packet['items']]
     if submitted:
         for entry, item in zip(entries, packet['items']):
-            entry['receipts'] = [{'action':'explicit_confirm', 'content_sha256':wire_hash(browser_snapshot(packet['packet_id'], item['task'], item['proposal'], entry)), 'covered_units':['atom:'+a['atom_id'] for a in item['task']['oracle_draft']['atoms']]+['support','cpd','additions','notes'], 'reviewer_id':packet['reviewer_id'], 'revision':entry['revision']}]
+            entry['receipts'] = [{'action':'explicit_confirm', 'content_sha256':wire_hash(browser_snapshot(packet['packet_id'], item['task'], item['proposal'], entry, item.get('revision_proposals'), item.get('surface_diff'))), 'covered_units':['atom:'+a['atom_id'] for a in item['task']['oracle_draft']['atoms']]+['support','cpd','additions','notes'], 'reviewer_id':packet['reviewer_id'], 'revision':entry['revision']}]
             entry['status'] = 'submitted'
     value = dict(artifact_type='browser_review_backup', packet_version=packet['packet_version'],packet_id=packet['packet_id'],reviewer_id=packet['reviewer_id'],generation=1,entries=entries,human_gold=False)
     return {**value,'backup_sha256':wire_hash(value)}

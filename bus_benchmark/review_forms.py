@@ -342,14 +342,14 @@ def _inherited_surface_form(
     target_task: Mapping[str, Any],
     target_mechanical_form: Mapping[str, Any],
 ) -> Dict[str, Any]:
-    """Rebase a completed precise review onto one sibling surface draft.
+    """Rebase only after identical text/source semantics establish applicability.
 
-    Common source atoms have stable IDs across a v0.2 triplet.  Precise-only
-    atoms are omitted, target-only atoms keep their target mechanical default,
-    and the high-level summaries are re-derived from the target proposal rather
-    than copied into an inconsistent state.  The caller must still persist the
-    target with ``human_confirmed=False``.
+    Any unexplained surface or requirement difference returns a blank draft for
+    full review. Existing target work is preserved by the caller's merge step.
+    Even applicable inheritance remains unconfirmed and never creates gold.
     """
+
+    from .surface_diff import inheritance_assessment
 
     precise_record = precise_task["query_record"]
     target_record = target_task["query_record"]
@@ -359,6 +359,11 @@ def _inherited_surface_form(
         raise ValidationError("inheritance target must be partial or vague")
     if precise_record.get("intent_group_id") != target_record.get("intent_group_id"):
         raise ValidationError("inheritance source and target must share one intent")
+
+    reviewed_atoms = response_from_form(precise_task, precise_form)["proposed_oracle"]["atoms"]
+    applicability = inheritance_assessment(precise_task, target_task, reviewed_atoms)
+    if not applicability["can_inherit"]:
+        return _blank_form(target_task)
 
     inherited = _json_copy(target_mechanical_form, "target mechanical form")
     source_decisions = {
@@ -459,6 +464,9 @@ def _inherited_surface_form(
             "verdict": "revise" if changed else "accept",
             "reason": CHECK_REVISE_REASON if changed else CHECK_ACCEPT_REASON,
         }
+    if not applicability["cpd_compatible"]:
+        inherited["cpd_decision"] = {"verdict": "", "reason": "", "replacement_policy_json": "{}"}
+        inherited["required_check_decisions"]["cpd_common_eligibility"] = {"verdict": "", "reason": ""}
     return inherited
 
 

@@ -48,7 +48,12 @@ class CompilerCompatibilityTests(unittest.TestCase):
         tasks = {t["query_record"]["surface_style"]: t for t in bundle["reviewer_packet"]["tasks"]}
         case = fixture["inheritance"]
         inherited = _inherited_surface_form(tasks["precise"], case["source_form"], tasks["partial"], case["target_form"])
-        self.assertEqual(sha256_bytes(canonical_json_bytes(inherited)), case["expected_form_sha256"])
+        # BW-06 intentionally closes the old cross-surface inheritance behavior.
+        # Preserve the historical vector/hash rather than rewriting its evidence.
+        self.assertNotEqual(sha256_bytes(canonical_json_bytes(inherited)), case["expected_form_sha256"])
+        self.assertTrue(all(not d["verdict"] for d in inherited["atom_decisions"]))
+        self.assertEqual(inherited["added_atoms_json"], "[]")
+        self.assertEqual(inherited["cpd_decision"]["verdict"], "")
         with tempfile.TemporaryDirectory() as directory:
             checkpoint = Path(directory) / "checkpoint.json"
             def session():

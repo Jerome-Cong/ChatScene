@@ -54,6 +54,7 @@ from .review_presentation import (
     _human_token,
 )
 from .review_session import QueryReviewSession
+from .surface_diff import surface_diff
 from .review_presentation import quick_confirmation_issues
 from .review_store import _checkpoint_guard
 from .review_vocabulary import (
@@ -642,7 +643,23 @@ class QueryReviewWorkbench:
         )
         tabs.set_title(0, "相同要求批审")
         tabs.set_title(1, "CPD 策略批审")
-        return tabs
+        undo = w.Button(description="撤销本会话最近的批审草稿")
+        def undo_latest(_):
+            if self.dirty:
+                self._notify("请先保存当前编辑，再撤销批审草稿。", error=True)
+                return
+            action_id = self.session.last_batch_action_id
+            if action_id is None:
+                self._notify("本会话没有可撤销的批审记录。", error=True)
+                return
+            try:
+                result = self.session.undo_batch(action_id)
+                self._render_current()
+                self._notify("已撤销 {} 条未变化草稿；保留 {} 条之后编辑或已确认的记录。".format(len(result["restored"]), len(result["skipped_edited_or_confirmed"])))
+            except ValidationError as exc:
+                self._notify(str(exc), error=True)
+        undo.on_click(undo_latest)
+        return w.VBox([tabs, undo])
 
     def _build_shell(self) -> None:
         w = self.widgets
@@ -1267,6 +1284,13 @@ class QueryReviewWorkbench:
         reference_accordion.set_title(0, "对照材料：同 intent 三种表述与完整元数据")
         reference_accordion.selected_index = None
         inheritance_children = []
+        if record.get("surface_style") in ("partial", "vague"):
+            references = [self.session.task(q) for q in self.session.intent_query_ids(query_id) if self.session.task(q)["query_record"].get("surface_style") == "precise"]
+            if references:
+                comparison = surface_diff(references[0], task)
+                rows = ["<li>{} → {}</li>".format(html.escape(" ".join(c["source_tokens"])) or "（空）", html.escape(" ".join(c["target_tokens"])) or "（空）") for c in comparison["changes"]]
+                rows.extend("<li>要求差异：{} → {}</li>".format(html.escape(_human_atom_statement(c["source"])) if c["source"] else "精确版无此要求", html.escape(_human_atom_statement(c["target"])) if c["target"] else "当前草稿无此要求") for c in comparison["atom_changes"])
+                inheritance_children.append(w.HTML("<details><summary>表述差异：{}</summary><p>差异分类仅用于导航；文字或要求有差异时完整重审，不因 atom ID 相同自动继承。</p><ul>{}</ul></details>".format(html.escape("、".join(comparison["category_labels"])) or "文字相同，仍检查来源要求", "".join(rows))))
         precise_source = self.session._completed_precise_query_id(query_id)
         if (
             record.get("surface_style") in ("partial", "vague")

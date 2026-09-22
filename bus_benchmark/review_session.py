@@ -66,6 +66,7 @@ class QueryReviewSession:
         self.checkpoint_path = review_state_path(checkpoint_path)
         self.agent_reviews = dict(agent_reviews or {})
         self.agent_artifact_id = agent_artifact_id
+        self.last_batch_action_id = None
 
         expected = export_query_review_bundle(
             library_source, oracle_source, reviewer_id=self.reviewer_id
@@ -229,7 +230,7 @@ class QueryReviewSession:
             task = self.task(query_id)
             record = task["query_record"]
             for atom in task["oracle_draft"]["atoms"]:
-                batch_id = _atom_batch_id(atom)
+                batch_id = _json_sha256({"dataset_split": record["dataset_split"], "atom": _atom_batch_id(atom)})
                 group = groups.setdefault(
                     batch_id,
                     {
@@ -255,7 +256,7 @@ class QueryReviewSession:
             task = self.task(query_id)
             record = task["query_record"]
             policy = task["oracle_draft"]["cpd_policy"]
-            batch_id = _cpd_batch_id(record["surface_style"], policy)
+            batch_id = _json_sha256({"dataset_split": record["dataset_split"], "policy": _cpd_batch_id(record["surface_style"], policy)})
             group = groups.setdefault(
                 batch_id,
                 {
@@ -430,7 +431,8 @@ class QueryReviewSession:
                 )
             applied += 1
         if applied:
-            self._persist(entries)
+            from .review_action_audit import persist_draft_action
+            self.last_batch_action_id = persist_draft_action(self, entries, "atom", batch_id)
         return {
             "instances_total": len(self._atom_batch_specs[batch_id]["instances"]),
             "applied": applied,
@@ -492,13 +494,21 @@ class QueryReviewSession:
             ] = {"verdict": verdict, "reason": reason}
             applied += 1
         if applied:
-            self._persist(entries)
+            from .review_action_audit import persist_draft_action
+            self.last_batch_action_id = persist_draft_action(self, entries, "cpd", batch_id)
         return {
             "instances_total": len(self._cpd_batch_specs[batch_id]["instances"]),
             "applied": applied,
             "skipped_complete": skipped_complete,
             "skipped_existing": skipped_existing,
         }
+
+    def undo_batch(self, action_id):
+        from .review_action_audit import undo_batch
+        result = undo_batch(self, action_id)
+        if self.last_batch_action_id == action_id:
+            self.last_batch_action_id = None
+        return result
 
     def save_form(
         self, query_id: str, form: Mapping[str, Any], *, human_confirmed: bool = False
@@ -529,6 +539,7 @@ class QueryReviewSession:
             record = candidate_task["query_record"]
             if (
                 record["intent_group_id"] == intent
+                and record["dataset_split"] == task["query_record"]["dataset_split"]
                 and record["surface_style"] == "precise"
                 and self._entry(candidate)["human_confirmed"]
             ):
@@ -580,7 +591,10 @@ class QueryReviewSession:
             self._seeded_form_from_precise(precise_query_id, query_id),
         )
         target_entry["human_confirmed"] = False
-        self._persist(entries)
+        from .review_action_audit import persist_draft_action
+        from .surface_diff import inheritance_assessment
+        assessment = inheritance_assessment(self.task(precise_query_id), self.task(query_id), response_from_form(self.task(precise_query_id), self.form(precise_query_id))["proposed_oracle"]["atoms"])
+        persist_draft_action(self, entries, "inheritance", precise_query_id, source_subject_id=precise_query_id, applicability=[assessment])
         return precise_query_id
 
     def mark_complete_and_seed_siblings(
@@ -611,6 +625,7 @@ class QueryReviewSession:
                 target_record = self.task(target_query_id)["query_record"]
                 if (
                     target_record["intent_group_id"] != intent
+                    or target_record["dataset_split"] != record["dataset_split"]
                     or target_record["surface_style"] not in ("partial", "vague")
                 ):
                     continue
@@ -634,7 +649,13 @@ class QueryReviewSession:
                     target_entry["form"] = merged
                     target_entry["human_confirmed"] = False
                     seeded.append(target_query_id)
-        self._persist(entries)
+        if seeded:
+            from .review_action_audit import persist_draft_action
+            from .surface_diff import inheritance_assessment
+            assessments = [inheritance_assessment(self.task(query_id), self.task(target), response["proposed_oracle"]["atoms"]) for target in seeded]
+            persist_draft_action(self, entries, "inheritance", query_id, source_subject_id=query_id, applicability=assessments)
+        else:
+            self._persist(entries)
         return seeded
 
     def reset_form(self, query_id: str) -> None:
@@ -771,6 +792,7 @@ class QueryReviewSession:
             candidate
             for candidate in self.ordered_query_ids
             if self.task(candidate)["query_record"]["intent_group_id"] == intent
+            and self.task(candidate)["query_record"]["dataset_split"] == self.task(query_id)["query_record"]["dataset_split"]
         ]
 
     def build_submission(self) -> Dict[str, Any]:

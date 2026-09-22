@@ -31,6 +31,13 @@ def build_packet(library_source, oracle_source, reviewer_id, *, with_suggestions
                 for entry in item["revision_proposals"]["items"] if entry["status"] == "unresolved"
             ]
         items.append(item)
+    from .surface_diff import surface_diff
+    precise = {(i["task"]["query_record"]["dataset_split"], i["task"]["query_record"]["intent_group_id"]): i["task"] for i in items if i["task"]["query_record"]["surface_style"] == "precise"}
+    for item in items:
+        record = item["task"]["query_record"]
+        reference = precise.get((record["dataset_split"], record["intent_group_id"]))
+        if reference is not None and record["surface_style"] != "precise":
+            item["surface_diff"] = surface_diff(reference, item["task"])
     core = {
         "packet_version": PACKET_VERSION, "ui_version": UI_VERSION,
         "reviewer_id": reviewer_id, "human_gold": False,
@@ -49,10 +56,12 @@ def build_packet(library_source, oracle_source, reviewer_id, *, with_suggestions
     return {**core, "packet_id": wire_hash(core)}
 
 
-def browser_snapshot(packet_id, task, proposal, draft, revision_proposals=None):
+def browser_snapshot(packet_id, task, proposal, draft, revision_proposals=None, surface_comparison=None):
     snapshot = {"packet_id": packet_id, "task": task, "proposal": proposal, "draft_content": {k: v for k, v in draft.items() if k not in ("receipts", "status", "human_gold")}}
     if revision_proposals is not None:
         snapshot["revision_proposals"] = revision_proposals
+    if surface_comparison is not None:
+        snapshot["surface_diff"] = surface_comparison
     return snapshot
 
 
@@ -106,7 +115,7 @@ def validate_browser_submission(assignment, submission, library_source, oracle_s
         draft["receipts"] = []
         draft["status"] = incoming["status"] if incoming["status"] in ("deferred", "requires_source_fix") else "draft"
         if incoming["receipts"]:
-            expected_digest = wire_hash(browser_snapshot(expected["packet_id"], task, proposal, incoming, item.get("revision_proposals")))
+            expected_digest = wire_hash(browser_snapshot(expected["packet_id"], task, proposal, incoming, item.get("revision_proposals"), item.get("surface_diff")))
             for receipt in incoming["receipts"]:
                 receipt_keys = {"action", "content_sha256", "covered_units", "reviewer_id", "revision"}
                 if not isinstance(receipt, dict) or set(receipt) != receipt_keys or receipt["action"] != "explicit_confirm" or receipt["content_sha256"] != expected_digest or receipt["reviewer_id"] != expected["reviewer_id"] or type(receipt["revision"]) is not int or receipt["revision"] != draft["revision"]:
