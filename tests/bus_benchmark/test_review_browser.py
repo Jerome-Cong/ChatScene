@@ -224,3 +224,52 @@ class OfflineBrowserTests(unittest.TestCase):
         self.page.locator('#confirm').click()
         self.assertIn('未登记要求类型',self.page.locator('#message').inner_text())
         self.assertEqual(self.errors,[])
+
+    def test_migrated_confirmations_restore_as_carried_and_edits_reopen(self):
+        from bus_benchmark.review_migration import migrate_review
+        from bus_benchmark.jsonio import write_json
+        from test_review_packet import browser_backup
+        old_assignment=self.root/'packet/assignment.json';old_backup=self.root/'old-progress.json'
+        write_json(old_backup,browser_backup(self.packet,True))
+        migrate_review(old_submission_path=old_backup,old_assignment_path=old_assignment,old_library=self.library,old_oracle=self.oracle,new_library=self.library,new_oracle=self.oracle,output_dir=self.root/'migration')
+        self.packet=read_json(self.root/'migration/packet/assignment.json');self.url=(self.root/'migration/packet/review.html').as_uri()
+        backup=read_json(self.root/'migration/progress.json')
+        self.open();self.page.evaluate('(value)=>ReviewWorkbench.restore(value)',backup)
+        self.assertIn('沿用原确认',self.page.locator('#subject').inner_text())
+        self.assertEqual(validate_browser_submission(self.packet,self.backup(),self.library,self.oracle)['subjects_submitted'],2)
+        self.page.locator('#notes').fill('new edit after migration')
+        self.assertEqual(self.page.evaluate('ReviewWorkbench.getState().entries[0].status'),'draft')
+        self.assertEqual(self.page.evaluate('ReviewWorkbench.getState().entries[0].receipts'),[])
+        self.assertNotIn('沿用原确认',self.page.locator('#subject').inner_text())
+        self.assertEqual(validate_browser_submission(self.packet,self.backup(),self.library,self.oracle)['subjects_submitted'],1)
+
+    def test_changed_source_keeps_old_notes_read_only_and_requires_new_review(self):
+        from bus_benchmark.review_migration import migrate_review
+        from bus_benchmark.jsonio import write_json
+        self.open();self.page.locator('#notes').fill('old human edit to retain')
+        self.page.locator('#confirm').click();wait(self.page,"ReviewWorkbench.getState().entries[0].status==='submitted'")
+        old=self.backup()
+        # Model an earlier expert CPD edit in this synthetic confirmed backup.
+        from bus_benchmark.review_packet import browser_snapshot
+        entry=old['entries'][0];source=self.packet['items'][0]
+        policy=copy.deepcopy(source['task']['oracle_draft']['cpd_policy']);policy['cross_platform_judgeable']=False
+        entry['form']['cpd_decision'].update(verdict='revise',reason='unique old CPD revision reason',replacement_policy_json=json.dumps(policy))
+        entry['revision']+=1;entry['edit_sources'].append({'revision':entry['revision'],'origin':'human'})
+        entry['receipts'][0]['revision']=entry['revision']
+        entry['receipts'][0]['content_sha256']=wire_hash(browser_snapshot(self.packet['packet_id'],source['task'],source['proposal'],entry,source.get('revision_proposals'),source.get('surface_diff')))
+        old['generation']+=1;old['backup_sha256']=wire_hash({k:v for k,v in old.items() if k!='backup_sha256'})
+        old_path=self.root/'old-progress.json';write_json(old_path,old)
+        changed=copy.deepcopy(self.library);qid=self.packet['items'][0]['task']['subject_id']
+        next(row for row in changed if row['query_id']==qid)['query_text']+=' Corrected source wording.'
+        migrate_review(old_submission_path=old_path,old_assignment_path=self.root/'packet/assignment.json',old_library=self.library,old_oracle=self.oracle,new_library=changed,new_oracle=self.oracle,output_dir=self.root/'changed-migration')
+        self.packet=read_json(self.root/'changed-migration/packet/assignment.json');self.url=(self.root/'changed-migration/packet/review.html').as_uri();self.library=changed
+        self.open();self.page.evaluate('(value)=>ReviewWorkbench.restore(value)',read_json(self.root/'changed-migration/progress.json'))
+        self.page.locator('#prior-review > details > summary').click()
+        self.assertIn('old human edit to retain',self.page.locator('#prior-review').inner_text())
+        self.page.get_by_text('完整旧表单（只读技术记录，含全部理由与 CPD 修订）',exact=True).click()
+        self.assertIn('unique old CPD revision reason',self.page.locator('#prior-review pre').inner_text())
+        self.assertIn('required_check_decisions',self.page.locator('#prior-review pre').inner_text())
+        self.assertEqual(self.page.evaluate('ReviewWorkbench.getState().entries[0].status'),'deferred')
+        self.assertEqual(self.page.evaluate('ReviewWorkbench.getState().entries[0].receipts'),[])
+        self.page.locator('#confirm').click()
+        self.assertIn('仍有疑问',self.page.locator('#message').inner_text())

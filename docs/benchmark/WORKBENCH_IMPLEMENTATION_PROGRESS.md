@@ -25,7 +25,7 @@ PYTHONPATH=tests/bus_benchmark .carla-runtime/benchmark/bin/python -m unittest \
 
 ## 后续工作包
 
-BW-07 至 BW-12 尚未开始。每包完成后在此追加实际文件、检查结果、未验证事项、兼容性变化和回滚方式；正式发布仍受 Judge/仿真及真人试标验收约束。
+BW-08 至 BW-12 尚未开始。每包完成后在此追加实际文件、检查结果、未验证事项、兼容性变化和回滚方式；正式发布仍受 Judge/仿真及真人试标验收约束。
 
 ## BW-01：可移植审阅服务与显式上下文
 
@@ -104,3 +104,17 @@ BW-07 至 BW-12 尚未开始。每包完成后在此追加实际文件、检查�
 兼容性：有意减少旧自动继承，不清空旧 checkpoint；原其他 compiler 输出、计分与 finalizer 不变。sidecar 审计是新资源，不能丢弃后宣称仍可完整追溯。未验证：真人差异视图使用效率；未用词法分类宣称完整自然语言等价识别。回滚与旧更宽松行为的风险见 ADR，不能把回滚描述为无行为变化。
 
 BW-06 补充：前端词典改为只查自身属性，未知 predicate/token 与 `constructor` 等 JavaScript 内置属性同名时仍完整显示并拒绝确认；新增实际浏览器反例，12 项全部通过（4.213 秒），独立复审无阻断。
+
+## BW-07：疑问队列、源反馈与安全迁移
+
+状态：完成；真实旧人工进度尚未提供，未冒充真人迁移验收。
+
+实际文件：两套源码新增 `review_history.py`、`review_migration.py`、`review_issues.py`，更新 model/packet/wire/CLI 与离线页面；新增 `test_review_migration.py`，扩展实际浏览器迁移测试；交付 `REVIEW_MIGRATION_AND_ISSUES.md` 并更新离线手册。
+
+行为：defer/requires_source_fix 保留编辑、撤销确认，问题单绑定原文/query/oracle/atom。迁移只读归档原始字节与跨次 lineage；纯 UI 更新可沿用原确认并显式标为 carried_confirmation，源变更只重审对应subject；指南或实际词典变化不得偷用旧声明hash保留complete。旧0.2 checkpoint无新指南绑定，保留表单但需重新确认。旧表单全部理由、required checks和CPD修订均可只读展开，JSON Pointer定位变化；浏览器不能在备份中自造迁移授权。
+
+验证：Python migration/packet/model/surface/固定向量 33 项通过（3.976 秒）；真实离线浏览器 14 项通过（5.032 秒）。覆盖实际词典改动却伪留旧hash、纯UI沿用、单题源变化、错reviewer/源、编辑失效、原件不变、只读权限、重复迁移lineage和完整旧CPD理由。独立复审无阻断。
+
+本机对实际BW-04开发题包执行了明确标记的未开始状态迁移：`.review-workspace/bw07-unstarted-demo-verified/` 保留12题草稿，0沿用确认，0gold；不是用户真人进度。兼容性与信任边界：迁移授权来自维护者可信assignment，仍不证明人类身份；模型编译器及finalizer保持原语义。浏览器数字精度限制也覆盖嵌套JSON字符串，无法安全解释的旧编辑留在原件/只读区，不静默舍入。
+
+未验证：真实人工试标、真实旧checkpoint迁移、Windows实测，仍在后续验收范围。回滚：撤销新迁移/问题入口但保留完整输出目录、只读originals与lineage；旧入口继续可用，不能删除迁移证据后声称旧进度仍完整可追溯。

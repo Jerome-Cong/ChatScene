@@ -102,6 +102,19 @@ def edit_draft(task, proposal, draft, form, origin="human"):
     return result
 
 
+def defer_draft(task, proposal, draft, *, code, reason, atom_ids=()):
+    """Keep intermediate edits, revoke receipts and expose a source-bound issue."""
+    if code not in ("semantic_unclear", "source_error", "expert_review", "other") or not isinstance(reason, str) or not reason.strip():
+        raise ValidationError("deferral requires a structured reason and nonempty explanation")
+    known = {a["atom_id"] for a in task["oracle_draft"]["atoms"]}
+    if not isinstance(atom_ids, (list, tuple)) or any(not isinstance(a, str) or a not in known for a in atom_ids):
+        raise ValidationError("issue atom IDs must belong to this source")
+    result = edit_draft(task, proposal, draft, draft["form"], "human")
+    result["issues"].append({"code": code, "reason": reason.strip(), "atom_ids": sorted(set(atom_ids))})
+    result["status"] = "requires_source_fix" if code == "source_error" else "deferred"
+    return result
+
+
 def confirmation_projection(task, proposal, draft):
     """The frontend must display this snapshot before sending its digest back."""
     validate_draft(task, proposal, draft)

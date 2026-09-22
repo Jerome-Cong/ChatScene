@@ -11,7 +11,7 @@ from .paths import asset_path, review_state_path
 from .review_model import make_proposal, new_draft, validate_draft, confirmation_projection, confirm_scope, compile_confirmed
 from .review_registry import FIELD_DEFINITIONS, PREDICATE_DEFINITIONS, TOKEN_TRANSLATIONS
 from .review_vocabulary import TOKEN_LABELS
-from .review_wire import wire_hash
+from .review_wire import wire_hash, ensure_browser_form
 
 PACKET_VERSION = "1"
 UI_VERSION = "1"
@@ -67,6 +67,10 @@ def browser_snapshot(packet_id, task, proposal, draft, revision_proposals=None, 
 
 def export_packet(library_source, oracle_source, reviewer_id, output_dir, *, with_suggestions=False):
     packet = build_packet(library_source, oracle_source, reviewer_id, with_suggestions=with_suggestions)
+    return _write_packet(packet, output_dir)
+
+
+def _write_packet(packet, output_dir):
     output = review_state_path(output_dir)
     output.parent.mkdir(parents=True, exist_ok=True)
     try:
@@ -91,6 +95,11 @@ def validate_browser_submission(assignment, submission, library_source, oracle_s
         raise ValidationError("trusted assignment is malformed")
     from .review_proposals import PROFILE
     expected = build_packet(library_source, oracle_source, assignment["reviewer_id"], with_suggestions=assignment.get("proposal_profile") == PROFILE)
+    if "migration" in assignment:
+        from .review_migration import validate_migration_ledger
+        validate_migration_ledger(expected, assignment["migration"])
+        expected["migration"] = copy.deepcopy(assignment["migration"])
+        expected["packet_id"] = wire_hash({k: v for k, v in expected.items() if k != "packet_id"})
     if canonical_json_bytes(assignment) != canonical_json_bytes(expected):
         raise ValidationError("assignment differs from trusted current sources, guide or UI")
     keys = {"artifact_type", "packet_version", "packet_id", "reviewer_id", "generation", "entries", "human_gold", "backup_sha256"}
@@ -105,10 +114,13 @@ def validate_browser_submission(assignment, submission, library_source, oracle_s
     entries = submission["entries"]
     if not isinstance(entries, list) or len(entries) != len(expected["items"]):
         raise ValidationError("backup must retain every assigned subject, including deferred ones")
-    drafts, responses = [], []
+    drafts, responses, origins = [], [], {}
     for item, incoming in zip(expected["items"], entries):
         task, proposal = item["task"], item["proposal"]
         validate_draft(task, proposal, incoming)
+        ensure_browser_form(incoming["form"])
+        if [d["atom_id"] for d in incoming["form"]["atom_decisions"]] != [a["atom_id"] for a in task["oracle_draft"]["atoms"]]:
+            raise ValidationError("browser source atom order or coverage differs")
         if incoming["reviewer_id"] != expected["reviewer_id"]:
             raise ValidationError("subject reviewer differs from the assignment")
         draft = copy.deepcopy(incoming)
@@ -117,9 +129,11 @@ def validate_browser_submission(assignment, submission, library_source, oracle_s
         if incoming["receipts"]:
             expected_digest = wire_hash(browser_snapshot(expected["packet_id"], task, proposal, incoming, item.get("revision_proposals"), item.get("surface_diff")))
             for receipt in incoming["receipts"]:
-                receipt_keys = {"action", "content_sha256", "covered_units", "reviewer_id", "revision"}
-                if not isinstance(receipt, dict) or set(receipt) != receipt_keys or receipt["action"] != "explicit_confirm" or receipt["content_sha256"] != expected_digest or receipt["reviewer_id"] != expected["reviewer_id"] or type(receipt["revision"]) is not int or receipt["revision"] != draft["revision"]:
+                from .review_migration import validate_receipt_origin
+                validate_receipt_origin(expected, task, incoming, receipt, ledger_validated=True)
+                if receipt["content_sha256"] != expected_digest or receipt["reviewer_id"] != expected["reviewer_id"] or type(receipt["revision"]) is not int or receipt["revision"] != draft["revision"]:
                     raise ValidationError("browser receipt source/content/reviewer differs")
+                origins[task["subject_id"]] = {"kind": receipt["action"], "migration_id": receipt.get("migration_id"), "origin_confirmation_sha256": receipt.get("origin_confirmation_sha256")}
                 projection = confirmation_projection(task, proposal, draft)
                 draft = confirm_scope(task, proposal, draft, receipt["covered_units"], projection["content_sha256"], explicit=True)
         if incoming["status"] == "submitted":
@@ -128,7 +142,7 @@ def validate_browser_submission(assignment, submission, library_source, oracle_s
         elif draft["status"] == "submitted":
             raise ValidationError("backup status contradicts complete confirmation coverage")
         drafts.append(draft)
-    return {"drafts": drafts, "responses": responses, "subjects_total": len(entries), "subjects_submitted": len(responses), "human_gold": False}
+    return {"drafts": drafts, "responses": responses, "confirmation_origins": origins, "subjects_total": len(entries), "subjects_submitted": len(responses), "human_gold": False}
 
 
 def import_packet(assignment_path, submission_path, library_source, oracle_source, output_dir):

@@ -31,6 +31,12 @@ def _run(args):
     elif args.review_action == "validate":
         value = validate_browser_submission(read_json(args.assignment), read_json(args.submission), args.library, args.oracle)
         result = {k: value[k] for k in ("subjects_total", "subjects_submitted", "human_gold")}
+    elif args.review_action == "issues":
+        from .review_issues import export_issues
+        result = export_issues(args.assignment, args.submission, args.library, args.oracle, args.output)
+    elif args.review_action == "migrate":
+        from .review_migration import migrate_review
+        result = migrate_review(old_submission_path=args.submission, old_assignment_path=args.assignment, old_library=args.old_library, old_oracle=args.old_oracle, new_library=args.library, new_oracle=args.oracle, output_dir=args.output, reviewer_id=args.reviewer)
     else:
         function = import_packet if args.review_action == "import" else finalize_packet
         result = function(args.assignment, args.submission, args.library, args.oracle, args.output)
@@ -40,7 +46,7 @@ def _run(args):
 def add_review_parser(subparsers):
     parser = subparsers.add_parser("review", help="export, import and validate offline human review")
     actions = parser.add_subparsers(dest="review_action", required=True)
-    for name in ("export", "propose", "validate", "import", "finalize"):
+    for name in ("export", "propose", "validate", "import", "finalize", "issues", "migrate"):
         command = actions.add_parser(name)
         command.add_argument("--library", type=Path, required=True)
         command.add_argument("--oracle", type=Path, required=True)
@@ -49,6 +55,12 @@ def add_review_parser(subparsers):
             command.add_argument("--suggestions", action="store_true", help="include offline literal proposals and unresolved issues")
         elif name == "propose":
             command.add_argument("--agent-review", type=Path)
+        elif name == "migrate":
+            command.add_argument("--assignment", type=Path, help="original browser assignment; omit for legacy checkpoint")
+            command.add_argument("--submission", type=Path, required=True)
+            command.add_argument("--old-library", type=Path, required=True)
+            command.add_argument("--old-oracle", type=Path, required=True)
+            command.add_argument("--reviewer", help="required for legacy checkpoint; cannot reassign another reviewer")
         else:
             command.add_argument("--assignment", type=Path, required=True)
             command.add_argument("--submission", type=Path, required=True)

@@ -1,5 +1,6 @@
 'use strict';
 (() => {
+ try {
   const packet = JSON.parse(document.getElementById('packet').textContent);
   const $ = id => document.getElementById(id), clone = v => JSON.parse(JSON.stringify(v));
   const fail = (ok, message) => { if (!ok) throw new Error(message); };
@@ -26,6 +27,8 @@
   let current=0,readonly=true,busy=false,composing=false,saveTimer=null,storedDigest=null,storedGeneration=null,storageFailed=false,savesPending=0;
   const item=()=>packet.items[current], draft=()=>state.entries[current];
   const lookup=(mapping,key)=>Object.prototype.hasOwnProperty.call(mapping,key)?mapping[key]:undefined;
+  const migrationOutcomes={carried_confirmation:'沿用原确认',preserved_draft:'保留未完成草稿',requires_review:'需要重新审阅',new_subject:'新题目'};
+  const migrationReasons={same_subject_and_guidance:'题目及指南定义未变',same_subject_draft_preserved:'题目未变，保留原草稿',source_changed:'题目原文或要求已经变化',legacy_guide_unbound:'旧记录没有新版指南绑定',guidance_changed:'指南或实际词典发生变化',legacy_form_not_browser_editable:'旧高级编辑不能直接由浏览器解释',current_validation_requires_review:'当前校验要求重新核对',new_subject:'本次新加入的题目'};
   const policyLabels={candidate:'是否存在合理变化',eligible:'是否纳入多样性评价',cross_platform_judgeable:'跨平台能否一致判断',decision_status:'材料状态',dimensions:'允许变化的维度',name:'维度名称',reason:'理由',allowed_values:'允许取值',bin_definition:'数值分档规则',target_selector:'目标选择规则（专家设置）',cardinality:'目标数量条件',common_semantic:'跨平台共有语义',query_blind:'不读取题目元数据',candidate_scope:'候选对象范围',missing_target:'目标缺失时的处理',target_signature:'目标特征',actor_class:'参与者类型',platforms:'适用平台',near_max:'近距离上界',medium_max:'中距离上界'};
   const fieldLabel=k=>(lookup(packet.dictionary.fields,k)||[lookup(policyLabels,k)||k])[0];
   const tokens={...packet.dictionary.tokens,supported:'应生成场景',unsupported:'应明确拒绝',generate_scene:'生成场景',draft:'机器草稿',near:'近',far:'远',exactly_one:'恰好一个可识别目标'};
@@ -34,7 +37,7 @@
   function button(label,action){const b=node('button',label);b.type='button';b.addEventListener('click',action);return b;}
   function notify(message){$('message').textContent=message;}
   function originalAtoms(){return item().task.oracle_draft.atoms;}
-  function decode(s,type){const v=JSON.parse(s);fail(type==='list'?Array.isArray(v):v&&typeof v==='object'&&!Array.isArray(v),'修订格式不正确');return v;}
+  function decode(s,type){const v=JSON.parse(s,(k,x)=>{if(typeof x==='number')fail(Number.isFinite(x)&&(!Number.isInteger(x)||Number.isSafeInteger(x)),'数字超过浏览器精确范围，请使用专家入口');return x;});fail(type==='list'?Array.isArray(v):v&&typeof v==='object'&&!Array.isArray(v),'修订格式不正确');return v;}
   function atomWarnings(atom,query){
     const out=[],spec=lookup(packet.dictionary.predicates,atom.predicate),args=atom.arguments;
     if(!spec)out.push('未登记要求类型：'+atom.predicate);
@@ -74,7 +77,7 @@
   function markChanged(origin='human',audit={}){
     if(readonly||busy)return false;
     const d=draft();d.revision++;d.receipts=[];d.status=d.issues.length?'deferred':'draft';d.edit_sources.push({revision:d.revision,origin,...audit});
-    state.generation++;$('storage').textContent='有未保存修改；正在自动保存到浏览器…';queueUpdate();scheduleSave();return true;
+    state.generation++;$('subject').textContent=item().task.subject_id;$('storage').textContent='有未保存修改；正在自动保存到浏览器…';queueUpdate();scheduleSave();return true;
   }
   function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{saveTimer=null;save().catch(e=>notify(e.message));},150);}
   async function backup(){const core=clone(state);return {...core,backup_sha256:await hash(core)};}
@@ -111,7 +114,11 @@
     const core=clone(value);delete core.backup_sha256;fail(await hash(core)===value.backup_sha256,'备份已损坏，原进度未改变');
     for(let i=0;i<value.entries.length;i++){
       const entry=value.entries[i];validateEntry(entry,i);const digest=await hash(snapshot(entry,i)),covered=new Set();
-      for(const r of entry.receipts){fail(exact(r,['action','content_sha256','covered_units','reviewer_id','revision'])&&r.action==='explicit_confirm'&&r.content_sha256===digest&&r.reviewer_id===packet.reviewer_id&&r.revision===entry.revision,'确认收据失效');fail(Array.isArray(r.covered_units)&&r.covered_units.length&&new Set(r.covered_units).size===r.covered_units.length&&r.covered_units.every(x=>coverage(i).includes(x)),'确认范围错误');r.covered_units.forEach(x=>covered.add(x));}
+      for(const r of entry.receipts){
+        const carried=r.action==='carried_confirmation',keys=['action','content_sha256','covered_units','reviewer_id','revision',...(carried?['migration_id','origin_confirmation_sha256']:[])];
+        fail(exact(r,keys)&&(r.action==='explicit_confirm'||carried)&&r.content_sha256===digest&&r.reviewer_id===packet.reviewer_id&&r.revision===entry.revision,'确认收据失效');
+        if(carried){const authority=packet.migration?.subjects[packet.items[i].task.subject_id];fail(authority?.outcome==='carried_confirmation'&&r.migration_id===packet.migration.migration_id&&r.origin_confirmation_sha256===authority.origin_confirmation_sha256&&await hash(snapshot(entry,i).draft_content)===authority.draft_content_sha256&&JSON.stringify(wireTree(entry.form))===JSON.stringify(wireTree(authority.previous_form)),'沿用确认不匹配维护者迁移记录');}
+fail(Array.isArray(r.covered_units)&&r.covered_units.length&&new Set(r.covered_units).size===r.covered_units.length&&r.covered_units.every(x=>coverage(i).includes(x)),'确认范围错误');r.covered_units.forEach(x=>covered.add(x));}
       if(entry.status==='submitted')fail(!entry.issues.length&&covered.size===coverage(i).length,'未完整确认的题不能恢复为已提交');
     }
     return core;
@@ -121,7 +128,7 @@
     try{const candidate=await validateBackup(value);fail(state.generation===generation,'当前内容已改变，恢复已取消');fail(candidate.generation>=state.generation,'这是较旧备份，不能覆盖当前进度');if(candidate.generation===state.generation)fail(await hash(candidate)===await hash(state),'同版本备份内容冲突，原进度保留');state=candidate;await save();render();notify('备份恢复完成；仍须由维护者正式校验。');}finally{busy=false;controls();}
   }
   function queueUpdate(){
-    const select=$('queue'),filter=$('filter').value;select.replaceChildren();const groups=new Map();state.entries.forEach((e,i)=>{if(filter==='pending'&&e.status==='submitted'||filter==='issues'&&!e.issues.length||filter==='submitted'&&e.status!=='submitted')return;const o=node('option',`${i+1}. ${e.status==='submitted'?'已提交':e.issues.length?'有疑问':'待审阅'} · ${packet.items[i].task.query_record.surface_style}`);o.value=String(i);const rec=packet.items[i].task.query_record,key=rec.dataset_split+' / '+rec.intent_group_id;if(!groups.has(key)){const group=node('optgroup');group.label=key;groups.set(key,group);select.append(group);}groups.get(key).append(o);});select.value=String(current);
+    const select=$('queue'),filter=$('filter').value;select.replaceChildren();const groups=new Map();state.entries.forEach((e,i)=>{if(filter==='pending'&&e.status==='submitted'||filter==='issues'&&!e.issues.length||filter==='submitted'&&e.status!=='submitted')return;const o=node('option',`${i+1}. ${e.status==='submitted'?(e.receipts.some(r=>r.action==='carried_confirmation')?'沿用原确认':'已提交'):e.issues.length?'有疑问':'待审阅'} · ${packet.items[i].task.query_record.surface_style}`);o.value=String(i);const rec=packet.items[i].task.query_record,key=rec.dataset_split+' / '+rec.intent_group_id;if(!groups.has(key)){const group=node('optgroup');group.label=key;groups.set(key,group);select.append(group);}groups.get(key).append(o);});select.value=String(current);
     $('progress').textContent=`已提交 ${state.entries.filter(e=>e.status==='submitted').length} / ${state.entries.length}；疑问 ${state.entries.filter(e=>e.issues.length).length}`;
   }
   function fieldEditor(parent,atom,update){
@@ -139,7 +146,8 @@
   }
   function render(){
     queueUpdate();$('subject').textContent=item().task.subject_id;$('query').textContent=item().task.query_text;$('cards').replaceChildren();
-    const d=draft();$('surface-diff').replaceChildren();const diff=item().surface_diff;if(diff){const details=node('details');details.append(node('summary','与精确表述的差异：'+(diff.category_labels.join('、')||'文字相同，仍须核对来源要求')),node('p','差异分类只用于导航；每个表述独立提交，有差异时不自动继承。'));for(const change of diff.changes)details.append(node('p',(change.source_tokens.join(' ')||'（空）')+' → '+(change.target_tokens.join(' ')||'（空）')));for(const change of diff.atom_changes||[])details.append(node('p','要求差异：'+(change.source?statement(change.source):'精确版无此要求')+' → '+(change.target?statement(change.target):'当前草稿无此要求')));$('surface-diff').append(details);}
+    const d=draft();if(d.status==='submitted'&&d.receipts.some(r=>r.action==='carried_confirmation'))$('subject').textContent+=' · 沿用原确认（非新作答）';$('surface-diff').replaceChildren();const diff=item().surface_diff;if(diff){const details=node('details');details.append(node('summary','与精确表述的差异：'+(diff.category_labels.join('、')||'文字相同，仍须核对来源要求')),node('p','差异分类只用于导航；每个表述独立提交，有差异时不自动继承。'));for(const change of diff.changes)details.append(node('p',(change.source_tokens.join(' ')||'（空）')+' → '+(change.target_tokens.join(' ')||'（空）')));for(const change of diff.atom_changes||[])details.append(node('p','要求差异：'+(change.source?statement(change.source):'精确版无此要求')+' → '+(change.target?statement(change.target):'当前草稿无此要求')));$('surface-diff').append(details);}
+    $('prior-review').replaceChildren();const prior=packet.migration?.subjects[item().task.subject_id];if(prior?.previous_form){const details=node('details');details.append(node('summary','旧进度与迁移依据（只读）'),node('p','处理：'+(lookup(migrationOutcomes,prior.outcome)||prior.outcome)+'；原因：'+(lookup(migrationReasons,prior.reason)||prior.reason)),node('p','旧原文：'+prior.previous_query_text),node('p','旧备注：'+(prior.previous_form.notes||'')));const sources=new Map(prior.previous_atoms.map(a=>[a.atom_id,a]));for(const decision of Array.isArray(prior.previous_form.atom_decisions)?prior.previous_form.atom_decisions:[]){if(!decision.verdict)continue;details.append(node('p','旧选择 '+decision.verdict+'：'+(sources.has(decision.atom_id)?statement(sources.get(decision.atom_id)):decision.atom_id)));if(decision.replacement_atoms_json&&decision.replacement_atoms_json!=='[]'){try{for(const a of decode(decision.replacement_atoms_json,'list'))details.append(node('p','旧修订：'+statement(a)));}catch(_){details.append(node('p','未解析的旧高级编辑：'+decision.replacement_atoms_json));}}}if(prior.previous_form.added_atoms_json!=='[]')details.append(node('p','旧新增编辑（保留原始文本）：'+prior.previous_form.added_atoms_json));for(const path of prior.changed_paths||[])details.append(node('p','需要核对的变化位置：'+path));const full=node('details');full.append(node('summary','完整旧表单（只读技术记录，含全部理由与 CPD 修订）'),node('pre',JSON.stringify(prior.previous_form,null,2)));details.append(full);$('prior-review').append(details);}
     originalAtoms().forEach((source,index)=>{
       const decision=d.form.atom_decisions[index],card=node('article',undefined,'card');card.append(node('h3',`${index+1}. ${(lookup(packet.dictionary.predicates,source.predicate)||[])[1]||source.predicate}`),node('p',statement(source)));
       const warnings=atomWarnings(source,item().task.query_text);if(warnings.length)card.append(node('p',warnings.join('；'),'warning'));
@@ -208,6 +216,8 @@
   window.addEventListener('storage',e=>{if(e.key===stateKey&&e.newValue){try{const x=JSON.parse(e.newValue);if(storedDigest!==null&&x.backup_sha256!==storedDigest){readonly=true;controls();$('storage').textContent='另一会话更改了进度，已转为只读；请导出内存备份后重新打开。';}}catch(_){readonly=true;controls();}}});
   window.addEventListener('beforeunload',e=>{if(storageFailed||saveTimer||savesPending){e.preventDefault();e.returnValue='';}});
   async function initialize(){
+    const core=clone(packet);delete core.packet_id;fail(await hash(core)===packet.packet_id,'题包内容不完整或已修改，请使用维护者原件。');
+    if(packet.migration){const ledger=clone(packet.migration);delete ledger.migration_id;fail(await hash(ledger)===packet.migration.migration_id,'迁移记录已损坏');}
     let raw=null;try{raw=localStorage.getItem(stateKey);}catch(e){storageFailed=true;notify('浏览器存储不可读取，将使用内存；关闭前须导出备份。');}
     if(raw){try{const value=JSON.parse(raw);state=await validateBackup(value);storedDigest=value.backup_sha256;storedGeneration=value.generation;}catch(e){readonly=true;render();$('storage').textContent='已有本地记录损坏，已保护原件并进入只读。';notify(e.message);return;}}
     fail(navigator.locks&&navigator.locks.request,'浏览器不支持独占编辑锁，请使用当前版本 Chrome 或 Edge。');
@@ -215,4 +225,5 @@
   }
   window.ReviewWorkbench=Object.freeze({hash,wireTree,backup,restore,confirm,validateBackup,getState:()=>clone(state),ready:()=>!readonly&&!busy});
   render();initialize().catch(e=>{readonly=true;controls();$('storage').textContent='只读：无法取得安全编辑条件。';notify(e.message);});
+} catch(error) { document.getElementById('editor').disabled=true;document.getElementById('confirm').disabled=true;document.getElementById('storage').textContent='题包读取失败，未写入进度。请保留原文件并联系维护者。';document.getElementById('message').textContent=String(error.message||error); }
 })();

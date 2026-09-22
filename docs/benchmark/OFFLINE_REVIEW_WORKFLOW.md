@@ -50,4 +50,4 @@ Windows 复验步骤：断网双击 HTML → 输入中文备注并切题 → 导
 
 源码模块为 `assets/review/app.js`、`app.css`、`template.html`，导出时合为单文件，无 CDN/远程调用；动态内容使用文本节点，嵌入 JSON 转义脚本闭合字符，CSP 禁止网络和 eval。Python/浏览器收据使用带类型树与有限 binary64 数字的共享摘要规则；正式 compiler/hash 不改。
 
-旧 notebook 与 checkpoint 无迁移要求。撤回此包时保留所有导出和备份供审计，不把浏览器文件改名为旧 checkpoint。后续 UI 更新与源修订的安全迁移在 BW-07 明确处理。
+旧 notebook 与 checkpoint 不强制迁移。撤回此包时保留所有导出和备份供审计，不把浏览器文件改名为旧 checkpoint。UI 更新与源修订请使用 [BW-07 迁移和疑问流程](REVIEW_MIGRATION_AND_ISSUES.md)，保留整个迁移目录和只读原件。
