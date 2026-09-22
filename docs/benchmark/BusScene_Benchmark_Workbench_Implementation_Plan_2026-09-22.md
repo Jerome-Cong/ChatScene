@@ -1,7 +1,7 @@
 # BusScene：2D 场景生成 Benchmark 与标注 Workbench 改进实施计划
 
 日期：2026-09-22  
-状态：2026-09-23 已继续 BW-00 环境准备，定位 Linux 5.15 的 Judge 执行封印限制并修复既有私钥目录边界回归；CARLA 下载已启动。BW-00 尚未验收，BW-01 至 BW-12 未开始，等待兼容环境或用户明确允许先推进独立工作。实际执行记录见 [WORKBENCH_REFACTOR_BASELINE.md](WORKBENCH_REFACTOR_BASELINE.md)。下文固定源码视图及规划证据保留原始时间和含义，不代表当前执行状态。
+状态：2026-09-23 BW-00 独立审阅基线已完成；已获准继续独立审阅与打包工作，Judge/仿真未通过记录保留，正式评测及最终发布前补齐。逐包实际状态见 [实施记录](WORKBENCH_IMPLEMENTATION_PROGRESS.md)，历史环境证据见 [基线记录](WORKBENCH_REFACTOR_BASELINE.md)。
 工作区：`linux-5880:chatscene:main`；scope：`planning`。  
 目标：保留已经定义的评测口径，降低 query oracle 标注的理解与操作成本，并让同一 benchmark 包接入 ChatScene、TTSG、Text2Scenario、Chat2Scenic，而不是在每个仓库重复复制和标注。Talk2Traffic 不在本轮 baseline 范围。
 

@@ -1,0 +1,1530 @@
+{
+  "fixture_version": "1",
+  "human_gold": false,
+  "description": "Synthetic edits over authorized development source; captures pre-refactor compiler behavior, not semantic truth.",
+  "source_commit": "d78b8d5",
+  "query_id": "BSG_DEV_v0_2_S01_precise",
+  "reviewer_id": "synthetic-baseline-reviewer",
+  "source_bindings": {
+    "query_lib/bus_ego_topdown_2d_dev_query_library_v0_2.jsonl": "bb965d41c9cf21191b1a33d45be01e9ceb53d54d4216663a2f6578537bec62e5",
+    "benchmark_artifacts/drafts/dev_oracle_draft.jsonl": "15d193c4c79e047b21ca60918ab9b59828194f2fe7779982b350fb731b87f3c5",
+    "docs/benchmark/HUMAN_REVIEW_GUIDE.md": "0d15ac1423cb711904300015b69c758de94fe954a8553415d2406d3574fa825e",
+    "benchmark_artifacts/drafts/protocol_decisions_draft.json": "d314926bde75de9a7fe68ec7dd0d92f578f9fde2b82cdfd6c63a6378b23a6092"
+  },
+  "bundle_sha256": "24904df8b3abbc7f9f3054904c86f0c079e740e1b10bb27b84fd3aa6003aef8b",
+  "cases": [
+    {
+      "name": "accept",
+      "form": {
+        "required_check_decisions": {
+          "support_and_response_disposition": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "cardinality_and_polarity": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "road_and_spatial_decomposition": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "event_graph_and_actor_binding": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "surface_layering": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "cpd_common_eligibility": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          }
+        },
+        "atom_decisions": [
+          {
+            "atom_id": "6cc48ebd3a21c60b",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "572e9a2c424874cb",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "33dc720fe61ccb95",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "9eadc25be96b73a5",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "88d159eb0c27a33a",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "4824dffaeb16f65e",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "cbf29c7b657077eb",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "7666418c2661fcd1",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "6caa371d36d52992",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "51954119362088c2",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "427573944e1564c3",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "31d0a1cf7b0623f2",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "3e47ee8e0dc268a6",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "c548e8cfa40a3d97",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          }
+        ],
+        "cpd_decision": {
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_policy_json": "{}"
+        },
+        "added_atoms_json": "[]",
+        "notes": "Synthetic regression vector, never human gold."
+      },
+      "expected_payload_sha256": "247272e8a922ffd221be15298fc7c73f3155cb3a6f6b5cddb31976abc53488c7",
+      "valid": true,
+      "error": null
+    },
+    {
+      "name": "permitted",
+      "form": {
+        "required_check_decisions": {
+          "support_and_response_disposition": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "cardinality_and_polarity": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "road_and_spatial_decomposition": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "event_graph_and_actor_binding": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "surface_layering": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "cpd_common_eligibility": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          }
+        },
+        "atom_decisions": [
+          {
+            "atom_id": "6cc48ebd3a21c60b",
+            "verdict": "modify",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[{\"arguments\": {\"count\": \"1\", \"role\": \"through_cyclist_on_cycle_crossing\", \"type\": \"bicycle\"}, \"atom_id\": \"6cc48ebd3a21c60b\", \"category\": \"actor\", \"decision_status\": \"draft\", \"layer\": \"permitted\", \"notes\": \"Cardinality normalization is a draft decision.\", \"polarity\": \"present\", \"predicate\": \"actor_role_count\", \"provenance\": {\"field\": \"counterpart_actors\", \"index\": 0, \"query_id\": \"BSG_DEV_v0_2_S01_precise\", \"source\": \"query_library_metadata\"}, \"weight\": 1.0}]"
+          },
+          {
+            "atom_id": "572e9a2c424874cb",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "33dc720fe61ccb95",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "9eadc25be96b73a5",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "88d159eb0c27a33a",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "4824dffaeb16f65e",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "cbf29c7b657077eb",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "7666418c2661fcd1",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "6caa371d36d52992",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "51954119362088c2",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "427573944e1564c3",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "31d0a1cf7b0623f2",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "3e47ee8e0dc268a6",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "c548e8cfa40a3d97",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          }
+        ],
+        "cpd_decision": {
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_policy_json": "{}"
+        },
+        "added_atoms_json": "[]",
+        "notes": "Synthetic regression vector, never human gold."
+      },
+      "expected_payload_sha256": "95811f91b168a5f8fc9cd7c4b32d3aeca30d964e6915c9f1e42ea17e7ebe5c3b",
+      "valid": true,
+      "error": null
+    },
+    {
+      "name": "exclude",
+      "form": {
+        "required_check_decisions": {
+          "support_and_response_disposition": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "cardinality_and_polarity": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "road_and_spatial_decomposition": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "event_graph_and_actor_binding": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "surface_layering": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "cpd_common_eligibility": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          }
+        },
+        "atom_decisions": [
+          {
+            "atom_id": "6cc48ebd3a21c60b",
+            "verdict": "reject",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "572e9a2c424874cb",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "33dc720fe61ccb95",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "9eadc25be96b73a5",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "88d159eb0c27a33a",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "4824dffaeb16f65e",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "cbf29c7b657077eb",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "7666418c2661fcd1",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "6caa371d36d52992",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "51954119362088c2",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "427573944e1564c3",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "31d0a1cf7b0623f2",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "3e47ee8e0dc268a6",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "c548e8cfa40a3d97",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          }
+        ],
+        "cpd_decision": {
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_policy_json": "{}"
+        },
+        "added_atoms_json": "[]",
+        "notes": "Synthetic regression vector, never human gold."
+      },
+      "expected_payload_sha256": "2b68f26e1578dfab4fd1a09e6d0ee2c06792215d24e3f1bb95ee180f91ca0ab6",
+      "valid": true,
+      "error": null
+    },
+    {
+      "name": "modify",
+      "form": {
+        "required_check_decisions": {
+          "support_and_response_disposition": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "cardinality_and_polarity": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "road_and_spatial_decomposition": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "event_graph_and_actor_binding": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "surface_layering": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "cpd_common_eligibility": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          }
+        },
+        "atom_decisions": [
+          {
+            "atom_id": "6cc48ebd3a21c60b",
+            "verdict": "modify",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[{\"arguments\": {\"count\": \"2\", \"role\": \"through_cyclist_on_cycle_crossing\", \"type\": \"bicycle\"}, \"atom_id\": \"6cc48ebd3a21c60b\", \"category\": \"actor\", \"decision_status\": \"draft\", \"layer\": \"core_required\", \"notes\": \"Cardinality normalization is a draft decision.\", \"polarity\": \"present\", \"predicate\": \"actor_role_count\", \"provenance\": {\"field\": \"counterpart_actors\", \"index\": 0, \"query_id\": \"BSG_DEV_v0_2_S01_precise\", \"source\": \"query_library_metadata\"}, \"weight\": 1.0}]"
+          },
+          {
+            "atom_id": "572e9a2c424874cb",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "33dc720fe61ccb95",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "9eadc25be96b73a5",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "88d159eb0c27a33a",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "4824dffaeb16f65e",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "cbf29c7b657077eb",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "7666418c2661fcd1",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "6caa371d36d52992",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "51954119362088c2",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "427573944e1564c3",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "31d0a1cf7b0623f2",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "3e47ee8e0dc268a6",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "c548e8cfa40a3d97",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          }
+        ],
+        "cpd_decision": {
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_policy_json": "{}"
+        },
+        "added_atoms_json": "[]",
+        "notes": "Synthetic regression vector, never human gold."
+      },
+      "expected_payload_sha256": "371f36babf6fbdaefb6e88970f7bb570d0d055073c3fa2ba6b76c16c23fb21ca",
+      "valid": true,
+      "error": null
+    },
+    {
+      "name": "split",
+      "form": {
+        "required_check_decisions": {
+          "support_and_response_disposition": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "cardinality_and_polarity": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "road_and_spatial_decomposition": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "event_graph_and_actor_binding": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "surface_layering": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "cpd_common_eligibility": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          }
+        },
+        "atom_decisions": [
+          {
+            "atom_id": "6cc48ebd3a21c60b",
+            "verdict": "split",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[{\"arguments\": {\"count\": \"2\", \"role\": \"through_cyclist_on_cycle_crossing\", \"type\": \"bicycle\"}, \"atom_id\": \"6cc48ebd3a21c60b\", \"category\": \"actor\", \"decision_status\": \"draft\", \"layer\": \"core_required\", \"notes\": \"Cardinality normalization is a draft decision.\", \"polarity\": \"present\", \"predicate\": \"actor_role_count\", \"provenance\": {\"field\": \"counterpart_actors\", \"index\": 0, \"query_id\": \"BSG_DEV_v0_2_S01_precise\", \"source\": \"query_library_metadata\"}, \"weight\": 1.0}, {\"arguments\": {\"count\": \"2\", \"role\": \"synthetic_second_cyclist\", \"type\": \"bicycle\"}, \"atom_id\": \"6cc48ebd3a21c60b\", \"category\": \"actor\", \"decision_status\": \"draft\", \"layer\": \"core_required\", \"notes\": \"Cardinality normalization is a draft decision.\", \"polarity\": \"present\", \"predicate\": \"actor_role_count\", \"provenance\": {\"field\": \"counterpart_actors\", \"index\": 0, \"query_id\": \"BSG_DEV_v0_2_S01_precise\", \"source\": \"query_library_metadata\"}, \"weight\": 1.0}]"
+          },
+          {
+            "atom_id": "572e9a2c424874cb",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "33dc720fe61ccb95",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "9eadc25be96b73a5",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "88d159eb0c27a33a",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "4824dffaeb16f65e",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "cbf29c7b657077eb",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "7666418c2661fcd1",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "6caa371d36d52992",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "51954119362088c2",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "427573944e1564c3",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "31d0a1cf7b0623f2",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "3e47ee8e0dc268a6",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "c548e8cfa40a3d97",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          }
+        ],
+        "cpd_decision": {
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_policy_json": "{}"
+        },
+        "added_atoms_json": "[]",
+        "notes": "Synthetic regression vector, never human gold."
+      },
+      "expected_payload_sha256": "df7e14b0eab27fe2d1f02ca48cb0674c703c334a8137b4110bb3dfdef8078883",
+      "valid": true,
+      "error": null
+    },
+    {
+      "name": "merge",
+      "form": {
+        "required_check_decisions": {
+          "support_and_response_disposition": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "cardinality_and_polarity": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "road_and_spatial_decomposition": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "event_graph_and_actor_binding": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "surface_layering": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "cpd_common_eligibility": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          }
+        },
+        "atom_decisions": [
+          {
+            "atom_id": "6cc48ebd3a21c60b",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "572e9a2c424874cb",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "33dc720fe61ccb95",
+            "verdict": "merge",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[{\"arguments\": {\"value\": \"signalized_intersection_with_cycle_crossing\"}, \"atom_id\": \"33dc720fe61ccb95\", \"category\": \"road\", \"decision_status\": \"draft\", \"layer\": \"core_required\", \"notes\": \"Monolithic topology label must be reviewed against operational evidence.\", \"polarity\": \"present\", \"predicate\": \"synthetic_merged_road_requirement\", \"provenance\": {\"field\": \"road_topology\", \"query_id\": \"BSG_DEV_v0_2_S01_precise\", \"source\": \"query_library_metadata\"}, \"weight\": 1.0}]"
+          },
+          {
+            "atom_id": "9eadc25be96b73a5",
+            "verdict": "merge",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[{\"arguments\": {\"value\": \"signalized_intersection_with_cycle_crossing\"}, \"atom_id\": \"33dc720fe61ccb95\", \"category\": \"road\", \"decision_status\": \"draft\", \"layer\": \"core_required\", \"notes\": \"Monolithic topology label must be reviewed against operational evidence.\", \"polarity\": \"present\", \"predicate\": \"synthetic_merged_road_requirement\", \"provenance\": {\"field\": \"road_topology\", \"query_id\": \"BSG_DEV_v0_2_S01_precise\", \"source\": \"query_library_metadata\"}, \"weight\": 1.0}]"
+          },
+          {
+            "atom_id": "88d159eb0c27a33a",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "4824dffaeb16f65e",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "cbf29c7b657077eb",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "7666418c2661fcd1",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "6caa371d36d52992",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "51954119362088c2",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "427573944e1564c3",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "31d0a1cf7b0623f2",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "3e47ee8e0dc268a6",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "c548e8cfa40a3d97",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          }
+        ],
+        "cpd_decision": {
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_policy_json": "{}"
+        },
+        "added_atoms_json": "[]",
+        "notes": "Synthetic regression vector, never human gold."
+      },
+      "expected_payload_sha256": "244ecd080bbbf4749d369c04eff1b6d21840d67db22bc58357ca50ff75f9a3ce",
+      "valid": true,
+      "error": null
+    },
+    {
+      "name": "add",
+      "form": {
+        "required_check_decisions": {
+          "support_and_response_disposition": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "cardinality_and_polarity": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "road_and_spatial_decomposition": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "event_graph_and_actor_binding": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "surface_layering": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "cpd_common_eligibility": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          }
+        },
+        "atom_decisions": [
+          {
+            "atom_id": "6cc48ebd3a21c60b",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "572e9a2c424874cb",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "33dc720fe61ccb95",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "9eadc25be96b73a5",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "88d159eb0c27a33a",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "4824dffaeb16f65e",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "cbf29c7b657077eb",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "7666418c2661fcd1",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "6caa371d36d52992",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "51954119362088c2",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "427573944e1564c3",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "31d0a1cf7b0623f2",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "3e47ee8e0dc268a6",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "c548e8cfa40a3d97",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          }
+        ],
+        "cpd_decision": {
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_policy_json": "{}"
+        },
+        "added_atoms_json": "[{\"arguments\": {\"count\": \"2\", \"role\": \"synthetic_added_actor\", \"type\": \"bicycle\"}, \"atom_id\": \"6cc48ebd3a21c60b\", \"category\": \"actor\", \"decision_status\": \"draft\", \"layer\": \"core_required\", \"notes\": \"Cardinality normalization is a draft decision.\", \"polarity\": \"present\", \"predicate\": \"actor_role_count\", \"provenance\": {\"field\": \"counterpart_actors\", \"index\": 0, \"query_id\": \"BSG_DEV_v0_2_S01_precise\", \"source\": \"query_library_metadata\"}, \"weight\": 1.0}]",
+        "notes": "Synthetic regression vector, never human gold."
+      },
+      "expected_payload_sha256": "a78f4dfbee11253bfb525c53f1d3adc8f7dab4facdd51bd3532febe53d0c9860",
+      "valid": true,
+      "error": null
+    },
+    {
+      "name": "support_source_error",
+      "form": {
+        "required_check_decisions": {
+          "support_and_response_disposition": {
+            "verdict": "reject",
+            "reason": "Synthetic fixture decision"
+          },
+          "cardinality_and_polarity": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "road_and_spatial_decomposition": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "event_graph_and_actor_binding": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "surface_layering": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "cpd_common_eligibility": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          }
+        },
+        "atom_decisions": [
+          {
+            "atom_id": "6cc48ebd3a21c60b",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "572e9a2c424874cb",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "33dc720fe61ccb95",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "9eadc25be96b73a5",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "88d159eb0c27a33a",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "4824dffaeb16f65e",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "cbf29c7b657077eb",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "7666418c2661fcd1",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "6caa371d36d52992",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "51954119362088c2",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "427573944e1564c3",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "31d0a1cf7b0623f2",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "3e47ee8e0dc268a6",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "c548e8cfa40a3d97",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          }
+        ],
+        "cpd_decision": {
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_policy_json": "{}"
+        },
+        "added_atoms_json": "[]",
+        "notes": "Synthetic regression vector, never human gold."
+      },
+      "expected_payload_sha256": "292468dc0b1c4d71d2abe30f5a31f5f222560c017462d8e3f43409187e3c4bad",
+      "valid": false,
+      "error": "rejected required check 'support_and_response_disposition' cannot produce a confirmed oracle"
+    },
+    {
+      "name": "cpd_revision",
+      "form": {
+        "required_check_decisions": {
+          "support_and_response_disposition": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "cardinality_and_polarity": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "road_and_spatial_decomposition": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "event_graph_and_actor_binding": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "surface_layering": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          },
+          "cpd_common_eligibility": {
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision"
+          }
+        },
+        "atom_decisions": [
+          {
+            "atom_id": "6cc48ebd3a21c60b",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "572e9a2c424874cb",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "33dc720fe61ccb95",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "9eadc25be96b73a5",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "88d159eb0c27a33a",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "4824dffaeb16f65e",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "cbf29c7b657077eb",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "7666418c2661fcd1",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "6caa371d36d52992",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "51954119362088c2",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "427573944e1564c3",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "31d0a1cf7b0623f2",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "3e47ee8e0dc268a6",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          },
+          {
+            "atom_id": "c548e8cfa40a3d97",
+            "verdict": "accept",
+            "reason": "Synthetic fixture decision",
+            "replacement_atoms_json": "[]"
+          }
+        ],
+        "cpd_decision": {
+          "verdict": "revise",
+          "reason": "Synthetic fixture decision",
+          "replacement_policy_json": "{\"candidate\": false, \"cross_platform_judgeable\": false, \"decision_status\": \"draft\", \"dimensions\": [], \"eligible\": false}"
+        },
+        "added_atoms_json": "[]",
+        "notes": "Synthetic regression vector, never human gold."
+      },
+      "expected_payload_sha256": "0ba9787716de41566ee4af788e7c30ff28a3d2854c9d9dbba0804acda322cbb0",
+      "valid": true,
+      "error": null
+    }
+  ],
+  "inheritance": {
+    "query_ids": [
+      "BSG_DEV_v0_2_S01_precise",
+      "BSG_DEV_v0_2_S01_partial",
+      "BSG_DEV_v0_2_S01_vague"
+    ],
+    "source_form": {
+      "required_check_decisions": {
+        "support_and_response_disposition": {
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision"
+        },
+        "cardinality_and_polarity": {
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision"
+        },
+        "road_and_spatial_decomposition": {
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision"
+        },
+        "event_graph_and_actor_binding": {
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision"
+        },
+        "surface_layering": {
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision"
+        },
+        "cpd_common_eligibility": {
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision"
+        }
+      },
+      "atom_decisions": [
+        {
+          "atom_id": "6cc48ebd3a21c60b",
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "572e9a2c424874cb",
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "33dc720fe61ccb95",
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "9eadc25be96b73a5",
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "88d159eb0c27a33a",
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "4824dffaeb16f65e",
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "cbf29c7b657077eb",
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "7666418c2661fcd1",
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "6caa371d36d52992",
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "51954119362088c2",
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "427573944e1564c3",
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "31d0a1cf7b0623f2",
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "3e47ee8e0dc268a6",
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "c548e8cfa40a3d97",
+          "verdict": "accept",
+          "reason": "Synthetic fixture decision",
+          "replacement_atoms_json": "[]"
+        }
+      ],
+      "cpd_decision": {
+        "verdict": "accept",
+        "reason": "Synthetic fixture decision",
+        "replacement_policy_json": "{}"
+      },
+      "added_atoms_json": "[]",
+      "notes": "Synthetic regression vector, never human gold."
+    },
+    "target_form": {
+      "required_check_decisions": {
+        "support_and_response_disposition": {
+          "verdict": "accept",
+          "reason": "Mechanical retention proposal: retain the current support_and_response_disposition projection; consult the Agent semantic review and verify it independently."
+        },
+        "cardinality_and_polarity": {
+          "verdict": "accept",
+          "reason": "Mechanical retention proposal: retain the current cardinality_and_polarity projection; consult the Agent semantic review and verify it independently."
+        },
+        "road_and_spatial_decomposition": {
+          "verdict": "accept",
+          "reason": "Mechanical retention proposal: retain the current road_and_spatial_decomposition projection; consult the Agent semantic review and verify it independently."
+        },
+        "event_graph_and_actor_binding": {
+          "verdict": "accept",
+          "reason": "Mechanical retention proposal: retain the current event_graph_and_actor_binding projection; consult the Agent semantic review and verify it independently."
+        },
+        "surface_layering": {
+          "verdict": "accept",
+          "reason": "Mechanical retention proposal: retain the current surface_layering projection; consult the Agent semantic review and verify it independently."
+        },
+        "cpd_common_eligibility": {
+          "verdict": "accept",
+          "reason": "Mechanical retention proposal: retain the current cpd_common_eligibility projection; consult the Agent semantic review and verify it independently."
+        }
+      },
+      "atom_decisions": [
+        {
+          "atom_id": "6cc48ebd3a21c60b",
+          "verdict": "accept",
+          "reason": "Mechanical retention proposal: Cardinality normalization is a draft decision. Consult the Agent semantic review and verify independently.",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "572e9a2c424874cb",
+          "verdict": "accept",
+          "reason": "Mechanical retention proposal: Heuristic role-to-space mapping; human confirmation required. Consult the Agent semantic review and verify independently.",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "33dc720fe61ccb95",
+          "verdict": "accept",
+          "reason": "Mechanical retention proposal: Monolithic topology label must be reviewed against operational evidence. Consult the Agent semantic review and verify independently.",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "9eadc25be96b73a5",
+          "verdict": "accept",
+          "reason": "Mechanical retention proposal: Draft records absence metadata without scoring it as forbidden. Consult the Agent semantic review and verify independently.",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "88d159eb0c27a33a",
+          "verdict": "accept",
+          "reason": "Mechanical retention proposal: retain this source-derived atom pending review. Consult the Agent semantic review and verify independently.",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "4824dffaeb16f65e",
+          "verdict": "accept",
+          "reason": "Mechanical retention proposal: retain this source-derived atom pending review. Consult the Agent semantic review and verify independently.",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "cbf29c7b657077eb",
+          "verdict": "accept",
+          "reason": "Mechanical retention proposal: retain this source-derived atom pending review. Consult the Agent semantic review and verify independently.",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "7666418c2661fcd1",
+          "verdict": "accept",
+          "reason": "Mechanical retention proposal: retain this source-derived atom pending review. Consult the Agent semantic review and verify independently.",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "6caa371d36d52992",
+          "verdict": "accept",
+          "reason": "Mechanical retention proposal: Metadata label may be event/state/trigger/constraint; classify during review. Consult the Agent semantic review and verify independently.",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "51954119362088c2",
+          "verdict": "accept",
+          "reason": "Mechanical retention proposal: retain this source-derived atom pending review. Consult the Agent semantic review and verify independently.",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "427573944e1564c3",
+          "verdict": "accept",
+          "reason": "Mechanical retention proposal: retain this source-derived atom pending review. Consult the Agent semantic review and verify independently.",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "31d0a1cf7b0623f2",
+          "verdict": "accept",
+          "reason": "Mechanical retention proposal: Confirm whether risk is requested semantics or analysis-only metadata. Consult the Agent semantic review and verify independently.",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "3e47ee8e0dc268a6",
+          "verdict": "accept",
+          "reason": "Mechanical retention proposal: Rule-hook scope is preserved; this atom does not prescribe an ego reaction. Consult the Agent semantic review and verify independently.",
+          "replacement_atoms_json": "[]"
+        }
+      ],
+      "cpd_decision": {
+        "verdict": "accept",
+        "reason": "Mechanical retention proposal: retain the current CPD policy; consult the Agent semantic review and verify independently.",
+        "replacement_policy_json": "{}"
+      },
+      "added_atoms_json": "[]",
+      "notes": "Machine-only, non-gold mechanical form proposal. Semantic findings are in the source-bound Agent query-review artifact. The assigned reviewer must inspect both and submit an independent complete response."
+    },
+    "expected_form_sha256": "fc8ca1c9ab91d43e41a0a945892172822883b31de0a4ce17a5417301b49d97c3"
+  },
+  "conflict": {
+    "query_id": "BSG_DEV_v0_2_S01_precise",
+    "form": {
+      "required_check_decisions": {
+        "support_and_response_disposition": {
+          "verdict": "",
+          "reason": ""
+        },
+        "cardinality_and_polarity": {
+          "verdict": "",
+          "reason": ""
+        },
+        "road_and_spatial_decomposition": {
+          "verdict": "",
+          "reason": ""
+        },
+        "event_graph_and_actor_binding": {
+          "verdict": "",
+          "reason": ""
+        },
+        "surface_layering": {
+          "verdict": "",
+          "reason": ""
+        },
+        "cpd_common_eligibility": {
+          "verdict": "",
+          "reason": ""
+        }
+      },
+      "atom_decisions": [
+        {
+          "atom_id": "6cc48ebd3a21c60b",
+          "verdict": "",
+          "reason": "",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "572e9a2c424874cb",
+          "verdict": "",
+          "reason": "",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "33dc720fe61ccb95",
+          "verdict": "",
+          "reason": "",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "9eadc25be96b73a5",
+          "verdict": "",
+          "reason": "",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "88d159eb0c27a33a",
+          "verdict": "",
+          "reason": "",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "4824dffaeb16f65e",
+          "verdict": "",
+          "reason": "",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "cbf29c7b657077eb",
+          "verdict": "",
+          "reason": "",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "7666418c2661fcd1",
+          "verdict": "",
+          "reason": "",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "6caa371d36d52992",
+          "verdict": "",
+          "reason": "",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "51954119362088c2",
+          "verdict": "",
+          "reason": "",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "427573944e1564c3",
+          "verdict": "",
+          "reason": "",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "31d0a1cf7b0623f2",
+          "verdict": "",
+          "reason": "",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "3e47ee8e0dc268a6",
+          "verdict": "",
+          "reason": "",
+          "replacement_atoms_json": "[]"
+        },
+        {
+          "atom_id": "c548e8cfa40a3d97",
+          "verdict": "",
+          "reason": "",
+          "replacement_atoms_json": "[]"
+        }
+      ],
+      "cpd_decision": {
+        "verdict": "",
+        "reason": "",
+        "replacement_policy_json": "{}"
+      },
+      "added_atoms_json": "[]",
+      "notes": "fixed first-session edit"
+    },
+    "error": "checkpoint 已被另一会话修改；本次未覆盖，请关闭其他标签页并重新加载",
+    "expected_checkpoint_sha256": "aa5fcc3e0693417607c996d8033d6b5be2c09a1ef22ce274e2cfd9a8cb93d23b"
+  }
+}
