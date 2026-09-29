@@ -343,7 +343,7 @@ class QueryReviewWorkbench:
             "</div>{}{}"
             "<details><summary>正式语义分组键</summary>{}</details>"
         ).format(
-            html.escape(_human_atom_statement(atom)),
+            html.escape(_human_atom_statement(atom)).replace("\n", "<br>"),
             html.escape(LAYER_LABELS.get(atom.get("layer"), str(atom.get("layer")))),
             counts["total"],
             counts["decided"],
@@ -1615,7 +1615,7 @@ class QueryReviewWorkbench:
                 "<div><small>机器提示：{} — {}</small></div>"
                 "</details></div>".format(
                     html.escape(ATOM_CATEGORY_LABELS.get(atom["category"], atom["category"])),
-                    html.escape(statement),
+                    html.escape(statement).replace("\n", "<br>"),
                     html.escape(layer_label),
                     html.escape(_human_atom_evidence(atom, task["query_text"])),
                     html.escape("、".join(mapping_labels) or "无"),
@@ -2205,7 +2205,7 @@ class QueryReviewWorkbench:
             ]
             mapping_examples.append(
                 "<li><b>{}</b> → {}</li>".format(
-                    html.escape(_human_atom_statement(atom)),
+                    html.escape(_human_atom_statement(atom)).replace("\n", "<br>"),
                     html.escape("、".join(labels)),
                 )
             )

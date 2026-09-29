@@ -32,6 +32,36 @@ class CompletePresentationTests(unittest.TestCase):
                             changed["arguments"][key] = "changed-parameter-哨兵"
                             self.assertNotEqual(before, _human_atom_statement(changed))
 
+    def test_optional_absent_road_feature_is_not_a_prohibition(self):
+        atom = make_atom("road", "lane_configuration", {"feature":"has_crosswalk_zone", "value":False}, layer="permitted")
+        atom['notes'] = 'Draft records absence metadata without scoring it as forbidden.'
+        before = copy.deepcopy(atom)
+        shown = _human_atom_statement(atom)
+        self.assertIn('草稿描述：场景中没有人行横道区域。', shown)
+        self.assertIn('本条是可选描述。场景是否符合这项描述，都不会因本条扣分。', shown)
+        self.assertIn('机器把这项设施记录为不存在', shown)
+        self.assertIn(atom['notes'], shown)
+        self.assertNotIn('出现或成立', shown)
+        self.assertNotIn('；', shown)
+        self.assertEqual(atom, before)
+        atom['polarity'] = 'absent'
+        self.assertIn('不应出现以下情况：“场景中没有人行横道区域”', _human_atom_statement(atom))
+        self.assertNotIn('场景中有人行横道区域', _human_atom_statement(atom))
+
+    def test_general_forbidden_absence_does_not_repeat_negation(self):
+        atom = make_atom('road', 'lane_configuration', {'feature':'has_crosswalk_zone','value':True}, layer='forbidden', polarity='absent')
+        shown = _human_atom_statement(atom)
+        self.assertIn('不应出现以下情况：“场景中有人行横道区域”', shown)
+        self.assertIn('场景必须遵守上面的“不应出现”要求', shown)
+        self.assertNotIn('不得出现上面指出的情况', shown)
+
+    def test_conflicting_prohibition_is_not_silently_inverted(self):
+        atom = make_atom('road', 'lane_configuration', {'feature':'has_crosswalk_zone','value':True}, layer='forbidden', polarity='present')
+        shown = _human_atom_statement(atom)
+        self.assertIn('场景中有人行横道区域', shown)
+        self.assertIn('两种设置有冲突', shown)
+        self.assertFalse(project_atom(atom, '')['quick_confirm_allowed'])
+
     def test_unknown_and_nested_fields_survive_and_disable_shortcuts(self):
         atom = make_atom("event", "event_spec", {"event": "crossing", "future_field": {"distance": 2, "unknown_unit": "custom"}})
         atom["future_top_level"] = "retain-this"
@@ -68,7 +98,9 @@ class CompletePresentationTests(unittest.TestCase):
         evidence = {"atoms": [], "complete_categories": ["actor"]}
         self.assertEqual(deterministic_atom_verdict(atom, evidence), "satisfied")
         shown = _human_atom_statement(atom)
-        self.assertIn("不出现或不成立", shown)
+        self.assertIn("不应出现", shown)
+        self.assertIn("场景必须遵守上面的“不应出现”要求", shown)
+        self.assertNotIn("不得出现上面指出的情况", shown)
         self.assertNotIn("禁止满足", shown)
         self.assertFalse(quick_confirmation_issues([atom], "No cyclist."))
         present = make_atom("actor", "actor_role_count", {"count": "1", "role": "nearby_cyclist", "type": "bicycle"})

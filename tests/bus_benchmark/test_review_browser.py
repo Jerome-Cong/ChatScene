@@ -101,6 +101,28 @@ class OfflineBrowserTests(unittest.TestCase):
         self.assertFalse(self.backup()['human_gold'])
         self.assertEqual(self.errors,[])
 
+    def test_readable_card_copy_and_python_js_agreement(self):
+        from bus_benchmark.review_wording import describe_atom
+        from bus_benchmark.review_presentation import _human_token
+        self.open()
+        index=next(i for i,item in enumerate(self.packet['items']) if any(a['predicate']=='lane_configuration' and a['arguments'].get('feature')=='has_crosswalk_zone' and a['arguments'].get('value') is False for a in item['task']['oracle_draft']['atoms']))
+        self.page.locator('#queue').select_option(str(index))
+        atoms=self.packet['items'][index]['task']['oracle_draft']['atoms']
+        for i,atom in enumerate(atoms):
+            card=self.page.locator('#cards > .card').nth(i)
+            expected=describe_atom(atom,_human_token)
+            self.assertEqual(card.locator('.atom-sentence').first.inner_text(),'草稿描述：'+expected['description'])
+            self.assertEqual(card.locator('.atom-scope').first.inner_text(),'本条作用：'+expected['scope'])
+        i=next(i for i,a in enumerate(atoms) if a['predicate']=='lane_configuration' and a['arguments'].get('feature')=='has_crosswalk_zone' and a['arguments'].get('value') is False)
+        card=self.page.locator('#cards > .card').nth(i)
+        self.assertIn('草稿描述：场景中没有人行横道区域。',card.inner_text())
+        self.assertNotIn('Draft records absence',card.inner_text())
+        self.assertNotIn('出现或成立',card.inner_text())
+        card.locator('.machine-notes summary').click()
+        self.assertIn('机器把这项设施记录为不存在',card.inner_text())
+        self.assertIn('Draft records absence',card.inner_text())
+        self.assertEqual(self.errors,[])
+
     def test_reload_stale_and_foreign_backups_preserve_newer_work(self):
         self.open();self.page.locator('#notes').fill('first edit')
         wait(self.page, "document.getElementById('storage').textContent.startsWith('已保存')")

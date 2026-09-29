@@ -32,7 +32,7 @@
   const policyLabels={candidate:'是否存在合理变化',eligible:'是否纳入多样性评价',cross_platform_judgeable:'跨平台能否一致判断',decision_status:'材料状态',dimensions:'允许变化的维度',name:'维度名称',reason:'理由',allowed_values:'允许取值',bin_definition:'数值分档规则',target_selector:'目标选择规则（专家设置）',cardinality:'目标数量条件',common_semantic:'跨平台共有语义',query_blind:'不读取题目元数据',candidate_scope:'候选对象范围',missing_target:'目标缺失时的处理',target_signature:'目标特征',actor_class:'参与者类型',platforms:'适用平台',near_max:'近距离上界',medium_max:'中距离上界'};
   const fieldLabel=k=>(lookup(packet.dictionary.fields,k)||[lookup(policyLabels,k)||k])[0];
   const tokens={...packet.dictionary.tokens,supported:'应生成场景',unsupported:'应明确拒绝',generate_scene:'生成场景',draft:'机器草稿',near:'近',far:'远',exactly_one:'恰好一个可识别目标'};
-  function text(v){if(v===null)return '草稿未明确';if(v===true)return '是';if(v===false)return '否';if(Array.isArray(v))return v.length?v.map(text).join('、'):'空列表';if(typeof v==='object')return Object.entries(v).map(([k,x])=>fieldLabel(k)+'：'+text(x)).join('；');return lookup(tokens,String(v))||String(v);}
+  function text(v){if(v===null)return '草稿未明确';if(v===true)return '是';if(v===false)return '否';if(Array.isArray(v))return v.length?v.map(text).join('、'):'空列表';if(typeof v==='object')return Object.entries(v).map(([k,x])=>fieldLabel(k)+'：'+text(x)).join('；');const raw=String(v);return lookup(tokens,raw)||(raw.includes('_')?raw.replaceAll('_',' ')+'（原标记：'+raw+'）':raw);}
   function node(tag,value,cls){const n=document.createElement(tag);if(value!==undefined)n.textContent=value;if(cls)n.className=cls;return n;}
   function button(label,action){const b=node('button',label);b.type='button';b.addEventListener('click',action);return b;}
   function notify(message){$('message').textContent=message;}
@@ -58,12 +58,35 @@
     if(p?.source==='query_text_regex'&&(!Array.isArray(p.span)||p.span.length!==2||!p.span.every(Number.isInteger)||p.span[0]<0||p.span[0]>=p.span[1]||p.span[1]>Array.from(query).length))out.push('原文依据位置无效');
     return out;
   }
-  function statement(a){
-    const layer={core_required:'同一意图各表述必须满足',surface_required:'当前文字必须满足',permitted:'允许但不强制，缺失不扣分',forbidden:'禁止项，不额外取反'}[a.layer]||a.layer;
-    const polarity={present:'出现或成立',absent:'不出现或不成立'}[a.polarity]||a.polarity;
-    const label=(lookup(packet.dictionary.predicates,a.predicate)||[])[1]||('未登记要求：'+a.predicate);
+  function describeAtom(a){
+    const w=packet.dictionary.wording,args=a.arguments&&typeof a.arguments==='object'&&!Array.isArray(a.arguments)?a.arguments:{},values=Object.fromEntries(Object.entries(args).map(([k,v])=>[k,text(v)]));
+    const label=(lookup(packet.dictionary.predicates,a.predicate)||[])[1]||a.predicate;
+    const fill=(template,fields)=>template.replace(/\{(\w+)\}/g,(_,key)=>lookup(fields,key)??'草稿未明确');
+    if(a.predicate==='before')for(const [key,aliases]of [['first',['first','before','source']],['second',['second','after','target']]])values[key]=text(args[aliases.find(k=>Object.prototype.hasOwnProperty.call(args,k))]??null);
+    if(a.predicate==='parallel_group')values.events=text(args.events??args.members??null);
+    const template=lookup(w.templates,a.predicate);
+    let condition=template&&[...template.matchAll(/\{(\w+)\}/g)].every(m=>Object.prototype.hasOwnProperty.call(values,m[1]))?fill(template,values):fill(w.fallback,{label});
+    if(a.predicate==='lane_configuration'&&typeof args.value==='boolean'&&typeof args.feature==='string'&&args.feature.startsWith('has_'))condition=fill(args.value?w.feature_present:w.feature_absent,{feature:text(args.feature)});
+    let description=fill(a.polarity==='present'?w.positive:a.polarity==='absent'?w.negative:w.unknown_direction,{condition});
+    if(a.predicate==='actor_role_count'&&a.polarity==='absent'&&String(args.count)==='0'&&'type' in values&&'role' in values)description=fill(w.zero_absent,values);
+    const scope=a.layer==='forbidden'&&a.polarity==='present'?w.conflict:lookup(w.layers,a.layer)||w.unknown_layer;
+    return {description,scope};
+  }
+  function statement(a){const p=describeAtom(a);return '草稿描述：'+p.description+'\n本条作用：'+p.scope+'\n'+text(a.arguments);}
+  function renderStatement(parent,a){
+    const p=describeAtom(a),box=node('div',undefined,'atom-description');
+    box.append(node('p','草稿描述：'+p.description,'atom-sentence'),node('p','本条作用：'+p.scope,'atom-scope'));
+    // All original parameters remain visible, one labelled row per field.
+    const fields=node('dl',undefined,'atom-parameters');
+    if(a.arguments&&typeof a.arguments==='object'&&!Array.isArray(a.arguments))for(const [k,v]of Object.entries(a.arguments)){fields.append(node('dt',fieldLabel(k)),node('dd',text(v)));}
+    else fields.append(node('dt','原始参数'),node('dd',text(a.arguments)));
+    box.append(fields);
+    if(a.predicate==='event_spec')box.append(node('p',packet.dictionary.wording.missing_event,'muted'));
+    if(a.notes){const notes=node('details',undefined,'machine-notes');notes.append(node('summary','机器备注（参考，不是原文要求）'));const translated=lookup(packet.dictionary.wording.notes,a.notes);if(translated)notes.append(node('p',translated));notes.append(node('p','备注原文：'+a.notes));box.append(notes);}
+    if(a.weight!==undefined&&a.weight!==1)box.append(node('p','本条权重：'+a.weight));
     const extras=Object.fromEntries(Object.entries(a).filter(([k])=>!['atom_id','category','predicate','arguments','layer','polarity','weight','provenance','decision_status','notes'].includes(k)));
-    return layer+'；'+polarity+'；'+label+'。'+text(a.arguments)+(a.notes?'；备注：'+a.notes:'')+(a.weight!==undefined&&a.weight!==1?'；权重：'+a.weight:'')+(Object.keys(extras).length?'；未登记原值：'+text(extras):'')+(a.predicate==='event_spec'?'；草稿未给出的参与者绑定、触发和结束条件不在展示层补写':'');
+    if(Object.keys(extras).length){box.append(node('p','未登记内容，需专家核对：','warning'));showTree(box,extras);}
+    parent.append(box);
   }
   function showTree(parent,v,key=''){
     if(v&&typeof v==='object'){
@@ -173,15 +196,15 @@ fail(Array.isArray(r.covered_units)&&r.covered_units.length&&new Set(r.covered_u
     const d=draft();if(d.status==='submitted'&&d.receipts.some(r=>r.action==='carried_confirmation'))$('subject').textContent+=' · 沿用原确认（非新作答）';$('surface-diff').replaceChildren();const diff=item().surface_diff;if(diff){const details=node('details');details.append(node('summary','与精确表述的差异：'+(diff.category_labels.join('、')||'文字相同，仍须核对来源要求')),node('p','差异分类只用于导航；每个表述独立提交，有差异时不自动继承。'));for(const change of diff.changes)details.append(node('p',(change.source_tokens.join(' ')||'（空）')+' → '+(change.target_tokens.join(' ')||'（空）')));for(const change of diff.atom_changes||[])details.append(node('p','要求差异：'+(change.source?statement(change.source):'精确版无此要求')+' → '+(change.target?statement(change.target):'当前草稿无此要求')));$('surface-diff').append(details);}
     $('prior-review').replaceChildren();const prior=packet.migration?.subjects[item().task.subject_id];if(prior?.previous_form){const details=node('details');details.append(node('summary','旧进度与迁移依据（只读）'),node('p','处理：'+(lookup(migrationOutcomes,prior.outcome)||prior.outcome)+'；原因：'+(lookup(migrationReasons,prior.reason)||prior.reason)),node('p','旧原文：'+prior.previous_query_text),node('p','旧备注：'+(prior.previous_form.notes||'')));const sources=new Map(prior.previous_atoms.map(a=>[a.atom_id,a]));for(const decision of Array.isArray(prior.previous_form.atom_decisions)?prior.previous_form.atom_decisions:[]){if(!decision.verdict)continue;details.append(node('p','旧选择 '+decision.verdict+'：'+(sources.has(decision.atom_id)?statement(sources.get(decision.atom_id)):decision.atom_id)));if(decision.replacement_atoms_json&&decision.replacement_atoms_json!=='[]'){try{for(const a of decode(decision.replacement_atoms_json,'list'))details.append(node('p','旧修订：'+statement(a)));}catch(_){details.append(node('p','未解析的旧高级编辑：'+decision.replacement_atoms_json));}}}if(prior.previous_form.added_atoms_json!=='[]')details.append(node('p','旧新增编辑（保留原始文本）：'+prior.previous_form.added_atoms_json));for(const path of prior.changed_paths||[])details.append(node('p','需要核对的变化位置：'+path));const full=node('details');full.append(node('summary','完整旧表单（只读技术记录，含全部理由与 CPD 修订）'),node('pre',JSON.stringify(prior.previous_form,null,2)));details.append(full);$('prior-review').append(details);}
     originalAtoms().forEach((source,index)=>{
-      const decision=d.form.atom_decisions[index],card=node('article',undefined,'card');card.append(node('h3',`${index+1}. ${(lookup(packet.dictionary.predicates,source.predicate)||[])[1]||source.predicate}`),node('p',statement(source)));
+      const decision=d.form.atom_decisions[index],card=node('article',undefined,'card');card.append(node('h3',`${index+1}. ${(lookup(packet.dictionary.predicates,source.predicate)||[])[1]||source.predicate}`));renderStatement(card,source);
       const warnings=atomWarnings(source,item().task.query_text);if(warnings.length)card.append(node('p',warnings.join('；'),'warning'));
-      const p=source.provenance;let evidence='机器元数据建议，需对照原文核实';if(p?.source==='query_text_regex')evidence=warnings.includes('原文依据位置无效')?'原文依据位置无效':`精确原文：“${Array.from(item().task.query_text).slice(p.span[0],p.span[1]).join('')}”`;else if(p?.field)evidence+='；来源字段：'+p.field;card.append(node('p',evidence,'source'));
+      const p=source.provenance;let evidence='这条草稿来自机器整理的题目资料，尚未提供对应的原文片段。请对照上方原文核对。';if(p?.source==='query_text_regex')evidence=warnings.includes('原文依据位置无效')?'机器给出的原文位置无效，请对照上方原文核对。':`对应的原文片段：“${Array.from(item().task.query_text).slice(p.span[0],p.span[1]).join('')}”`;card.append(node('p',evidence,'source'));if(p?.field){const origin=node('details',undefined,'muted');origin.append(node('summary','草稿来源记录'),node('p','资料字段：'+p.field));card.append(origin);}
       const suggestion=item().revision_proposals?.items.find(x=>x.source_atom_id===source.atom_id);
       if(suggestion){
         const panel=node('div',undefined,'source');panel.append(node('strong',suggestion.status==='proposed'?'机器修订提案（尚未采用）':suggestion.status==='supported'?'机器找到的文字依据，仍需人工核对':'机器未解决的疑问'),node('p',suggestion.machine_rationale));
         for(const e of suggestion.evidence)panel.append(node('p','原文：“'+e.quote+'”'));
         if(suggestion.legacy_advisory)panel.append(node('p','旧 Agent 提示（机器）：'+suggestion.legacy_advisory.reason));
-        if(suggestion.status==='proposed'){for(const target of suggestion.replacement_atoms)panel.append(node('p','建议改为：'+statement(target)));panel.append(button('采用此修订草稿',()=>{decision.verdict=suggestion.operation;decision.replacement_atoms_json=JSON.stringify(suggestion.replacement_atoms);decision.reason='Machine revision proposal: '+suggestion.machine_rationale;d.issues=d.issues.filter(x=>x.atom_id!==source.atom_id);markChanged('machine_proposal',{proposal_report_id:item().revision_proposals.report_id,source_atom_id:source.atom_id});render();}));}
+        if(suggestion.status==='proposed'){for(const target of suggestion.replacement_atoms){panel.append(node('p','建议改为：'));renderStatement(panel,target);}panel.append(button('采用此修订草稿',()=>{decision.verdict=suggestion.operation;decision.replacement_atoms_json=JSON.stringify(suggestion.replacement_atoms);decision.reason='Machine revision proposal: '+suggestion.machine_rationale;d.issues=d.issues.filter(x=>x.atom_id!==source.atom_id);markChanged('machine_proposal',{proposal_report_id:item().revision_proposals.report_id,source_atom_id:source.atom_id});render();}));}
         if(d.issues.some(x=>x.code==='machine_unresolved'&&x.atom_id===source.atom_id))panel.append(button('我已核对这条疑问，使用当前编辑',()=>{d.issues=d.issues.filter(x=>!(x.code==='machine_unresolved'&&x.atom_id===source.atom_id));markChanged();render();}));
         card.append(panel);
       }
@@ -236,7 +259,7 @@ fail(Array.isArray(r.covered_units)&&r.covered_units.length&&new Set(r.covered_u
   $('export').onclick=async()=>{try{const b=await backup(),blob=new Blob([JSON.stringify(b,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=node('a');a.href=url;a.download='review-'+packet.packet_id.slice(0,12)+'-v'+state.generation+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);notify('已发起备份下载，请在浏览器下载记录中确认文件保存。');}catch(e){notify('备份导出失败：'+e.message);}};
   $('restore').onchange=async()=>{try{const file=$('restore').files[0];if(!file)return;fail(file.size<=64*1024*1024,'备份文件过大');await restore(JSON.parse(await file.text()));}catch(e){notify(e.message);}finally{$('restore').value='';}};
   $('help').onclick=()=>$('guide').showModal();$('close-guide').onclick=()=>$('guide').close();$('guide-text').textContent=packet.guide;$('identity').textContent='审阅者：'+packet.reviewer_id;
-  const answerLabels={required:'必须满足',permitted:'允许但不强制',forbidden:'禁止出现',exclude:'排除此草稿要求',defer:'暂存疑问'};for(const exercise of packet.practice.cases){const card=node('article',undefined,'card');card.append(node('h3','练习：'+exercise.query_text),node('p',statement(exercise.atom)));const answer=node('p',answerLabels[exercise.answer]+'。'+exercise.explanation);answer.hidden=true;card.append(button('显示参考解释',()=>{answer.hidden=!answer.hidden;}),answer);$('practice').append(card);}
+  const answerLabels={required:'必须满足',permitted:'允许但不强制',forbidden:'禁止出现',exclude:'排除此草稿要求',defer:'暂存疑问'};for(const exercise of packet.practice.cases){const card=node('article',undefined,'card');card.append(node('h3','练习：'+exercise.query_text),node('p','请判断这条草稿是否符合原文。'));renderStatement(card,exercise.atom);const answer=node('p',answerLabels[exercise.answer]+'。'+exercise.explanation);answer.hidden=true;card.append(button('显示参考解释',()=>{answer.hidden=!answer.hidden;}),answer);$('practice').append(card);}
   window.addEventListener('storage',e=>{if(e.key===stateKey&&e.newValue){try{const x=JSON.parse(e.newValue);if(storedDigest!==null&&x.backup_sha256!==storedDigest){readonly=true;controls();$('storage').textContent='另一会话更改了进度，已转为只读；请导出内存备份后重新打开。';}}catch(_){readonly=true;controls();}}});
   window.addEventListener('beforeunload',e=>{if(storageFailed||saveTimer||savesPending){e.preventDefault();e.returnValue='';}});
   async function initialize(){

@@ -1,5 +1,5 @@
 {
-  "version": "1",
+  "version": "2",
   "registry_version": "1",
   "human_gold": false,
   "purpose": "synthetic training only; never formal review",
@@ -26,8 +26,10 @@
       "answer": "required",
       "explanation": "原文明示自行车，必须保留参与者要求。",
       "expected_display": [
-        "必须满足",
-        "出现或成立"
+        "草稿描述：",
+        "本条作用：",
+        "参与者",
+        "必须满足"
       ]
     },
     {
@@ -52,8 +54,10 @@
       "answer": "permitted",
       "explanation": "允许出现，不代表缺失要扣分。",
       "expected_display": [
-        "允许但不强制",
-        "出现或成立"
+        "草稿描述：",
+        "本条作用：",
+        "参与者",
+        "可选描述"
       ]
     },
     {
@@ -78,8 +82,10 @@
       "answer": "forbidden",
       "explanation": "明确禁止出现自行车。",
       "expected_display": [
-        "禁止项",
-        "不出现或不成立"
+        "草稿描述：",
+        "本条作用：",
+        "参与者",
+        "不应出现"
       ]
     },
     {
@@ -104,8 +110,10 @@
       "answer": "required",
       "explanation": "必须满足不出现，与禁止出现表达同一方向；不要读反极性。",
       "expected_display": [
-        "必须满足",
-        "不出现或不成立"
+        "草稿描述：",
+        "本条作用：",
+        "参与者",
+        "不应出现"
       ]
     },
     {
@@ -130,8 +138,10 @@
       "answer": "exclude",
       "explanation": "草稿自行车不受原文支持，排除该条，不等于禁止场景里所有自行车。",
       "expected_display": [
-        "必须满足",
-        "出现或成立"
+        "草稿描述：",
+        "本条作用：",
+        "参与者",
+        "必须满足"
       ]
     },
     {
@@ -156,8 +166,10 @@
       "answer": "defer",
       "explanation": "原文无法确定类型和数量，应暂存，不凭机器提议确认。",
       "expected_display": [
-        "必须满足",
-        "出现或成立"
+        "草稿描述：",
+        "本条作用：",
+        "参与者",
+        "必须满足"
       ]
     }
   ]

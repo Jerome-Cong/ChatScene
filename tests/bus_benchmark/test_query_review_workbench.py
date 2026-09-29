@@ -402,8 +402,8 @@ class QueryReviewWorkbenchTests(unittest.TestCase):
         mapping_guide = workbench.review_tabs.children[3].children[1].value
         self.assertIn("不是让你重复审核", mapping_guide)
         self.assertIn("不是让你手工给评分指标分配字段", mapping_guide)
-        self.assertIn(_human_atom_statement(lane_count), mapping_guide)
-        self.assertIn(_human_atom_statement(risk), mapping_guide)
+        self.assertIn(_human_atom_statement(lane_count), mapping_guide.replace("<br>", "\n"))
+        self.assertIn(_human_atom_statement(risk), mapping_guide.replace("<br>", "\n"))
 
     def test_completing_precise_requires_full_review_of_different_surfaces(self):
         session = self._triplet_session()

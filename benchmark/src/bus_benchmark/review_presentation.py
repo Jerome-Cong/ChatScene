@@ -25,34 +25,30 @@ def _human_token(value: Any) -> str:
 
 def _human_atom_statement(atom: Mapping[str, Any]) -> str:
     """Show every argument, polarity and scoring layer without semantic inference."""
-    spec = PREDICATE_DEFINITIONS.get(atom.get("predicate"))
-    label = spec[1] if spec else "未登记要求：" + str(atom.get("predicate"))
-    layers = {
-        "core_required": "同一意图各表述均必须满足以下条件",
-        "surface_required": "当前文字必须满足以下条件",
-        "permitted": "允许但不强制满足以下条件（缺失不扣分）",
-        "forbidden": "禁止项（按下列出现方向判断，不再额外取反）",
-    }
-    polarity = {"present": "出现或成立", "absent": "不出现或不成立"}.get(atom.get("polarity"), "极性未明确")
+    from .review_wording import describe_atom, WORDING
+    projection = describe_atom(atom, _human_token)
     arguments = atom.get("arguments", {})
-    fields = "；".join(field_definition(k)[0] + "：" + _human_token(v) for k, v in sorted(arguments.items())) if isinstance(arguments, Mapping) else repr(arguments)
-    statement = "{}：{}；{}。{}".format(layers.get(atom.get("layer"), "计分层级未明确"), polarity, label, fields)
-    if atom.get("predicate") == "actor_role_count" and atom.get("polarity") == "absent" and isinstance(arguments, Mapping) and str(arguments.get("count")) == "0":
-        statement += "；此处数量 0 表示该类型/角色不得出现，不是对“零个”再取反"
+    lines = ["草稿描述：" + projection["description"], "本条作用：" + projection["scope"]]
+    if isinstance(arguments, Mapping):
+        lines.extend(field_definition(k)[0] + "：" + _human_token(v) for k, v in sorted(arguments.items()))
+    else:
+        lines.append("原始参数：" + repr(arguments))
+    statement = "\n".join(lines)
     if atom.get("notes"):
-        statement += "；备注：" + str(atom["notes"])
+        statement += "\n机器备注（参考）：" + WORDING["notes"].get(str(atom["notes"]), str(atom["notes"]))
+        statement += "\n备注原文：" + str(atom["notes"])
     if atom.get("weight", 1.0) != 1.0:
-        statement += "；权重：" + str(atom["weight"])
+        statement += "\n权重：" + str(atom["weight"])
     warnings = presentation_warnings(atom)
     if warnings:
-        statement += "；⚠ " + "；".join(warnings)
+        statement += "\n⚠ " + "\n⚠ ".join(warnings)
     extras = {k: v for k, v in atom.items() if k not in {"atom_id", "category", "predicate", "arguments", "layer", "polarity", "weight", "provenance", "decision_status", "notes"}}
     if extras:
-        statement += "；未登记原值：" + json.dumps(extras, ensure_ascii=False, sort_keys=True)
+        statement += "\n未登记原值：" + json.dumps(extras, ensure_ascii=False, sort_keys=True)
     if atom.get("predicate") == "event_spec" and isinstance(arguments, Mapping):
         missing = [label for keys, label in ((("actor", "role", "subject"), "参与者绑定"), (("trigger", "condition", "start"), "触发条件"), (("end",), "结束条件")) if not any(key in arguments for key in keys)]
         if missing:
-            statement += "；草稿未明确" + "、".join(missing) + "，展示层不补写"
+            statement += "\n草稿未明确" + "、".join(missing) + "，展示层不补写"
     return statement
 
 
