@@ -52,7 +52,7 @@ def validate_migration_ledger(packet, ledger):
         raise ValidationError('migration removed-subject inventory is inconsistent')
     for qid,record in ledger['subjects'].items():
         item=items[qid]
-        if not isinstance(record,dict) or set(record)!=_SUBJECT_KEYS or record['outcome'] not in ('carried_confirmation','preserved_draft','requires_review','new_subject') or record['new_subject_sha256']!=item['task']['subject_sha256'] or record['new_semantic_binding']!=semantic_binding(item['proposal']['task_binding']):
+        if not isinstance(record,dict) or set(record)-{'previous_cpd_review'}!=_SUBJECT_KEYS or record['outcome'] not in ('carried_confirmation','preserved_draft','requires_review','new_subject') or record['new_subject_sha256']!=item['task']['subject_sha256'] or record['new_semantic_binding']!=semantic_binding(item['proposal']['task_binding']):
             raise ValidationError('migration subject binding differs')
         if not isinstance(record['draft_content_sha256'],str) or re.fullmatch(r'[0-9a-f]{64}',record['draft_content_sha256']) is None:
             raise ValidationError('migration draft digest is missing')
@@ -157,8 +157,10 @@ def _migrate_records(old_records,new_packet,source_kind,source_packet_id,source_
     for item in new_packet['items']:
         task,proposal=item['task'],item['proposal'];qid=task['subject_id'];entry=copy.deepcopy(item['initial_draft'])
         old=old_records.get(qid);outcome='new_subject';reason='new_subject';old_sha=None;old_binding=None;origin=None
-        previous_query=None;previous_atoms=[];previous_form=None;old_dictionary_sha=None;changed_paths=[]
+        previous_query=None;previous_atoms=[];previous_form=None;previous_cpd=None;old_dictionary_sha=None;changed_paths=[]
         if old is not None:
+            from .review_cpd_semantics import latest_review
+            previous_cpd=copy.deepcopy(latest_review(old['draft']))
             old_sha=old['task']['subject_sha256'];old_binding=old['semantic_binding'];origin=old['origin_confirmation_sha256']
             previous_query=old['task']['query_text'];previous_atoms=copy.deepcopy(old['task']['oracle_draft']['atoms']);previous_form=copy.deepcopy(old['draft']['form'])
             old_dictionary_sha=content_hash(old['dictionary']) if old.get('dictionary') is not None else None
@@ -189,10 +191,12 @@ def _migrate_records(old_records,new_packet,source_kind,source_packet_id,source_
             else:
                 outcome='requires_review'
                 reason='source_changed' if not same_source else 'legacy_guide_unbound' if old_binding is None else 'guidance_changed' if not same_guidance else 'legacy_form_not_browser_editable'
+            if not same_source or not same_guidance:
+                entry['edit_sources']=[e for e in entry['edit_sources'] if e.get('origin') != 'cpd_semantics']
             if outcome=='requires_review':
                 entry['status']='deferred'
                 entry['issues']=[{'code':'migration_review_required','reason':reason+'；原编辑已只读保留，请对照当前源完整重审。'}]+entry['issues']
-        record={'outcome':outcome,'reason':reason,'old_subject_sha256':old_sha,'new_subject_sha256':task['subject_sha256'],'old_semantic_binding':old_binding,'new_semantic_binding':semantic_binding(proposal['task_binding']),'old_dictionary_sha256':old_dictionary_sha,'new_dictionary_sha256':new_dictionary_sha,'changed_paths':changed_paths,'origin_confirmation_sha256':origin,'draft_content_sha256':wire_hash(draft_content(entry)),'previous_query_text':previous_query,'previous_atoms':previous_atoms,'previous_form':previous_form}
+        record={'outcome':outcome,'reason':reason,'old_subject_sha256':old_sha,'new_subject_sha256':task['subject_sha256'],'old_semantic_binding':old_binding,'new_semantic_binding':semantic_binding(proposal['task_binding']),'old_dictionary_sha256':old_dictionary_sha,'new_dictionary_sha256':new_dictionary_sha,'changed_paths':changed_paths,'origin_confirmation_sha256':origin,'draft_content_sha256':wire_hash(draft_content(entry)),'previous_query_text':previous_query,'previous_atoms':previous_atoms,'previous_form':previous_form,'previous_cpd_review':previous_cpd}
         subjects[qid]=record;entries.append(entry)
     core={'version':'1','source_kind':source_kind,'source_artifact_sha256':source_sha,'source_packet_id':source_packet_id,'subjects':subjects,'removed_subject_ids':sorted(set(old_records)-set(subjects))}
     ledger={**core,'migration_id':wire_hash(core)}

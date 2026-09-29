@@ -34,7 +34,7 @@ python -m bus_benchmark.cli review import \
 
 `assignment.json` 必须是维护者原先保存的可信原件，不能采用浏览器用户另交的替代版本。导入器从可信 library/oracle 重建 task、proposal 和绑定，核对 guide/UI/词典版本、完整题目列表、reviewer、内容摘要与确认范围；客户端自洽地重算 hash 不足以伪造源。
 
-导入只保存审计备份与已验证的非 gold 草稿。全部 assigned subjects 均明确提交后，维护者才可用同样参数调用 `review finalize --output NEW_DIRECTORY`，转交已有正式 finalizer；任何暂存/缺项都阻断。一个开发子包完成只表示这个明确 source bundle 完成，不表示当前 300 subject 套件或跨平台最终冻结已完成。
+导入只保存审计备份与已验证的非 gold 草稿。全部 assigned subjects 均完成可见语义确认后，还需按 [CPD 技术核对流程](CPD_REVIEW_CATALOG.md)核对完整策略，再调用 `review finalize --cpd-technical-review APPROVAL_JSON --output NEW_DIRECTORY`，转交已有正式 finalizer；任何暂存/缺项都阻断。一个开发子包完成只表示这个明确 source bundle 完成，不表示当前 300 subject 套件或跨平台最终冻结已完成。
 
 所有输出目录必须全新；错误保留原件。题包、备份和导入状态建议放在忽略入库的 `.review-workspace/`，不进入方法源码、生成器上下文或 wheel。工具未改变生成器输入；实际运行隔离边界仍由 BW-10 验证，不能由“query-only”参数宣称文件系统零泄漏。
 

@@ -16,6 +16,8 @@ def browser_backup(packet, submitted=False):
     entries = [copy.deepcopy(i['initial_draft']) for i in packet['items']]
     if submitted:
         for entry, item in zip(entries, packet['items']):
+            from bus_benchmark.review_cpd_semantics import review_basis, question_ids
+            entry['edit_sources'].append({'origin':'cpd_semantics','revision':entry['revision'],'basis':review_basis(item['task'],entry['form']),'answers':[{'id':id,'choice':'allow','reason':''} for id in question_ids(item['task'],entry['form'])]})
             entry['receipts'] = [{'action':'explicit_confirm', 'content_sha256':wire_hash(browser_snapshot(packet['packet_id'], item['task'], item['proposal'], entry, item.get('revision_proposals'), item.get('surface_diff'))), 'covered_units':['atom:'+a['atom_id'] for a in item['task']['oracle_draft']['atoms']]+['support','cpd','additions','notes'], 'reviewer_id':packet['reviewer_id'], 'revision':entry['revision']}]
             entry['status'] = 'submitted'
     value = dict(artifact_type='browser_review_backup', packet_version=packet['packet_version'],packet_id=packet['packet_id'],reviewer_id=packet['reviewer_id'],generation=1,entries=entries,human_gold=False)
@@ -86,7 +88,12 @@ class OfflinePacketTests(unittest.TestCase):
             with self.assertRaisesRegex(ValidationError,'all subjects'):finalize_packet(assignment,submission,self.library,self.oracle,root/'gold')
             self.assertFalse((root/'gold').exists())
             write_json(submission,browser_backup(self.packet,True))
-            result=finalize_packet(assignment,submission,self.library,self.oracle,root/'synthetic-test-finalizer')
+            with self.assertRaisesRegex(ValidationError,'technical review'):
+                finalize_packet(assignment,submission,self.library,self.oracle,root/'synthetic-test-finalizer')
+            from bus_benchmark.review_cpd_semantics import technical_template
+            approval=technical_template(self.packet,read_json(submission));approval.update(approved=True,reviewer_id='synthetic-expert')
+            write_json(root/'approval.json',approval)
+            result=finalize_packet(assignment,submission,self.library,self.oracle,root/'synthetic-test-finalizer',cpd_technical_review=root/'approval.json')
             self.assertEqual(result['record_count'],2)
 
     def test_wire_numbers_and_typed_objects_do_not_collide(self):

@@ -30,7 +30,7 @@ def _run(args):
         write_json(output / "coverage.json", result)
     elif args.review_action == "validate":
         value = validate_browser_submission(read_json(args.assignment), read_json(args.submission), args.library, args.oracle)
-        result = {k: value[k] for k in ("subjects_total", "subjects_submitted", "human_gold")}
+        result = {k: value[k] for k in ("subjects_total", "subjects_submitted", "human_gold", "cpd_confirmation_scope", "cpd_technical_review_required")}
     elif args.review_action == "issues":
         from .review_issues import export_issues
         result = export_issues(args.assignment, args.submission, args.library, args.oracle, args.output)
@@ -39,7 +39,7 @@ def _run(args):
         result = migrate_review(old_submission_path=args.submission, old_assignment_path=args.assignment, old_library=args.old_library, old_oracle=args.old_oracle, new_library=args.library, new_oracle=args.oracle, output_dir=args.output, reviewer_id=args.reviewer)
     else:
         function = import_packet if args.review_action == "import" else finalize_packet
-        result = function(args.assignment, args.submission, args.library, args.oracle, args.output)
+        result = function(args.assignment, args.submission, args.library, args.oracle, args.output, **({"cpd_technical_review": args.cpd_technical_review} if args.review_action == "finalize" else {}))
     print(json.dumps(result, ensure_ascii=False, sort_keys=True))
 
 
@@ -64,6 +64,8 @@ def add_review_parser(subparsers):
         else:
             command.add_argument("--assignment", type=Path, required=True)
             command.add_argument("--submission", type=Path, required=True)
+        if name == "finalize":
+            command.add_argument("--cpd-technical-review", type=Path, help="trusted maintainer approval, bound to the exact backup")
         if name != "validate":
             command.add_argument("--output", type=Path, required=True)
         command.set_defaults(function=_run)

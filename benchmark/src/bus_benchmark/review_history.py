@@ -91,6 +91,9 @@ def validate_historical_browser(assignment, backup, library_source, oracle_sourc
             if not isinstance(units,list) or not units or any(not isinstance(x,str) for x in units) or len(set(units))!=len(units) or not set(units)<=known:
                 raise ValidationError('historical confirmation scope differs')
             covered.update(units)
+        if assignment['dictionary'].get('cpd_catalog',{}).get('semantic_review_version') == '1':
+            from .review_cpd_semantics import validate_semantic_review
+            validate_semantic_review(task,entry,required=entry['status']=='submitted' or bool(entry['receipts']))
         if entry['status']=='submitted':
             if entry['issues'] or covered!=known:raise ValidationError('historical submission was not completely confirmed')
             try:

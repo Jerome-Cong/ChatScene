@@ -100,6 +100,7 @@
   function markChanged(origin='human',audit={}){
     if(readonly||busy)return false;
     const d=draft();d.revision++;d.receipts=[];d.status=d.issues.length?'deferred':'draft';d.edit_sources.push({revision:d.revision,origin,...audit});
+    if(origin!=='cpd_semantics'&&typeof cpdUI!=='undefined')cpdUI.render($('cpd'),d,current);
     state.generation++;$('subject').textContent=item().task.subject_id;$('storage').textContent='有未保存修改；正在自动保存到浏览器…';queueUpdate();scheduleSave();return true;
   }
   function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{saveTimer=null;save().catch(e=>notify(e.message));},150);}
@@ -123,6 +124,7 @@
     fail(entry.model_version===initial.model_version&&JSON.stringify(entry.task_binding)===JSON.stringify(initial.task_binding)&&entry.proposal_id===initial.proposal_id&&entry.reviewer_id===packet.reviewer_id,'题目、来源、版本或审阅者不匹配');
     fail(Number.isSafeInteger(entry.revision)&&entry.revision>=0&&['draft','submitted','deferred','requires_source_fix'].includes(entry.status),'题目状态无效');
     fail(Array.isArray(entry.receipts)&&Array.isArray(entry.issues)&&Array.isArray(entry.edit_sources),'记录列表损坏');
+    cpdUI.check(entry,index,entry.status==='submitted'||entry.receipts.length>0);
     const f=entry.form;fail(exact(f,['required_check_decisions','atom_decisions','cpd_decision','added_atoms_json','notes']),'表单字段错误');
     fail(typeof f.notes==='string'&&Array.isArray(f.atom_decisions)&&typeof f.added_atoms_json==='string','表单内容损坏');
     fail(f.atom_decisions.length===initial.form.atom_decisions.length&&f.atom_decisions.every((d,i)=>d.atom_id===initial.form.atom_decisions[i].atom_id),'要求处置列表被改写');
@@ -167,34 +169,12 @@ fail(Array.isArray(r.covered_units)&&r.covered_units.length&&new Set(r.covered_u
     const layerLabel=node('label','计分层级'),layer=node('select');for(const [value,label]of [['core_required','各表述必须'],['surface_required','当前文字必须'],['permitted','允许但不强制'],['forbidden','禁止项']]){const o=node('option',label);o.value=value;layer.append(o);}layer.value=atom.layer;layer.onchange=()=>{atom.layer=layer.value;update(atom);};layerLabel.append(layer);box.append(layerLabel);
     const polarityLabel=node('label','出现方向'),polarity=node('select');for(const [v,t]of [['present','要求出现或成立'],['absent','要求不出现或不成立']]){const o=node('option',t);o.value=v;polarity.append(o);}polarity.value=atom.polarity;polarity.onchange=()=>{atom.polarity=polarity.value;update(atom);};polarityLabel.append(polarity);box.append(polarityLabel);parent.append(box);
   }
-  function renderCPD(){
-    const parent=$('cpd'),d=draft(),catalog=packet.dictionary.cpd_catalog;
-    const policy=d.form.cpd_decision.verdict==='revise'?decode(d.form.cpd_decision.replacement_policy_json,'object'):item().task.oracle_draft.cpd_policy;
-    parent.replaceChildren(node('h3','允许的合理变化（CPD）'),node('p',policy.eligible?'本题草稿允许下列变化，仍需逐题人工核对。':'本题草稿不纳入 CPD 主指标；这不改变其他指标。'));
-    parent.append(node('p',catalog.preservation),node('p','文字锁定要求以本页要求卡片的当前编辑为准；修改要求后也须重新核对 CPD。'));
-    const warnings=[];
-    for(const dimension of policy.dimensions||[]){
-      const spec=lookup(catalog.dimensions,dimension.name),box=node('article',undefined,'cpd-dimension');
-      box.append(node('strong',spec?.label||('未登记维度：'+dimension.name)));
-      if(!spec)warnings.push('未登记 CPD 维度，须专家核对');
-      box.append(node('p','允许值：'+(dimension.allowed_values||[]).map(v=>lookup(spec?.values||{},v)||text(v)).join('、')));
-      if(spec)box.append(node('p',spec.explanation));
-      if(dimension.target_selector)box.append(node('p','作用对象：'+text(dimension.target_selector.target_signature?.actor_class||'未明确')));
-      if(dimension.reason)box.append(node('p','本题依据：'+dimension.reason));
-      if(spec?.bin_definition_m&&JSON.stringify(wireTree(dimension.bin_definition_m))!==JSON.stringify(wireTree(spec.bin_definition_m)))warnings.push('距离分箱与现有提取器不一致，须专家处理');
-      parent.append(box);
-    }
-    for(const warning of warnings)parent.append(node('p',warning,'warning'));
-    parent.append(node('p',catalog.platforms));
-    const expert=node('details');expert.append(node('summary','专家规则与完整本题策略（只读）'),node('p','高级修订使用既有 CPDPolicyEditor；这里不逐题重配共享 selector。'));
-    showTree(expert,policy);const shared=node('details');shared.append(node('summary','共享维度目录与 selector'));showTree(shared,catalog);expert.append(shared);parent.append(expert);
-    parent.append(button('对 CPD 有异议，交专家处理',()=>{if(readonly||busy)return;d.issues=d.issues.filter(x=>x.code!=='cpd_expert');d.issues.push({code:'cpd_expert',reason:'CPD 策略有异议，需专家核对；详见本题备注。'});markChanged();render();}));
-    return warnings;
-  }
+  const cpdUI=createCPDReview({packet,node,text,lookup,clone,wireTree,fail,showTree,markChanged,render,editable:()=>!readonly&&!busy&&!composing});
+  function renderCPD(){cpdUI.render($('cpd'),draft(),current);return cpdUI.problems(draft(),current);}
   function render(){
     queueUpdate();$('subject').textContent=item().task.subject_id;$('query').textContent=item().task.query_text;$('cards').replaceChildren();
     const d=draft();if(d.status==='submitted'&&d.receipts.some(r=>r.action==='carried_confirmation'))$('subject').textContent+=' · 沿用原确认（非新作答）';$('surface-diff').replaceChildren();const diff=item().surface_diff;if(diff){const details=node('details');details.append(node('summary','与精确表述的差异：'+(diff.category_labels.join('、')||'文字相同，仍须核对来源要求')),node('p','差异分类只用于导航；每个表述独立提交，有差异时不自动继承。'));for(const change of diff.changes)details.append(node('p',(change.source_tokens.join(' ')||'（空）')+' → '+(change.target_tokens.join(' ')||'（空）')));for(const change of diff.atom_changes||[])details.append(node('p','要求差异：'+(change.source?statement(change.source):'精确版无此要求')+' → '+(change.target?statement(change.target):'当前草稿无此要求')));$('surface-diff').append(details);}
-    $('prior-review').replaceChildren();const prior=packet.migration?.subjects[item().task.subject_id];if(prior?.previous_form){const details=node('details');details.append(node('summary','旧进度与迁移依据（只读）'),node('p','处理：'+(lookup(migrationOutcomes,prior.outcome)||prior.outcome)+'；原因：'+(lookup(migrationReasons,prior.reason)||prior.reason)),node('p','旧原文：'+prior.previous_query_text),node('p','旧备注：'+(prior.previous_form.notes||'')));const sources=new Map(prior.previous_atoms.map(a=>[a.atom_id,a]));for(const decision of Array.isArray(prior.previous_form.atom_decisions)?prior.previous_form.atom_decisions:[]){if(!decision.verdict)continue;details.append(node('p','旧选择 '+decision.verdict+'：'+(sources.has(decision.atom_id)?statement(sources.get(decision.atom_id)):decision.atom_id)));if(decision.replacement_atoms_json&&decision.replacement_atoms_json!=='[]'){try{for(const a of decode(decision.replacement_atoms_json,'list'))details.append(node('p','旧修订：'+statement(a)));}catch(_){details.append(node('p','未解析的旧高级编辑：'+decision.replacement_atoms_json));}}}if(prior.previous_form.added_atoms_json!=='[]')details.append(node('p','旧新增编辑（保留原始文本）：'+prior.previous_form.added_atoms_json));for(const path of prior.changed_paths||[])details.append(node('p','需要核对的变化位置：'+path));const full=node('details');full.append(node('summary','完整旧表单（只读技术记录，含全部理由与 CPD 修订）'),node('pre',JSON.stringify(prior.previous_form,null,2)));details.append(full);$('prior-review').append(details);}
+    $('prior-review').replaceChildren();const prior=packet.migration?.subjects[item().task.subject_id];if(prior?.previous_form){const details=node('details');details.append(node('summary','旧进度与迁移依据（只读）'),node('p','处理：'+(lookup(migrationOutcomes,prior.outcome)||prior.outcome)+'；原因：'+(lookup(migrationReasons,prior.reason)||prior.reason)),node('p','旧原文：'+prior.previous_query_text),node('p','旧备注：'+(prior.previous_form.notes||'')));const sources=new Map(prior.previous_atoms.map(a=>[a.atom_id,a]));for(const decision of Array.isArray(prior.previous_form.atom_decisions)?prior.previous_form.atom_decisions:[]){if(!decision.verdict)continue;details.append(node('p','旧选择 '+decision.verdict+'：'+(sources.has(decision.atom_id)?statement(sources.get(decision.atom_id)):decision.atom_id)));if(decision.replacement_atoms_json&&decision.replacement_atoms_json!=='[]'){try{for(const a of decode(decision.replacement_atoms_json,'list'))details.append(node('p','旧修订：'+statement(a)));}catch(_){details.append(node('p','未解析的旧高级编辑：'+decision.replacement_atoms_json));}}}if(prior.previous_form.added_atoms_json!=='[]')details.append(node('p','旧新增编辑（保留原始文本）：'+prior.previous_form.added_atoms_json));for(const path of prior.changed_paths||[])details.append(node('p','需要核对的变化位置：'+path));if(prior.previous_cpd_review){const history=node('details');history.append(node('summary','旧 CPD 逐项判断与原因（只读，不作为本题新答案）'));for(const a of prior.previous_cpd_review.answers||[]){history.append(node('p',(a.id==='coverage'?'遗漏检查':a.id)+'：'+(lookup({allow:'允许或未发现遗漏',restricted:'认为需要修改',uncertain:'无法判断','':'未判断'},a.choice)||a.choice)),node('p','原因：'+(a.reason||'未填写')));}details.append(history);}const full=node('details');full.append(node('summary','完整旧表单（只读技术记录，含全部理由与 CPD 修订）'),node('pre',JSON.stringify(prior.previous_form,null,2)));details.append(full);$('prior-review').append(details);}
     originalAtoms().forEach((source,index)=>{
       const decision=d.form.atom_decisions[index],card=node('article',undefined,'card');card.append(node('h3',`${index+1}. ${(lookup(packet.dictionary.predicates,source.predicate)||[])[1]||source.predicate}`));renderStatement(card,source);
       const warnings=atomWarnings(source,item().task.query_text);if(warnings.length)card.append(node('p',warnings.join('；'),'warning'));
@@ -253,8 +233,8 @@ fail(Array.isArray(r.covered_units)&&r.covered_units.length&&new Set(r.covered_u
   $('queue').onchange=()=>{current=Number($('queue').value);render();notify('');};$('filter').onchange=queueUpdate;
   $('previous').onclick=()=>navigate(-1);$('next').onclick=()=>navigate(1);
   $('confirm').onclick=()=>confirm().catch(e=>notify(e.message));
-  $('defer').onclick=()=>{if(readonly||busy||composing)return;const reason=$('issue').selectedOptions[0].textContent;if($('issue').value==='other'&&!draft().form.notes.trim()){notify('其他原因请在备注中说明');return;}draft().issues=draft().issues.filter(x=>x.code==='machine_unresolved');draft().issues.push({code:$('issue').value,reason});markChanged();if($('issue').value==='source_error')draft().status='requires_source_fix';scheduleSave();navigate(1);};
-  $('resume').onclick=()=>{draft().issues=draft().issues.filter(x=>x.code==='machine_unresolved');markChanged();render();};
+  $('defer').onclick=()=>{if(readonly||busy||composing)return;const reason=$('issue').selectedOptions[0].textContent;if($('issue').value==='other'&&!draft().form.notes.trim()){notify('其他原因请在备注中说明');return;}draft().issues=draft().issues.filter(x=>['machine_unresolved','cpd_semantic_question'].includes(x.code));draft().issues.push({code:$('issue').value,reason});markChanged();if($('issue').value==='source_error')draft().status='requires_source_fix';scheduleSave();navigate(1);};
+  $('resume').onclick=()=>{draft().issues=draft().issues.filter(x=>['machine_unresolved','cpd_semantic_question'].includes(x.code));markChanged();render();};
   $('add').onclick=()=>{const added=decode(draft().form.added_atoms_json,'list');added.push({category:'actor',predicate:'actor_role_count',arguments:{count:'1',role:'',type:'pedestrian'},layer:'surface_required',polarity:'present',weight:1,notes:''});draft().form.added_atoms_json=JSON.stringify(added);markChanged();render();};
   $('export').onclick=async()=>{try{const b=await backup(),blob=new Blob([JSON.stringify(b,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=node('a');a.href=url;a.download='review-'+packet.packet_id.slice(0,12)+'-v'+state.generation+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);notify('已发起备份下载，请在浏览器下载记录中确认文件保存。');}catch(e){notify('备份导出失败：'+e.message);}};
   $('restore').onchange=async()=>{try{const file=$('restore').files[0];if(!file)return;fail(file.size<=64*1024*1024,'备份文件过大');await restore(JSON.parse(await file.text()));}catch(e){notify(e.message);}finally{$('restore').value='';}};

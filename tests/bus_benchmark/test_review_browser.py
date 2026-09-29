@@ -56,6 +56,10 @@ class OfflineBrowserTests(unittest.TestCase):
         wait(self.page, 'window.ReviewWorkbench && ReviewWorkbench.ready()')
         wait(self.page, "document.getElementById('storage').textContent.includes('已保存') || document.getElementById('storage').textContent.includes('仅保存在内存')")
 
+    def answer_cpd(self):
+        for i in range(self.page.locator('.cpd-choice').count()):
+            self.page.locator('.cpd-choice').nth(i).select_option('allow')
+
     def backup(self):
         return self.page.evaluate('ReviewWorkbench.backup()')
 
@@ -69,7 +73,7 @@ class OfflineBrowserTests(unittest.TestCase):
                 card.get_by_label('要求处理',exact=True).select_option('modify')
                 card.get_by_label('数量',exact=True).fill('2')
             self.page.locator('#notes').fill('人工测试备注：中文🚍 </script><img src=x onerror="window.attacked=true">')
-            self.page.locator('#confirm').click()
+            self.answer_cpd();self.page.locator('#confirm').click()
             wait(self.page, f"ReviewWorkbench.getState().entries[{index}].status==='submitted'")
         backup=self.backup()
         result=validate_browser_submission(self.packet,backup,self.library,self.oracle)
@@ -90,15 +94,58 @@ class OfflineBrowserTests(unittest.TestCase):
         panel=self.page.locator('#cpd')
         self.assertIn('近：不超过 10 米', panel.inner_text())
         self.assertFalse(panel.get_by_text('selector_id',exact=True).is_visible())
-        self.page.locator('#confirm').click()
+        self.answer_cpd();self.page.locator('#confirm').click()
         wait(self.page, f"ReviewWorkbench.getState().entries[{index}].status==='submitted'")
-        panel.get_by_role('button',name='对 CPD 有异议，交专家处理').click()
+        panel.locator('.cpd-choice').first.select_option('restricted')
+        panel.locator('.cpd-reason').first.fill('原文限制距离')
         entry=self.backup()['entries'][index]
         self.assertEqual(entry['receipts'],[])
-        self.assertEqual(entry['issues'][0]['code'],'cpd_expert')
+        self.assertEqual(entry['issues'][0]['code'],'cpd_semantic_question')
         self.page.locator('#confirm').click()
         self.assertIn('仍有疑问',self.page.locator('#message').inner_text())
         self.assertFalse(self.backup()['human_gold'])
+        self.assertEqual(self.errors,[])
+
+    def test_cpd_requires_explicit_answers_and_saves_each_reason(self):
+        self.open()
+        self.page.locator('#confirm').click()
+        self.assertNotEqual(self.backup()['entries'][0]['status'],'submitted')
+        self.assertTrue(all(v=='' for v in self.page.locator('.cpd-choice').evaluate_all('(nodes)=>nodes.map(n=>n.value)')))
+        select=self.page.locator('.cpd-choice').first
+        select.select_option('uncertain')
+        self.page.locator('.cpd-reason').first.fill('这项距离没有明确依据')
+        self.assertEqual(self.page.locator('#notes').input_value(),self.packet['items'][0]['initial_draft']['form']['notes'])
+        self.page.locator('#resume').click()
+        self.assertTrue(any(i['code']=='cpd_semantic_question' for i in self.backup()['entries'][0]['issues']))
+        wait(self.page,"document.getElementById('storage').textContent.startsWith('已保存')")
+        self.page.reload();wait(self.page,'ReviewWorkbench.ready()')
+        self.assertEqual(self.page.locator('.cpd-choice').first.input_value(),'uncertain')
+        self.assertEqual(self.page.locator('.cpd-reason').first.input_value(),'这项距离没有明确依据')
+        self.answer_cpd();self.page.locator('#confirm').click()
+        wait(self.page,"ReviewWorkbench.getState().entries[0].status==='submitted'")
+        # Requirement edits invalidate semantic answers, but keep their local reasons.
+        self.page.locator('#cards > .card').first.get_by_label('要求处理',exact=True).select_option('reject')
+        self.assertTrue(all(v=='' for v in self.page.locator('.cpd-choice').evaluate_all('(nodes)=>nodes.map(n=>n.value)')))
+        self.assertIn('先前的 CPD 选择已失效',self.page.locator('#cpd').inner_text())
+        self.assertEqual(self.page.locator('.cpd-reason').first.input_value(),'这项距离没有明确依据')
+        self.assertEqual(self.backup()['entries'][0]['receipts'],[])
+        self.assertEqual(self.errors,[])
+
+    def test_cpd_source_migration_shows_old_reasons_without_reusing_answers(self):
+        from bus_benchmark.review_migration import migrate_review
+        from bus_benchmark.jsonio import write_json
+        self.open();self.page.locator('.cpd-choice').first.select_option('restricted')
+        self.page.locator('.cpd-reason').first.fill('旧CPD意见：原文限制了变化')
+        old=self.root/'cpd-backup.json';write_json(old,self.backup())
+        changed=copy.deepcopy(self.library);qid=self.packet['items'][0]['task']['subject_id']
+        next(r for r in changed if r['query_id']==qid)['query_text']+=' New wording.'
+        migrate_review(old_submission_path=old,old_assignment_path=self.root/'packet/assignment.json',old_library=self.library,old_oracle=self.oracle,new_library=changed,new_oracle=self.oracle,output_dir=self.root/'cpd-migration')
+        self.packet=read_json(self.root/'cpd-migration/packet/assignment.json');self.url=(self.root/'cpd-migration/packet/review.html').as_uri()
+        self.open();self.page.evaluate('(b)=>ReviewWorkbench.restore(b)',read_json(self.root/'cpd-migration/progress.json'))
+        self.page.locator('#prior-review > details > summary').click()
+        self.page.get_by_text('旧 CPD 逐项判断与原因（只读，不作为本题新答案）',exact=True).click()
+        self.assertIn('旧CPD意见：原文限制了变化',self.page.locator('#prior-review').inner_text())
+        self.assertTrue(all(v=='' for v in self.page.locator('.cpd-choice').evaluate_all('(nodes)=>nodes.map(n=>n.value)')))
         self.assertEqual(self.errors,[])
 
     def test_readable_card_copy_and_python_js_agreement(self):
@@ -149,7 +196,7 @@ class OfflineBrowserTests(unittest.TestCase):
     def test_quota_failure_is_memory_only_but_exportable(self):
         self.context.add_init_script("Storage.prototype.setItem=function(){throw new DOMException('quota','QuotaExceededError')}")
         self.open();self.page.locator('#notes').fill('memory only')
-        self.page.locator('#confirm').click()
+        self.answer_cpd();self.page.locator('#confirm').click()
         wait(self.page, "document.getElementById('storage').textContent.includes('仅保存在内存')")
         backup=self.backup()
         self.assertEqual(backup['entries'][0]['form']['notes'],'memory only')
@@ -164,7 +211,7 @@ class OfflineBrowserTests(unittest.TestCase):
         self.assertEqual(self.page.evaluate('(key)=>localStorage.getItem(key)',key),'{broken')
 
     def test_defer_and_edit_after_submit_have_no_valid_confirmation(self):
-        self.open();self.page.locator('#confirm').click();wait(self.page, "ReviewWorkbench.getState().entries[0].status==='submitted'")
+        self.open();self.answer_cpd();self.page.locator('#confirm').click();wait(self.page, "ReviewWorkbench.getState().entries[0].status==='submitted'")
         self.page.locator('#notes').fill('changed after confirmation')
         state=self.page.evaluate('ReviewWorkbench.getState()')
         self.assertEqual(state['entries'][0]['status'],'draft');self.assertEqual(state['entries'][0]['receipts'],[])
@@ -190,14 +237,14 @@ class OfflineBrowserTests(unittest.TestCase):
         self.page.locator('#queue').select_option(str(index))
         card=self.page.locator('.card').first
         card.get_by_label('要求处理',exact=True).select_option('modify')
-        self.page.locator('#confirm').click()
+        self.answer_cpd();self.page.locator('#confirm').click()
         self.assertIn('没有实际语义修改',self.page.locator('#message').inner_text())
         card.get_by_label('要求处理',exact=True).select_option('split')
-        self.page.locator('#confirm').click()
+        self.answer_cpd();self.page.locator('#confirm').click()
         self.assertIn('拆分目标重复',self.page.locator('#message').inner_text())
         self.assertEqual(self.page.evaluate(f'ReviewWorkbench.getState().entries[{index}].status'),'draft')
         card.get_by_label('参与者角色',exact=True).nth(1).fill('synthetic_second_actor')
-        self.page.locator('#confirm').click()
+        self.answer_cpd();self.page.locator('#confirm').click()
         wait(self.page,f"ReviewWorkbench.getState().entries[{index}].status==='submitted'")
         self.assertEqual(validate_browser_submission(self.packet,self.backup(),self.library,self.oracle)['subjects_submitted'],1)
 
@@ -208,11 +255,11 @@ class OfflineBrowserTests(unittest.TestCase):
         card=self.page.locator('.card').nth(2)
         card.get_by_label('要求处理',exact=True).select_option('merge')
         card.locator('select').nth(1).select_option('3')
-        self.page.locator('#confirm').click()
+        self.answer_cpd();self.page.locator('#confirm').click()
         self.assertIn('没有实际语义修改',self.page.locator('#message').inner_text())
         self.assertIn('共用第',self.page.locator('.card').nth(3).inner_text())
         card.get_by_label('取值',exact=True).fill('synthetic_different_road')
-        self.page.locator('#confirm').click()
+        self.answer_cpd();self.page.locator('#confirm').click()
         wait(self.page,f"ReviewWorkbench.getState().entries[{index}].status==='submitted'")
         self.assertEqual(validate_browser_submission(self.packet,self.backup(),self.library,self.oracle)['subjects_submitted'],1)
 
@@ -232,7 +279,7 @@ class OfflineBrowserTests(unittest.TestCase):
         self.oracle[0]['atoms']=[a for a in self.oracle[0]['atoms'] if a['provenance']['source']!='query_text_regex']
         exported=export_packet(self.library,self.oracle,'synthetic-browser-test',self.root/'suggestions',with_suggestions=True)
         self.packet=read_json(exported['assignment']);self.url=Path(exported['html']).as_uri()
-        self.open();self.page.locator('#confirm').click()
+        self.open();self.answer_cpd();self.page.locator('#confirm').click()
         self.assertIn('仍有疑问',self.page.locator('#message').inner_text())
         self.page.get_by_role('button',name='采用此修订草稿').first.click()
         state=self.page.evaluate('ReviewWorkbench.getState()')
@@ -242,11 +289,11 @@ class OfflineBrowserTests(unittest.TestCase):
         self.assertEqual(json.loads(state['entries'][0]['form']['atom_decisions'][0]['replacement_atoms_json'])[0]['arguments']['count'],'2')
         while self.page.get_by_role('button',name='我已核对这条疑问，使用当前编辑').count():
             self.page.get_by_role('button',name='我已核对这条疑问，使用当前编辑').first.click()
-        self.page.locator('#confirm').click()
+        self.answer_cpd();self.page.locator('#confirm').click()
         wait(self.page,"ReviewWorkbench.getState().entries[0].status==='submitted'")
         result=validate_browser_submission(self.packet,self.backup(),self.library,self.oracle)
         self.assertEqual(result['subjects_submitted'],1)
-        reason=result['responses'][0]['response']['atom_decisions'][0]['reason']
+        reason=result['semantic_responses'][0]['response']['atom_decisions'][0]['reason']
         self.assertIn('Human attestation:',reason)
         self.assertIn('Machine rationale:',reason)
 
@@ -260,7 +307,7 @@ class OfflineBrowserTests(unittest.TestCase):
         index=next(i for i,item in enumerate(self.packet['items']) if item['task']['query_record']['surface_style']=='precise')
         self.page.locator('#queue').select_option(str(index))
         self.assertIn('未登记要求',self.page.locator('.card').first.inner_text())
-        self.page.locator('#confirm').click()
+        self.answer_cpd();self.page.locator('#confirm').click()
         self.assertIn('未登记要求类型',self.page.locator('#message').inner_text())
         self.assertEqual(self.errors,[])
 
@@ -286,7 +333,7 @@ class OfflineBrowserTests(unittest.TestCase):
         from bus_benchmark.review_migration import migrate_review
         from bus_benchmark.jsonio import write_json
         self.open();self.page.locator('#notes').fill('old human edit to retain')
-        self.page.locator('#confirm').click();wait(self.page,"ReviewWorkbench.getState().entries[0].status==='submitted'")
+        self.answer_cpd();self.page.locator('#confirm').click();wait(self.page,"ReviewWorkbench.getState().entries[0].status==='submitted'")
         old=self.backup()
         # Model an earlier expert CPD edit in this synthetic confirmed backup.
         from bus_benchmark.review_packet import browser_snapshot
@@ -294,6 +341,8 @@ class OfflineBrowserTests(unittest.TestCase):
         policy=copy.deepcopy(source['task']['oracle_draft']['cpd_policy']);policy['cross_platform_judgeable']=False
         entry['form']['cpd_decision'].update(verdict='revise',reason='unique old CPD revision reason',replacement_policy_json=json.dumps(policy))
         entry['revision']+=1;entry['edit_sources'].append({'revision':entry['revision'],'origin':'human'})
+        from bus_benchmark.review_cpd_semantics import review_basis
+        next(e for e in entry['edit_sources'] if e.get('origin')=='cpd_semantics')['basis']=review_basis(source['task'],entry['form'])
         entry['receipts'][0]['revision']=entry['revision']
         entry['receipts'][0]['content_sha256']=wire_hash(browser_snapshot(self.packet['packet_id'],source['task'],source['proposal'],entry,source.get('revision_proposals'),source.get('surface_diff')))
         old['generation']+=1;old['backup_sha256']=wire_hash({k:v for k,v in old.items() if k!='backup_sha256'})

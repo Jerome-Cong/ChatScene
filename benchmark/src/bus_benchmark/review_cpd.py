@@ -6,7 +6,7 @@ explanations, never alternate extraction or scoring implementations.
 import copy
 from .cpd import QUERY_BLIND_TARGET_SELECTORS
 
-CATALOG_VERSION = "1"
+CATALOG_VERSION = "2"
 
 
 def policy_catalog():
@@ -33,6 +33,6 @@ def policy_catalog():
     }
     for name, selector in QUERY_BLIND_TARGET_SELECTORS.items():
         definitions[name]["target_selector"] = copy.deepcopy(selector)
-    return {"version": CATALOG_VERSION, "dimensions": definitions,
+    return {"version": CATALOG_VERSION, "semantic_review_version": "1", "dimensions": definitions,
             "preservation": "CPD 主指标保留自车门槛、各表述共同必须项和禁止项，并要求证据完整；当前文字必须项仍参与原有符合度计分。",
             "platforms": "共享规则面向 CARLA 与 MetaDrive，不代表本机 Judge 或跨平台验收已通过。目标缺失或无法唯一绑定时，该维度不可用。"}

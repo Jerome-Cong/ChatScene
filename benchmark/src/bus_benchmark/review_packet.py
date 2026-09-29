@@ -48,7 +48,7 @@ def build_packet(library_source, oracle_source, reviewer_id, *, with_suggestions
         "dictionary": {"wording": wording_catalog(), "cpd_catalog": policy_catalog(), "fields": FIELD_DEFINITIONS, "predicates": PREDICATE_DEFINITIONS, "tokens": {**TOKEN_LABELS, **TOKEN_TRANSLATIONS}},
         "guide": asset_path("review", "guide_zh.md").read_text(encoding="utf-8"),
         "practice": read_json(asset_path("review", "practice.json")),
-        "ui_sha256": {name: sha256_file(asset_path("review", name)) for name in ("app.js", "app.css", "template.html")},
+        "ui_sha256": {name: sha256_file(asset_path("review", name)) for name in ("app.js", "cpd_review.js", "app.css", "template.html")},
     }
     if with_suggestions:
         from .review_proposals import PROFILE
@@ -84,7 +84,7 @@ def _write_packet(packet, output_dir):
     embedded = json.dumps(packet, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c").replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")
     html = asset_path("review", "template.html").read_text(encoding="utf-8")
     html = html.replace("@@STYLE@@", asset_path("review", "app.css").read_text(encoding="utf-8"))
-    html = html.replace("@@SCRIPT@@", asset_path("review", "app.js").read_text(encoding="utf-8"))
+    html = html.replace("@@SCRIPT@@", asset_path("review", "cpd_review.js").read_text(encoding="utf-8") + "\n" + asset_path("review", "app.js").read_text(encoding="utf-8"))
     html = html.replace("@@PACKET@@", embedded)
     (output / "review.html").write_text(html, encoding="utf-8")
     write_json(output / "export_receipt.json", {"packet_id": packet["packet_id"], "human_gold": False, "html_sha256": sha256_file(output / "review.html")})
@@ -121,6 +121,8 @@ def validate_browser_submission(assignment, submission, library_source, oracle_s
         task, proposal = item["task"], item["proposal"]
         validate_draft(task, proposal, incoming)
         ensure_browser_form(incoming["form"])
+        from .review_cpd_semantics import validate_semantic_review
+        validate_semantic_review(task, incoming, required=incoming["status"] == "submitted" or bool(incoming["receipts"]))
         if [d["atom_id"] for d in incoming["form"]["atom_decisions"]] != [a["atom_id"] for a in task["oracle_draft"]["atoms"]]:
             raise ValidationError("browser source atom order or coverage differs")
         if incoming["reviewer_id"] != expected["reviewer_id"]:
@@ -140,11 +142,15 @@ def validate_browser_submission(assignment, submission, library_source, oracle_s
                 draft = confirm_scope(task, proposal, draft, receipt["covered_units"], projection["content_sha256"], explicit=True)
         if incoming["status"] == "submitted":
             response = compile_confirmed(task, proposal, draft, reviewer_id=expected["reviewer_id"])
+            # Do not expose a formally acceptable CPD attestation before technical review.
+            response["cpd_decision"]["verdict"] = "pending_technical_review"
+            response["cpd_decision"]["reason"] = "Visible CPD semantics reviewed; technical policy approval is still pending."
+            response["required_check_decisions"]["cpd_common_eligibility"] = {"verdict": "pending_technical_review", "reason": response["cpd_decision"]["reason"]}
             responses.append({"task_id": task["task_id"], "subject_id": task["subject_id"], "subject_sha256": task["subject_sha256"], "response": response})
         elif draft["status"] == "submitted":
             raise ValidationError("backup status contradicts complete confirmation coverage")
         drafts.append(draft)
-    return {"drafts": drafts, "responses": responses, "confirmation_origins": origins, "subjects_total": len(entries), "subjects_submitted": len(responses), "human_gold": False}
+    return {"drafts": drafts, "responses": [], "semantic_responses": responses, "confirmation_origins": origins, "subjects_total": len(entries), "subjects_submitted": len(responses), "human_gold": False, "cpd_confirmation_scope": "visible_semantics_only", "cpd_technical_review_required": True}
 
 
 def import_packet(assignment_path, submission_path, library_source, oracle_source, output_dir):
@@ -158,17 +164,32 @@ def import_packet(assignment_path, submission_path, library_source, oracle_sourc
         raise ValidationError("import output already exists; original files were retained") from exc
     write_json(output / "browser_backup.json", submission)
     write_json(output / "validated_review.json", result)
-    return {"output": str(output), "subjects_total": result["subjects_total"], "subjects_submitted": result["subjects_submitted"], "human_gold": False}
+    from .review_cpd_semantics import technical_template
+    write_json(output / "cpd_technical_review_template.json", technical_template(assignment, submission))
+    return {"output": str(output), "subjects_total": result["subjects_total"], "subjects_submitted": result["subjects_submitted"], "human_gold": False, "cpd_technical_review_required": True, "cpd_technical_review_template": str(output / "cpd_technical_review_template.json")}
 
 
-def finalize_packet(assignment_path, submission_path, library_source, oracle_source, output_dir):
+def finalize_packet(assignment_path, submission_path, library_source, oracle_source, output_dir, *, cpd_technical_review=None):
     assignment = read_json(assignment_path)
-    imported = validate_browser_submission(assignment, read_json(submission_path), library_source, oracle_source)
+    backup = read_json(submission_path)
+    imported = validate_browser_submission(assignment, backup, library_source, oracle_source)
     if imported["subjects_submitted"] != imported["subjects_total"]:
         raise ValidationError("all subjects must be explicitly submitted; deferred subjects cannot become gold")
+    from .review_cpd_semantics import validate_technical_review
+    if cpd_technical_review is None:
+        raise ValidationError("CPD technical review is required before finalization; browser confirms visible semantics only")
+    approval = read_json(cpd_technical_review)
+    validate_technical_review(approval, assignment, backup)
     bundle = export_query_review_bundle(library_source, oracle_source, reviewer_id=assignment["reviewer_id"])
     submission = copy.deepcopy(bundle["reviewer_packet"]["submission_template"])
-    submission["responses"] = imported["responses"]
+    submission["responses"] = []
+    for item, draft in zip(assignment["items"], imported["drafts"]):
+        task = item["task"]
+        response = compile_confirmed(task, item["proposal"], draft, reviewer_id=assignment["reviewer_id"])
+        reason = "Technical reviewer {} approved the bound CPD policy; the annotation reviewer confirmed visible semantic questions.".format(approval["reviewer_id"])
+        response["cpd_decision"]["reason"] = reason
+        response["required_check_decisions"]["cpd_common_eligibility"]["reason"] = reason
+        submission["responses"].append({"task_id":task["task_id"], "subject_id":task["subject_id"], "subject_sha256":task["subject_sha256"], "response":response})
     submission["submission_status"] = "complete"
     validate_query_review_submission(bundle["reviewer_packet"], submission, library_source=library_source, oracle_source=oracle_source)
     result = finalize_query_review_bundle(bundle, submission, library_source=library_source, oracle_source=oracle_source)
@@ -178,6 +199,7 @@ def finalize_packet(assignment_path, submission_path, library_source, oracle_sou
         output.mkdir(mode=0o700)
     except FileExistsError as exc:
         raise ValidationError("finalization output already exists; no overwrite") from exc
+    write_json(output / "cpd_technical_review.json", approval)
     write_json(output / "submission.json", submission)
     write_jsonl(output / "confirmed_oracle.jsonl", result["confirmed_oracles"])
     write_jsonl(output / "human_query_gold.jsonl", result["human_gold_records"])

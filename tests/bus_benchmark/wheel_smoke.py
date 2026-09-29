@@ -21,7 +21,7 @@ def main():
     assert 'site-packages' in PACKAGE_ROOT.parts, PACKAGE_ROOT
     assert not importlib.util.find_spec('ipywidgets')
     assert not importlib.util.find_spec('IPython')
-    for name in ('app.js', 'app.css', 'template.html', 'guide_zh.md', 'practice.json', 'revision_proposals.schema.json'):
+    for name in ('app.js', 'cpd_review.js', 'app.css', 'template.html', 'guide_zh.md', 'practice.json', 'revision_proposals.schema.json'):
         assert asset_path('review', name).read_bytes()
     assert (PACKAGE_ROOT/'query_review_workbench.css').read_bytes()
     from bus_benchmark.query_review_workbench import response_from_form
@@ -46,6 +46,8 @@ def main():
     entries = []
     for item in packet['items']:
         entry = copy.deepcopy(item['initial_draft'])
+        from bus_benchmark.review_cpd_semantics import review_basis, question_ids
+        entry['edit_sources'].append({'origin':'cpd_semantics','revision':entry['revision'],'basis':review_basis(item['task'],entry['form']),'answers':[{'id':id,'choice':'allow','reason':''} for id in question_ids(item['task'],entry['form'])]})
         entry['receipts'] = [{'action':'explicit_confirm','content_sha256':wire_hash(browser_snapshot(packet['packet_id'],item['task'],item['proposal'],entry,item.get('revision_proposals'),item.get('surface_diff'))), 'covered_units':['atom:'+a['atom_id'] for a in item['task']['oracle_draft']['atoms']]+['support','cpd','additions','notes'], 'reviewer_id':packet['reviewer_id'],'revision':entry['revision']}]
         entry['status'] = 'submitted'
         entries.append(entry)
