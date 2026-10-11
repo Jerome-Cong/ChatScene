@@ -27,3 +27,7 @@ CARLA.download.parts/
 # Local distribution build outputs
 /benchmark/build/
 /benchmark/dist/
+
+# Local model credentials (never part of a source snapshot or commit)
+/.env
+/.env.*

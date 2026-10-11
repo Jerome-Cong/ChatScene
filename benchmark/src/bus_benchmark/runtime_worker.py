@@ -563,6 +563,16 @@ def _carla_controller_classes(parameters):
     class FixedIDMPIDBehavior(Behavior):
         """Query-blind lane follower with IDM longitudinal control and PID steering."""
 
+        # Scenic normally emits these methods for a behavior declaration, even
+        # when it has no declared guards. This Python-defined controller has no
+        # additional behavior guards; parameter and native-state validation
+        # remain in the runner and realization checks.
+        def checkPreconditions(self, agent):
+            pass
+
+        def checkInvariants(self, agent):
+            pass
+
         def makeGenerator(self, agent):
             integral = 0.0
             previous_error = 0.0

@@ -18,20 +18,25 @@ parser.add_argument('--port_ip', type=int, default=2000, help='Port IP address (
 parser.add_argument('--topk', type=int, default=3, help='Top K value (default: 3) for retrieval')
 parser.add_argument('--model', type=str, default='gpt-4o', help="Model name (default: 'gpt-4o'), also support transformers model")
 parser.add_argument('--use_llm', action='store_true', help='if use llm for generating new snippets')
+parser.add_argument('--embedding-model', default='sentence-transformers/sentence-t5-large', help='Original retrieval model ID or a prepared local copy of that model')
+parser.add_argument('--llm-backend', choices=('auto', 'openai', 'transformers'), default='auto')
+parser.add_argument('--temperature', type=float, default=0.0)
+parser.add_argument('--api-timeout', type=float)
+parser.add_argument('--api-max-retries', type=int)
 args = parser.parse_args()
 
 port_ip = args.port_ip
 topk = args.topk
 use_llm = args.use_llm
 
-llm_model = LLMChat(args.model)
+llm_model = LLMChat(args.model, backend=args.llm_backend, temperature=args.temperature, timeout=args.api_timeout, max_retries=args.api_max_retries)
 local_path = osp.abspath(osp.dirname(osp.dirname(osp.realpath(__file__))))
 extraction_prompt = load_file(osp.join(local_path, 'retrieve', 'prompts', 'extraction.txt'))
 behavior_prompt = load_file(osp.join(local_path, 'retrieve', 'prompts', 'behavior.txt'))
 geometry_prompt = load_file(osp.join(local_path, 'retrieve', 'prompts', 'geometry.txt'))
 spawn_prompt = load_file(osp.join(local_path, 'retrieve', 'prompts', 'spawn.txt'))
 scenario_descriptions = load_file(osp.join(local_path, 'retrieve', 'scenario_descriptions.txt')).split('\n')
-encoder = SentenceTransformer('sentence-transformers/sentence-t5-large', device='cuda')
+encoder = SentenceTransformer(args.embedding_model, device='cuda')
 
 with open(osp.join(local_path, 'retrieve/database_v1.pkl'), 'rb') as file:
     database = pickle.load(file)
@@ -52,6 +57,9 @@ param carla_map = Town
 model scenic.simulators.carla.model
 EGO_MODEL = "vehicle.lincoln.mkz_2017"
 '''
+
+# Persist the selected endpoint in the raw artifact, not only the compile call.
+head = f'param port = {port_ip}\n' + head
 
 log_file_path = osp.join(local_path, 'safebench', 'scenario', 'scenario_data', 'scenic_data', 'dynamic_scenario', 'dynamic_log.csv')
 with open(log_file_path, mode='w', newline='') as file:

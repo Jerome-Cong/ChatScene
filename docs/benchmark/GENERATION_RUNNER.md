@@ -1,5 +1,7 @@
 # Immutable CARLA generation runner
 
+Current host setup and verified development commands: [2026-10-11 runtime repair](CHATSCENE_RUNTIME_REPAIR_2026-10-11.md). Historical draft configurations below are retained; use newly prepared host-bound configs on this machine.
+
 The generation runner is an external benchmark harness. It does not change
 ChatScene's generation architecture. Each invocation receives only the exact
 `query_text`, runs once in a fresh private directory, and consumes one of the

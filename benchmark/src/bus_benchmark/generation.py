@@ -388,13 +388,15 @@ def finalize_carla_ego_artifact(raw_bytes: bytes) -> EgoFinalization:
         blueprint_index = blueprint[0][0]
         content, newline = _split_line(lines[blueprint_index])
         newline = newline or "\n"
+        continues = content.split("#", 1)[0].rstrip().endswith(",")
         content = _ensure_clause_comma(content)
         lines[blueprint_index] = content + newline
         indent = re.match(r"^[ \t]*", content).group(0)
         insertion = []
-        for change_name, value in missing:
+        for position, (change_name, value) in enumerate(missing):
             property_name = "length" if change_name == "ego_length_m" else "width"
-            insertion.append("{}with {} {},{}".format(indent, property_name, value, newline))
+            comma = "," if continues or position < len(missing) - 1 else ""
+            insertion.append("{}with {} {}{}{}".format(indent, property_name, value, comma, newline))
             changes.append(change_name)
         lines[blueprint_index + 1 : blueprint_index + 1] = insertion
 

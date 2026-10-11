@@ -514,7 +514,10 @@ def _legacy_execution_checks(
         )
     )
     model = _configured_model(adapter.get("argv"))
-    if isinstance(model, str) and model.startswith("gpt"):
+    argv = adapter.get("argv", [])
+    explicit_api = "--llm-backend" in argv and argv.index("--llm-backend") + 1 < len(argv) and argv[argv.index("--llm-backend") + 1] == "openai"
+    explicit_local = "--llm-backend" in argv and argv.index("--llm-backend") + 1 < len(argv) and argv[argv.index("--llm-backend") + 1] == "transformers"
+    if isinstance(model, str) and not explicit_local and (model.startswith("gpt") or explicit_api):
         override = _source_overrides_credential(adapter)
         credential_present = bool(os.environ.get("OPENAI_API_KEY"))
         checks.append(

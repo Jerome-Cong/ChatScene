@@ -314,6 +314,7 @@ def _run_process(
     if environment_overrides is not None:
         allowed_overrides = {
             "HOME",
+            "PYTHONHOME",
             "XDG_CACHE_HOME",
             "MPLCONFIGDIR",
             "PYTHONPATH",
@@ -1237,6 +1238,17 @@ class ChatSceneLegacyAdapter(MethodAdapter):
                 self.max_stdout_bytes,
                 self.max_stderr_bytes,
                 environment_overrides={
+                    # A uv standalone Python may point at a base interpreter
+                    # inside the checkout which is deliberately hidden above.
+                    # Use only a complete stdlib copied into this read-only
+                    # environment; ordinary system-backed venvs keep their
+                    # existing lookup behavior.
+                    **({"PYTHONHOME": str(sandbox_environment)} if any(
+                        (library / "encodings" / "__init__.py").is_file()
+                        and (library / "os.py").is_file()
+                        and (library / "lib-dynload").is_dir()
+                        for library in (self.python_environment_root / "lib").glob("python*")
+                    ) else {}),
                     "HOME": str(sandbox_home),
                     "XDG_CACHE_HOME": str(sandbox_home / ".cache"),
                     "MPLCONFIGDIR": str(sandbox_home / ".matplotlib"),

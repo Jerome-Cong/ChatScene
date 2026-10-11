@@ -1,5 +1,7 @@
 # Platform-native runtime runner
 
+Current host setup and verified development commands: [2026-10-11 runtime repair](CHATSCENE_RUNTIME_REPAIR_2026-10-11.md). Historical draft configurations below are retained; use newly prepared host-bound configs on this machine.
+
 The runtime runner is external to ChatScene and does not change ChatScene's
 architecture. It consumes only immutable response records and finalized
 artifacts; neither query text nor oracle/evaluation metadata is passed to the
