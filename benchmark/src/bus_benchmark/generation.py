@@ -568,6 +568,8 @@ def _validate_method_config(config: Mapping[str, Any], roster: Mapping[str, Any]
             "ego_length_m": EGO_PROXY_LENGTH_M,
             "ego_width_m": EGO_PROXY_WIDTH_M,
         }
+    if platform == "carla" and isinstance(finalization,Mapping) and finalization.get("artifact_type")=="carla_native_scene_v0.1":
+        expected["artifact_type"]="carla_native_scene_v0.1"
     if finalization != expected:
         raise ValidationError("method config finalization policy is not the approved ego proxy")
     if not isinstance(config.get("adapter"), Mapping):
@@ -1369,21 +1371,45 @@ def _finalize_ego_artifact(
     raw_bytes: bytes,
     token_registry: Optional[Mapping[str, Any]] = None,
     token_registry_sha256: Optional[str] = None,
+    artifact_type=None,
 ) -> EgoFinalization:
     if platform == "carla":
+        if artifact_type == "carla_native_scene_v0.1":
+            from .carla_native import finalize, parse
+
+            try:
+                before = parse(raw_bytes)["actors"][0]
+                final = finalize(raw_bytes)
+                after = parse(final)["actors"][0]
+            except (ValueError, TypeError, KeyError, OverflowError) as exc:
+                raise ValidationError(
+                    "native CARLA artifact rejected: {}".format(exc)
+                ) from exc
+            changes = tuple(
+                "ego_" + k
+                for k in ("blueprint", "length_m", "width_m")
+                if before[k] != after[k]
+            )
+            return EgoFinalization(
+                final,
+                b"Native ego-only normalization; all non-ego fields unchanged.\n",
+                changes,
+            )
         return finalize_carla_ego_artifact(raw_bytes)
     if platform == "metadrive":
         if token_registry is None or token_registry_sha256 is None:
-            raise ValidationError("MetaDrive finalization requires a bound token registry")
+            raise ValidationError(
+                "MetaDrive finalization requires a bound token registry"
+            )
         return finalize_metadrive_ego_artifact(
             raw_bytes, token_registry, token_registry_sha256
         )
     raise ValidationError("generation platform is invalid")
 
 
-def _final_artifact_name(platform: str) -> str:
+def _final_artifact_name(platform: str, artifact_type=None) -> str:
     if platform == "carla":
-        return "artifact.final.scenic"
+        return "artifact.final.json" if artifact_type=="carla_native_scene_v0.1" else "artifact.final.scenic"
     if platform == "metadrive":
         return "artifact.final.json"
     raise ValidationError("generation platform is invalid")
@@ -1441,6 +1467,7 @@ class GenerationRunner:
         adapter: Optional[MethodAdapter] = None,
         development: bool = False,
         resume: bool = False,
+        retain_workspaces: bool = False,
     ) -> None:
         library_path = Path(library_path)
         if _path_has_symlink_component(library_path) or not library_path.is_file():
@@ -1455,6 +1482,9 @@ class GenerationRunner:
         validate_schema_instance(config, "method_config", context="generation method config")
         _validate_method_config(config, self.roster)
         self.development = bool(development)
+        if retain_workspaces and not self.development:raise ValidationError("workspace retention is a development diagnostic option")
+        self.retain_workspaces=bool(retain_workspaces)
+        self.retained_workspaces=[]
         if self.roster.get("decision_status") not in ("draft", "confirmed"):
             raise ValidationError("generation roster decision_status is invalid")
         if not self.development:
@@ -1774,6 +1804,7 @@ class GenerationRunner:
                     raw_artifact_bytes,
                     self.token_registry,
                     self.token_registry_sha256,
+                    self.method_config["finalization"].get("artifact_type"),
                 )
                 if (
                     recomputed.final_bytes != _descriptor_bytes(artifact, final_directory)
@@ -1847,7 +1878,8 @@ class GenerationRunner:
             response, evidence = self._build_response(
                 job, outcome, staging_directory, final_directory, workdir
             )
-            _remove_workspace(workspace_root)
+            if self.retain_workspaces:self.retained_workspaces.append(str(workspace_root))
+            else:_remove_workspace(workspace_root)
             write_json(staging_directory / "generation_evidence.json", evidence)
             write_json(staging_directory / "response.json", response)
             _fsync_directory(staging_directory)
@@ -1867,7 +1899,8 @@ class GenerationRunner:
             _fsync_directory(runs)
             return response
         except Exception:
-            _remove_workspace(workspace_root)
+            if self.retain_workspaces:self.retained_workspaces.append(str(workspace_root))
+            else:_remove_workspace(workspace_root)
             if staging_directory.exists():
                 shutil.rmtree(str(staging_directory), ignore_errors=True)
             raise
@@ -1967,11 +2000,12 @@ class GenerationRunner:
                     raw_bytes,
                     self.token_registry,
                     self.token_registry_sha256,
+                    self.method_config["finalization"].get("artifact_type"),
                 )
                 final_artifact = _write_blob(
                     staging_directory,
                     final_directory,
-                    _final_artifact_name(job.platform),
+                    _final_artifact_name(job.platform,self.method_config["finalization"].get("artifact_type")),
                     finalized.final_bytes,
                 )
                 diff = _write_blob(

@@ -267,6 +267,12 @@ def _verify_request(request):
         ):
             raise ValueError("CARLA runtime request lacks the frozen loopback endpoint")
         _verify_carla_server_request(request)
+        if "native_carla_files" in request:
+            import carla
+            from carla import libcarla
+            files=[_verify_file_binding(b,"native CARLA wheel") for b in request["native_carla_files"]]
+            if Path(carla.__file__).resolve() not in files or Path(libcarla.__file__).resolve() not in files:
+                raise ValueError("executing native CARLA package differs from registered files")
         map_context = request.get("carla_map_context")
         if (
             not isinstance(map_context, dict)
@@ -555,10 +561,131 @@ def _carla_sv(path, seed, max_iterations, request):
     }
 
 
+def fixed_carla_controls(actor, parameters):
+    import carla
+
+    integral = 0.0
+    previous_error = 0.0
+    previous_steer = 0.0
+    previous_acceleration = 0.0
+    dt = float(parameters["dt_seconds"])
+    while True:
+        transform = actor.get_transform()
+        location = transform.location
+        velocity = actor.get_velocity()
+        speed = math.sqrt(velocity.x**2 + velocity.y**2 + velocity.z**2)
+        world = actor.get_world()
+        road_map = world.get_map()
+        waypoint = road_map.get_waypoint(
+            location,
+            project_to_road=True,
+            lane_type=carla.LaneType.Driving,
+        )
+        if waypoint is None:
+            yield {"throttle": 0.0, "brake": 1.0, "steering": 0.0}
+            continue
+        candidates = waypoint.next(max(2.0, speed * parameters["lookahead_seconds"]))
+        target = (
+            candidates[0].transform.location
+            if candidates
+            else waypoint.transform.location
+        )
+        forward = transform.get_forward_vector()
+        target_x = target.x - location.x
+        target_y = target.y - location.y
+        target_norm = max(math.hypot(target_x, target_y), 1e-9)
+        heading_error = math.atan2(
+            forward.x * target_y - forward.y * target_x,
+            forward.x * target_x + forward.y * target_y,
+        )
+        integral += heading_error * dt
+        derivative = (heading_error - previous_error) / dt
+        raw_steer = (
+            parameters["lateral_kp"] * heading_error
+            + parameters["lateral_ki"] * integral
+            + parameters["lateral_kd"] * derivative
+        )
+        steer = max(-1.0, min(1.0, raw_steer))
+        max_steer_step = (
+            parameters["max_front_wheel_rate_rad_s"]
+            / parameters["max_front_wheel_angle_rad"]
+            * dt
+        )
+        steer = max(
+            previous_steer - max_steer_step,
+            min(previous_steer + max_steer_step, steer),
+        )
+        previous_error = heading_error
+        previous_steer = steer
+
+        nearest = None
+        nearest_distance = float("inf")
+        right = transform.get_right_vector()
+        for other in world.get_actors().filter("vehicle.*"):
+            if other.id == actor.id:
+                continue
+            delta = other.get_location() - location
+            longitudinal = delta.x * forward.x + delta.y * forward.y
+            lateral = abs(delta.x * right.x + delta.y * right.y)
+            if (
+                0 < longitudinal < nearest_distance
+                and lateral <= parameters["lane_half_width_m"]
+            ):
+                nearest = other
+                nearest_distance = longitudinal
+
+        target_speed = parameters["target_speed_m_s"]
+        acceleration = parameters["max_acceleration_m_s2"] * (
+            1.0 - (max(speed, 0.0) / max(target_speed, 1e-6)) ** parameters["idm_delta"]
+        )
+        if nearest is not None:
+            other_velocity = nearest.get_velocity()
+            other_speed = other_velocity.x * forward.x + other_velocity.y * forward.y
+            closing_speed = speed - other_speed
+            desired_gap = parameters["minimum_gap_m"] + max(
+                0.0,
+                speed * parameters["time_headway_seconds"]
+                + speed
+                * closing_speed
+                / (
+                    2.0
+                    * math.sqrt(
+                        parameters["max_acceleration_m_s2"]
+                        * parameters["comfortable_deceleration_m_s2"]
+                    )
+                ),
+            )
+            acceleration -= (
+                parameters["max_acceleration_m_s2"]
+                * (desired_gap / max(nearest_distance, 0.1)) ** 2
+            )
+        acceleration = max(
+            -parameters["max_deceleration_m_s2"],
+            min(parameters["max_acceleration_m_s2"], acceleration),
+        )
+        jerk_step = parameters["max_longitudinal_jerk_m_s3"] * dt
+        acceleration = max(
+            previous_acceleration - jerk_step,
+            min(previous_acceleration + jerk_step, acceleration),
+        )
+        previous_acceleration = acceleration
+        throttle = max(acceleration, 0.0) / parameters["max_acceleration_m_s2"]
+        brake = max(-acceleration, 0.0) / parameters["max_deceleration_m_s2"]
+        yield {
+            "throttle": float(max(0.0, min(1.0, throttle))),
+            "brake": float(max(0.0, min(1.0, brake))),
+            "steering": float(steer),
+        }
+
+
 def _carla_controller_classes(parameters):
     import carla
     from scenic.core.dynamics import Behavior
-    from scenic.domains.driving.actions import SetBrakeAction, SetSteerAction, SetThrottleAction
+    from scenic.domains.driving.actions import (
+        SetBrakeAction,
+        SetSteerAction,
+        SetThrottleAction,
+    )
 
     class FixedIDMPIDBehavior(Behavior):
         """Query-blind lane follower with IDM longitudinal control and PID steering."""
@@ -574,110 +701,11 @@ def _carla_controller_classes(parameters):
             pass
 
         def makeGenerator(self, agent):
-            integral = 0.0
-            previous_error = 0.0
-            previous_steer = 0.0
-            previous_acceleration = 0.0
-            dt = float(parameters["dt_seconds"])
-            while True:
-                actor = agent.carlaActor
-                transform = actor.get_transform()
-                location = transform.location
-                velocity = actor.get_velocity()
-                speed = math.sqrt(velocity.x ** 2 + velocity.y ** 2 + velocity.z ** 2)
-                world = actor.get_world()
-                road_map = world.get_map()
-                waypoint = road_map.get_waypoint(
-                    location,
-                    project_to_road=True,
-                    lane_type=carla.LaneType.Driving,
-                )
-                if waypoint is None:
-                    yield (SetThrottleAction(0.0), SetBrakeAction(1.0), SetSteerAction(0.0))
-                    continue
-                candidates = waypoint.next(max(2.0, speed * parameters["lookahead_seconds"]))
-                target = candidates[0].transform.location if candidates else waypoint.transform.location
-                forward = transform.get_forward_vector()
-                target_x = target.x - location.x
-                target_y = target.y - location.y
-                target_norm = max(math.hypot(target_x, target_y), 1e-9)
-                heading_error = math.atan2(
-                    forward.x * target_y - forward.y * target_x,
-                    forward.x * target_x + forward.y * target_y,
-                )
-                integral += heading_error * dt
-                derivative = (heading_error - previous_error) / dt
-                raw_steer = (
-                    parameters["lateral_kp"] * heading_error
-                    + parameters["lateral_ki"] * integral
-                    + parameters["lateral_kd"] * derivative
-                )
-                steer = max(-1.0, min(1.0, raw_steer))
-                max_steer_step = (
-                    parameters["max_front_wheel_rate_rad_s"]
-                    / parameters["max_front_wheel_angle_rad"]
-                    * dt
-                )
-                steer = max(
-                    previous_steer - max_steer_step,
-                    min(previous_steer + max_steer_step, steer),
-                )
-                previous_error = heading_error
-                previous_steer = steer
-
-                nearest = None
-                nearest_distance = float("inf")
-                right = transform.get_right_vector()
-                for other in world.get_actors().filter("vehicle.*"):
-                    if other.id == actor.id:
-                        continue
-                    delta = other.get_location() - location
-                    longitudinal = delta.x * forward.x + delta.y * forward.y
-                    lateral = abs(delta.x * right.x + delta.y * right.y)
-                    if 0 < longitudinal < nearest_distance and lateral <= parameters["lane_half_width_m"]:
-                        nearest = other
-                        nearest_distance = longitudinal
-
-                target_speed = parameters["target_speed_m_s"]
-                acceleration = parameters["max_acceleration_m_s2"] * (
-                    1.0 - (max(speed, 0.0) / max(target_speed, 1e-6)) ** parameters["idm_delta"]
-                )
-                if nearest is not None:
-                    other_velocity = nearest.get_velocity()
-                    other_speed = other_velocity.x * forward.x + other_velocity.y * forward.y
-                    closing_speed = speed - other_speed
-                    desired_gap = parameters["minimum_gap_m"] + max(
-                        0.0,
-                        speed * parameters["time_headway_seconds"]
-                        + speed
-                        * closing_speed
-                        / (
-                            2.0
-                            * math.sqrt(
-                                parameters["max_acceleration_m_s2"]
-                                * parameters["comfortable_deceleration_m_s2"]
-                            )
-                        ),
-                    )
-                    acceleration -= parameters["max_acceleration_m_s2"] * (
-                        desired_gap / max(nearest_distance, 0.1)
-                    ) ** 2
-                acceleration = max(
-                    -parameters["max_deceleration_m_s2"],
-                    min(parameters["max_acceleration_m_s2"], acceleration),
-                )
-                jerk_step = parameters["max_longitudinal_jerk_m_s3"] * dt
-                acceleration = max(
-                    previous_acceleration - jerk_step,
-                    min(previous_acceleration + jerk_step, acceleration),
-                )
-                previous_acceleration = acceleration
-                throttle = max(acceleration, 0.0) / parameters["max_acceleration_m_s2"]
-                brake = max(-acceleration, 0.0) / parameters["max_deceleration_m_s2"]
+            for action in fixed_carla_controls(agent.carlaActor, parameters):
                 yield (
-                    SetThrottleAction(float(max(0.0, min(1.0, throttle)))),
-                    SetBrakeAction(float(max(0.0, min(1.0, brake)))),
-                    SetSteerAction(float(steer)),
+                    SetThrottleAction(action["throttle"]),
+                    SetBrakeAction(action["brake"]),
+                    SetSteerAction(action["steering"]),
                 )
 
     return FixedIDMPIDBehavior
@@ -1290,6 +1318,22 @@ def execute(request):
     platform = request["platform"]
     mode = request["mode"]
     if platform == "carla":
+        if path.suffix == ".json":
+            if __package__:
+                from . import carla_native_worker as native
+            else:
+                import carla_native_worker as native
+            if mode == "compile":
+                return native.compile(path, request)
+            if mode == "sv":
+                return native.sv(path, request, (_oriented_box_corners, _boxes_overlap))
+            return native.ne(
+                path,
+                request,
+                fixed_carla_controls,
+                _carla_runtime_map_evidence,
+                _write_trace,
+            )
         if mode == "compile":
             return _carla_compile(path, request)[1]
         if mode == "sv":

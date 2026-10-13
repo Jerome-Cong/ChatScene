@@ -45,6 +45,7 @@
     "runtime_dependencies": {
       "oneOf": [
         {"$ref": "#/definitions/carlaRuntimeDependencies"},
+        {"$ref": "#/definitions/carlaWheelRuntimeDependencies"},
         {"$ref": "#/definitions/metadriveRuntimeDependencies"}
       ]
     },
@@ -140,6 +141,47 @@
         "tracked_file_count": {"type": "integer", "minimum": 1},
         "tracked_bytes": {"type": "integer", "minimum": 1},
         "policy": {"const": "git_tracked_worktree_bytes_v0.1"}
+      },
+      "additionalProperties": false
+    },
+    "carlaWheelRuntimeDependencies": {
+      "type": "object",
+      "required": [
+        "environment_manifest",
+        "python_path_entries",
+        "source_trees",
+        "map_catalog",
+        "native_carla_files"
+      ],
+      "properties": {
+        "environment_manifest": {
+          "$ref": "#/definitions/fileBinding"
+        },
+        "python_path_entries": {
+          "const": []
+        },
+        "source_trees": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "$ref": "#/definitions/treeBinding"
+          }
+        },
+        "map_catalog": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/fileBinding"
+          }
+        },
+        "native_carla_files": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/definitions/fileBinding"
+          }
+        }
       },
       "additionalProperties": false
     },

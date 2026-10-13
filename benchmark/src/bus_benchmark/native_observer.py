@@ -62,6 +62,12 @@ def _json_native(value):
 
 
 def _carla_observation(text):
+    if text.lstrip().startswith("{"):
+        if __package__:
+            from . import carla_native
+        else:
+            import carla_native
+        return carla_native.observe(carla_native.parse(text))
     from scenic.syntax.translator import scenarioFromString
 
     scenario = scenarioFromString(text)

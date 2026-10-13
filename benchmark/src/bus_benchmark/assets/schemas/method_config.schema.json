@@ -221,7 +221,8 @@
         "policy_id": {"const": "carla_ego_proxy_v0.1"},
         "ego_blueprint": {"const": "vehicle.chevrolet.impala"},
         "ego_length_m": {"const": 5.33},
-        "ego_width_m": {"const": 2.1}
+        "ego_width_m": {"const": 2.1},
+        "artifact_type": {"const": "carla_native_scene_v0.1"}
       },
       "additionalProperties": false
     },

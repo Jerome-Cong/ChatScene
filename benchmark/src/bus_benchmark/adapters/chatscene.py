@@ -417,6 +417,13 @@ def _run_process(
         )
     stdout = bytes(captured["stdout"])
     stderr = bytes(captured["stderr"])
+    credential = environment.get("OPENAI_API_KEY")
+    if credential and (credential.encode() in stdout or credential.encode() in stderr):
+        return AdapterOutcome(
+            b"", b"Credential-containing process output was suppressed.\n",
+            process.returncode, timed_out,
+            error="method process leaked a credential; output suppressed",
+        )
     if timed_out:
         return AdapterOutcome(
             stdout,

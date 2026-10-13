@@ -422,7 +422,7 @@ class GenerationTests(unittest.TestCase):
                 final_text = Path(response["artifact"]["path"]).read_text(encoding="utf-8")
                 self.assertIn('EGO_MODEL = "vehicle.chevrolet.impala"', final_text)
                 self.assertIn("with length 5.33,", final_text)
-                self.assertIn("with width 2.10,", final_text)
+                self.assertIn("with width 2.10\nother", final_text)
                 evidence = self._evidence(response)
                 self.assertNotEqual(
                     evidence["raw_artifact"]["sha256"], response["artifact"]["sha256"]
@@ -542,6 +542,28 @@ class GenerationTests(unittest.TestCase):
                 self.assertNotIn("unsupported_handling", response)
                 self.assertTrue(Path(response["raw_method_response"]["stdout"]["path"]).is_file())
                 self.assertTrue(Path(response["raw_method_response"]["stderr"]["path"]).is_file())
+
+    def test_invalid_native_artifact_is_recorded_without_interrupting_grid(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            _, library, roster = self._inputs(root)
+            method, config = self._config(root)
+            method['finalization']['artifact_type'] = 'carla_native_scene_v0.1'
+            write_json(config, method)
+            class InvalidNativeAdapter:
+                calls = 0
+                def generate(self, query_text, workdir):
+                    workdir.mkdir(parents=True)
+                    artifact = workdir / 'capture.json'
+                    artifact.write_text('{}' if self.calls % 2 == 0 else '['*2000+'0'+']'*2000)
+                    self.calls += 1
+                    return AdapterOutcome(b'', b'', 0, False, artifact_path=artifact, disposition='generate')
+            responses = run_generation(library, roster, config, root/'output', adapter=InvalidNativeAdapter(), development=True)
+            self.assertEqual(len(responses), 5)
+            for response in responses:
+                self.assertEqual(response['terminal_status'], 'failed')
+                self.assertIsNone(response['artifact'])
+                self.assertEqual(self._evidence(response)['finalization']['status'], 'failed')
 
     def test_timeout_is_recorded_without_retry(self):
         with tempfile.TemporaryDirectory() as directory:

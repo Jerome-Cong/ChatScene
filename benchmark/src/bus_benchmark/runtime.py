@@ -743,6 +743,40 @@ def _validate_runtime_environment_manifest(
     return normalized
 
 
+def _validate_native_carla_files(bindings, environment_manifest, python_entries):
+    """Check the complete installed wheel, without adding a dummy import path."""
+    if python_entries:
+        raise ValidationError(
+            "native wheel and explicit Python path entries cannot be mixed"
+        )
+    native_files = [_exact_file_binding(b, "native CARLA wheel file") for b in bindings]
+    paths = [Path(b["path"]) for b in native_files]
+    if (
+        not paths
+        or len({p.parent for p in paths}) != 1
+        or paths[0].parent.name != "carla"
+    ):
+        raise ValidationError("native CARLA package roots differ")
+    package = paths[0].parent
+    environment_root = Path(
+        read_json(Path(environment_manifest["path"]))["python_environment_root"]
+    )
+    if environment_root not in package.parents:
+        raise ValidationError("native CARLA package escapes its environment")
+    expected = sorted(
+        p.resolve()
+        for p in package.iterdir()
+        if p.is_file() and p.suffix not in (".pyc", ".pyo")
+    )
+    if (
+        paths != expected
+        or not any(p.name == "__init__.py" for p in paths)
+        or not any(p.name.startswith("libcarla") and p.suffix == ".so" for p in paths)
+    ):
+        raise ValidationError("native CARLA package binding is incomplete")
+    return native_files
+
+
 def _validate_carla_runtime_dependencies(
     document: Any,
     worker: Mapping[str, Any],
@@ -764,7 +798,7 @@ def _validate_carla_runtime_dependencies(
             "map_catalog": [],
             "verification_status": "draft_unverified",
         }
-    if not isinstance(document, Mapping) or set(document) != required:
+    if not isinstance(document, Mapping) or set(document)-{"native_carla_files"} != required:
         raise ValidationError("CARLA runtime dependencies are incomplete or unknown")
     interpreter = Path(str(worker.get("interpreter", ""))).resolve()
     environment_manifest = _validate_runtime_environment_manifest(
@@ -789,6 +823,12 @@ def _validate_carla_runtime_dependencies(
     if sorted(bound_environment_paths) != sorted(python_paths):
         raise ValidationError(
             "CARLA content-bearing runtime environment paths are not bound exactly"
+        )
+
+    native_files = None
+    if "native_carla_files" in document:
+        native_files = _validate_native_carla_files(
+            document["native_carla_files"], environment_manifest, python_entries
         )
 
     trees = [
@@ -857,7 +897,7 @@ def _validate_carla_runtime_dependencies(
         except ValueError as exc:
             raise ValidationError("CARLA runtime imported Scenic outside its bound tree") from exc
         carla_source = str(imported.get("carla", ""))
-        if not any(carla_source.startswith(path + os.sep) for path in python_paths):
+        if not (carla_source in {b["path"] for b in native_files} if native_files is not None else any(carla_source.startswith(path + os.sep) for path in python_paths)):
             raise ValidationError("CARLA runtime imported CARLA outside its bound PYTHONPATH entry")
 
     return {
@@ -866,6 +906,7 @@ def _validate_carla_runtime_dependencies(
         "source_trees": trees,
         "map_catalog": catalog,
         "verification_status": "formal_verified" if formal else "draft_bound",
+        **({"native_carla_files": native_files} if native_files is not None else {}),
     }
 
 
@@ -892,6 +933,7 @@ def _revalidate_normalized_carla_runtime_dependencies(
             "map_catalog",
         )
     }
+    if "native_carla_files" in dependencies:raw["native_carla_files"]=dependencies["native_carla_files"]
     source_trees = raw.get("source_trees")
     if not isinstance(source_trees, list):
         raise ValidationError("CARLA runtime source-tree bindings are unavailable")
@@ -972,6 +1014,47 @@ def _declared_carla_map_stem(artifact_path: Path) -> str:
     ):
         raise ValidationError("CARLA artifact requires one supported literal Town declaration")
     return values[0]
+
+
+def _prepare_carla_capture_input(artifact_path, attempt, dependencies):
+    from .carla_native import parse
+
+    doc = parse(artifact_path.read_bytes())
+    town = doc["map"]["name"]
+    frozen = next(
+        (
+            b
+            for b in dependencies["map_catalog"]
+            if Path(b["path"]).name == town + ".xodr"
+        ),
+        None,
+    )
+    if frozen is None or frozen["sha256"] != doc["map"]["sha256"]:
+        raise ValidationError("native capture map is outside frozen catalog")
+    source = Path(frozen["path"])
+    if source.read_text() != doc["map"]["opendrive"]:
+        raise ValidationError("native capture map content differs from frozen catalog")
+    stage_dir = attempt / "native-input"
+    scene_dir = stage_dir / "dynamic_scenario"
+    map_dir = stage_dir / "maps"
+    scene_dir.mkdir(parents=True)
+    map_dir.mkdir()
+    staged = scene_dir / "finalized_artifact.json"
+    staged.write_bytes(artifact_path.read_bytes())
+    road = map_dir / source.name
+    road.write_bytes(source.read_bytes())
+    bind = lambda p: {
+        "path": str(p.resolve()),
+        "sha256": sha256_file(p),
+        "bytes": p.stat().st_size,
+    }
+    return staged, {
+        "declared_town": town,
+        "source_artifact": bind(artifact_path),
+        "staged_artifact": bind(staged),
+        "source_catalog": [bind(source)],
+        "staged_catalog": [bind(road)],
+    }
 
 
 def _prepare_carla_native_input(
@@ -1621,6 +1704,7 @@ def execute_runtime_record(
                 dict(binding) for binding in dependencies.get("map_catalog", [])
             ],
             "verification_status": dependencies.get("verification_status"),
+            **({"native_carla_files":dependencies["native_carla_files"]} if "native_carla_files" in dependencies else {}),
         }
         _revalidate_normalized_carla_runtime_dependencies(
             normalized_worker_config
@@ -1738,11 +1822,12 @@ def execute_runtime_record(
         native_artifact_path = artifact_path
         carla_map_context = None
         if platform == "carla":
-            native_artifact_path, carla_map_context = _prepare_carla_native_input(
-                artifact_path,
-                attempt,
-                normalized_worker_config["runtime_dependencies"],
-            )
+            if artifact_path.suffix == ".json":
+                native_artifact_path, carla_map_context = _prepare_carla_capture_input(artifact_path, attempt, normalized_worker_config["runtime_dependencies"])
+            else:
+                native_artifact_path, carla_map_context = _prepare_carla_native_input(
+                    artifact_path, attempt, normalized_worker_config["runtime_dependencies"])
+
         base_request = {
             "schema_version": SCHEMA_VERSION,
             "platform": platform,
@@ -1768,6 +1853,8 @@ def execute_runtime_record(
             },
         }
         if platform == "carla":
+            if "native_carla_files" in normalized_worker_config["runtime_dependencies"]:
+                base_request["native_carla_files"] = normalized_worker_config["runtime_dependencies"]["native_carla_files"]
             base_request["carla_endpoint"] = dict(
                 normalized_worker_config["platform_context"]["carla_endpoint"]
             )
@@ -2418,7 +2505,7 @@ def validate_runtime_record_consistency(
         ):
             raise ValidationError("CARLA runtime platform binding changed")
         dependencies = worker_config["runtime_dependencies"]
-        if not isinstance(dependencies, Mapping) or set(dependencies) != {
+        if not isinstance(dependencies, Mapping) or set(dependencies)-{"native_carla_files"} != {
             "environment_manifest",
             "python_path_entries",
             "source_trees",
@@ -2431,7 +2518,7 @@ def validate_runtime_record_consistency(
             "formal_verified",
         }:
             raise ValidationError("CARLA runtime dependency verification is unavailable")
-        _validate_runtime_environment_manifest(
+        environment_manifest = _validate_runtime_environment_manifest(
             dependencies.get("environment_manifest"),
             interpreter_path,
             formal=False,
@@ -2440,6 +2527,10 @@ def validate_runtime_record_consistency(
             _exact_file_binding(binding, "recorded CARLA PYTHONPATH entry")
             for binding in dependencies.get("python_path_entries", [])
         ]
+        if "native_carla_files" in dependencies:
+            _validate_native_carla_files(
+                dependencies["native_carla_files"], environment_manifest, python_entries
+            )
         environment_paths = [
             str(Path(part).resolve())
             for key in sorted(_CONTENT_BEARING_ENVIRONMENT_KEYS)
@@ -2587,6 +2678,8 @@ def validate_runtime_record_consistency(
         common_request_keys.update(
             {"carla_endpoint", "carla_server_binary", "carla_map_context"}
         )
+        if "native_carla_files" in worker_config["runtime_dependencies"]:
+            common_request_keys.add("native_carla_files")
     else:
         common_request_keys.update(
             {"metadrive_token_registry", "metadrive_runtime_context"}
@@ -2639,6 +2732,8 @@ def validate_runtime_record_consistency(
         if request.get("runtime_environment") != expected_runtime_environment:
             return False
         if record["platform"] == "carla":
+            if request.get("native_carla_files") != worker_config["runtime_dependencies"].get("native_carla_files"):
+                return False
             map_context = request.get("carla_map_context")
             if (
                 request.get("carla_endpoint") != platform_context["carla_endpoint"]
