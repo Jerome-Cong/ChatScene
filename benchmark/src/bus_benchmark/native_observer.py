@@ -61,26 +61,42 @@ def _json_native(value):
     )
 
 
-def _carla_observation(text):
+def _carla_observation(text, map_path=None, scenic_2d=False):
     if text.lstrip().startswith("{"):
         if __package__:
             from . import carla_native
         else:
             import carla_native
+        if json.loads(text).get("artifact_type") == "carla_xosc_bundle_v0.1":
+            if __package__:
+                from . import carla_xosc
+            else:
+                import carla_xosc
+            return carla_xosc.observe(carla_xosc.parse(text.encode("utf-8")))
         return carla_native.observe(carla_native.parse(text))
     from scenic.syntax.translator import scenarioFromString
 
-    scenario = scenarioFromString(text)
+    params = {"map": str(map_path)} if map_path is not None else {}
+    if scenic_2d:
+        import random
+        import numpy as np
+        random.seed(0)
+        np.random.seed(0)
+        params.update(use2DMap=True, render=0)
+        compiled = scenarioFromString(text, params=params, mode2D=True)
+        scenario, _ = compiled.generate(maxIterations=2000)
+    else:
+        scenario = scenarioFromString(text, params=params) if params else scenarioFromString(text)
     objects = []
     for index, actor in enumerate(scenario.objects):
         behavior = getattr(actor, "behavior", None)
         trajectory = []
-        if behavior is not None:
+        if behavior is not None and not scenic_2d:
             args = getattr(behavior, "_args", ())
             if args and isinstance(args[0], (list, tuple)):
                 trajectory = [_xy(point) for point in args[0]]
         initial = _xy(actor.position)
-        if not trajectory:
+        if scenic_2d or not trajectory:
             trajectory = [initial]
         blueprint = getattr(actor, "blueprint", "")
         if not isinstance(blueprint, str):
@@ -96,6 +112,7 @@ def _carla_observation(text):
                 "length_m": float(getattr(actor, "length", 0.0)),
                 "width_m": float(getattr(actor, "width", 0.0)),
                 "blueprint": blueprint,
+                **({"motion_observed": False} if scenic_2d else {}),
             }
         )
     return {"platform": "carla", "objects": objects}
@@ -267,9 +284,9 @@ def _metadrive_runtime_probe(text, token_registry_path):
             environment.close()
 
 
-def observe(platform, text, token_registry_path=None):
+def observe(platform, text, token_registry_path=None, map_path=None, scenic_2d=False):
     if platform == "carla":
-        return _carla_observation(text)
+        return _carla_observation(text, map_path, scenic_2d)
     if platform == "metadrive":
         if not token_registry_path:
             raise ValueError("MetaDrive observation requires --token-registry")
@@ -282,6 +299,8 @@ def main(argv=None):
     parser.add_argument("platform", choices=("carla", "metadrive"))
     parser.add_argument("--runtime-probe", action="store_true")
     parser.add_argument("--token-registry")
+    parser.add_argument("--map-path")
+    parser.add_argument("--scenic-2d", action="store_true")
     args = parser.parse_args(argv)
     text = sys.stdin.read()
     if args.runtime_probe:
@@ -294,7 +313,10 @@ def main(argv=None):
     else:
         if args.platform == "carla" and args.token_registry:
             parser.error("CARLA observation cannot receive --token-registry")
-        result = observe(args.platform, text, args.token_registry)
+        if args.platform != "carla" and (args.map_path or args.scenic_2d):
+            parser.error("Scenic observation options require CARLA")
+        with contextlib.redirect_stdout(sys.stderr):
+            result = observe(args.platform, text, args.token_registry, args.map_path, args.scenic_2d)
     sys.stdout.write(json.dumps(result, sort_keys=True, separators=(",", ":")))
 
 

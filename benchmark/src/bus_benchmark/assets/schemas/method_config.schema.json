@@ -113,6 +113,8 @@
           "CUDA_VISIBLE_DEVICES",
           "OPENAI_API_KEY",
           "OPENAI_BASE_URL",
+          "EMBEDDING_API_KEY",
+          "EMBEDDING_BASE_URL",
           "HTTP_PROXY",
           "HTTPS_PROXY",
           "NO_PROXY"
@@ -222,7 +224,7 @@
         "ego_blueprint": {"const": "vehicle.chevrolet.impala"},
         "ego_length_m": {"const": 5.33},
         "ego_width_m": {"const": 2.1},
-        "artifact_type": {"const": "carla_native_scene_v0.1"}
+        "artifact_type": {"enum": ["carla_native_scene_v0.1", "carla_scenic3_v0.1", "carla_xosc_bundle_v0.1"]}
       },
       "additionalProperties": false
     },

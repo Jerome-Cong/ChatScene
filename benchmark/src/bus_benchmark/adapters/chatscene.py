@@ -41,6 +41,8 @@ _ALLOWED_ENVIRONMENT = frozenset(
         *_DEFAULT_ENVIRONMENT,
         "OPENAI_API_KEY",
         "OPENAI_BASE_URL",
+        "EMBEDDING_API_KEY",
+        "EMBEDDING_BASE_URL",
         "HTTP_PROXY",
         "HTTPS_PROXY",
         "NO_PROXY",
@@ -409,16 +411,16 @@ def _run_process(
         reader.join(timeout=2.0)
     if any(reader.is_alive() for reader in readers):
         return AdapterOutcome(
-            bytes(captured["stdout"]),
-            bytes(captured["stderr"]),
+            b"",
+            b"Unclosed method streams were suppressed.\n",
             process.returncode,
             False,
             error="method process streams did not close after group termination",
         )
     stdout = bytes(captured["stdout"])
     stderr = bytes(captured["stderr"])
-    credential = environment.get("OPENAI_API_KEY")
-    if credential and (credential.encode() in stdout or credential.encode() in stderr):
+    credentials = [value.encode("utf-8") for name, value in environment.items() if name.endswith("_API_KEY") and value]
+    if any(credential in stdout or credential in stderr for credential in credentials):
         return AdapterOutcome(
             b"", b"Credential-containing process output was suppressed.\n",
             process.returncode, timed_out,

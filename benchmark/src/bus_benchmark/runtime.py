@@ -80,7 +80,14 @@ _CONTENT_BEARING_ENVIRONMENT_KEYS = {
 _CARLA_RUNTIME_TREE_ROLES = {
     "carla_server_distribution",
     "scenic_editable_source",
+    "openscenario_source",
 }
+
+
+def _valid_carla_source_roles(roles):
+    return roles in ({"carla_server_distribution", "scenic_editable_source"},
+                     {"carla_server_distribution", "openscenario_source"})
+
 
 _RUNTIME_TREE_POLICY = "exclude_python_cache_v0.1"
 
@@ -798,7 +805,7 @@ def _validate_carla_runtime_dependencies(
             "map_catalog": [],
             "verification_status": "draft_unverified",
         }
-    if not isinstance(document, Mapping) or set(document)-{"native_carla_files"} != required:
+    if not isinstance(document, Mapping) or set(document)-{"native_carla_files", "scenic_compile_options"} != required:
         raise ValidationError("CARLA runtime dependencies are incomplete or unknown")
     interpreter = Path(str(worker.get("interpreter", ""))).resolve()
     environment_manifest = _validate_runtime_environment_manifest(
@@ -840,8 +847,11 @@ def _validate_carla_runtime_dependencies(
         for binding in document.get("source_trees", [])
     ]
     tree_by_role = {binding["role"]: binding for binding in trees}
-    if set(tree_by_role) != _CARLA_RUNTIME_TREE_ROLES or len(trees) != len(tree_by_role):
-        raise ValidationError("CARLA runtime must bind Scenic and server trees exactly once")
+    if not _valid_carla_source_roles(set(tree_by_role)) or len(trees) != len(tree_by_role):
+        raise ValidationError("CARLA runtime must bind one native backend and the server tree exactly once")
+    compile_options = document.get("scenic_compile_options")
+    if compile_options is not None and (compile_options != {"mode_2d": True, "use_2d_map": True} or "scenic_editable_source" not in tree_by_role):
+        raise ValidationError("Scenic compile options require the explicit Scenic 3 2D profile")
     normalized_server = _validate_carla_server_binary(server_binary)
     server_path = Path(normalized_server["path"])
     server_root = Path(tree_by_role["carla_server_distribution"]["path"])
@@ -873,10 +883,14 @@ def _validate_carla_runtime_dependencies(
         raise ValidationError("CARLA map cache lacks its bound OpenDRIVE source")
 
     if formal:
-        probe_code = (
-            "import carla,json,scenic;"
-            "print(json.dumps({'carla':carla.__file__,'scenic':scenic.__file__},sort_keys=True))"
-        )
+        if "openscenario_source" in tree_by_role:
+            runner = tree_by_role["openscenario_source"]["path"]
+            agent_root = str(server_root / "PythonAPI/carla")
+            probe_code = "import sys;sys.path[:0]=" + repr([runner, agent_root]) + ";import carla,json,srunner;print(json.dumps({'carla':carla.__file__,'backend':srunner.__file__},sort_keys=True))"
+            backend_role = "openscenario_source"
+        else:
+            probe_code = "import carla,json,scenic;print(json.dumps({'carla':carla.__file__,'backend':scenic.__file__},sort_keys=True))"
+            backend_role = "scenic_editable_source"
         try:
             process = subprocess.run(
                 [str(interpreter), "-c", probe_code],
@@ -891,11 +905,11 @@ def _validate_carla_runtime_dependencies(
         if process.returncode != 0:
             raise ValidationError("CARLA runtime cannot import its bound Scenic/CARLA modules")
         imported = strict_json_object_bytes(process.stdout, "CARLA runtime import probe")
-        scenic_path = Path(str(imported.get("scenic", ""))).resolve()
+        scenic_path = Path(str(imported.get("backend", ""))).resolve()
         try:
-            scenic_path.relative_to(Path(tree_by_role["scenic_editable_source"]["path"]))
+            scenic_path.relative_to(Path(tree_by_role[backend_role]["path"]))
         except ValueError as exc:
-            raise ValidationError("CARLA runtime imported Scenic outside its bound tree") from exc
+            raise ValidationError("CARLA runtime imported its native backend outside the bound tree") from exc
         carla_source = str(imported.get("carla", ""))
         if not (carla_source in {b["path"] for b in native_files} if native_files is not None else any(carla_source.startswith(path + os.sep) for path in python_paths)):
             raise ValidationError("CARLA runtime imported CARLA outside its bound PYTHONPATH entry")
@@ -907,6 +921,7 @@ def _validate_carla_runtime_dependencies(
         "map_catalog": catalog,
         "verification_status": "formal_verified" if formal else "draft_bound",
         **({"native_carla_files": native_files} if native_files is not None else {}),
+        **({"scenic_compile_options": dict(compile_options)} if compile_options is not None else {}),
     }
 
 
@@ -934,6 +949,7 @@ def _revalidate_normalized_carla_runtime_dependencies(
         )
     }
     if "native_carla_files" in dependencies:raw["native_carla_files"]=dependencies["native_carla_files"]
+    if "scenic_compile_options" in dependencies:raw["scenic_compile_options"]=dependencies["scenic_compile_options"]
     source_trees = raw.get("source_trees")
     if not isinstance(source_trees, list):
         raise ValidationError("CARLA runtime source-tree bindings are unavailable")
@@ -970,57 +986,24 @@ def _artifact_descriptor(path: Path) -> Dict[str, Any]:
 
 
 def _declared_carla_map_stem(artifact_path: Path) -> str:
+    from .scenic_map_declaration import map_declaration
     try:
-        text = Path(artifact_path).read_text(encoding="utf-8")
-        tokens = list(tokenize.generate_tokens(io.StringIO(text).readline))
-    except (OSError, UnicodeError, tokenize.TokenError) as exc:
-        raise ValidationError("CARLA artifact map declaration is unreadable") from exc
-    values = []
-    significant = [
-        token
-        for token in tokens
-        if token.type
-        not in {
-            tokenize.ENCODING,
-            tokenize.ENDMARKER,
-            tokenize.INDENT,
-            tokenize.DEDENT,
-            tokenize.NEWLINE,
-            tokenize.NL,
-            tokenize.COMMENT,
-        }
-    ]
-    for index, token in enumerate(significant[:-2]):
-        equals = significant[index + 1]
-        literal = significant[index + 2]
-        if (
-            token.type == tokenize.NAME
-            and token.string == "Town"
-            and token.start[1] == 0
-            and equals.type == tokenize.OP
-            and equals.string == "="
-            and literal.type == tokenize.STRING
-            and token.start[0] == equals.start[0] == literal.start[0]
-        ):
-            try:
-                value = ast.literal_eval(literal.string)
-            except (SyntaxError, ValueError) as exc:
-                raise ValidationError("CARLA Town declaration must be a string literal") from exc
-            values.append(value)
-    if (
-        len(values) != 1
-        or not isinstance(values[0], str)
-        or re.fullmatch(r"Town(?:0[1-7]|10HD)", values[0]) is None
-    ):
-        raise ValidationError("CARLA artifact requires one supported literal Town declaration")
-    return values[0]
+        return map_declaration(Path(artifact_path).read_text(encoding="utf-8"))[0]
+    except (OSError, UnicodeError, tokenize.TokenError, ValueError, SyntaxError) as exc:
+        raise ValidationError("CARLA artifact requires one consistent supported literal Town declaration") from exc
 
 
 def _prepare_carla_capture_input(artifact_path, attempt, dependencies):
     from .carla_native import parse
 
-    doc = parse(artifact_path.read_bytes())
-    town = doc["map"]["name"]
+    is_xosc = read_json(artifact_path).get("artifact_type") == "carla_xosc_bundle_v0.1"
+    if is_xosc:
+        from .carla_xosc import parse as parse_xosc, town as xosc_town, xml_root
+        doc = parse_xosc(artifact_path.read_bytes())
+        town = xosc_town(xml_root(doc["xosc"]))
+    else:
+        doc = parse(artifact_path.read_bytes())
+        town = doc["map"]["name"]
     frozen = next(
         (
             b
@@ -1029,10 +1012,10 @@ def _prepare_carla_capture_input(artifact_path, attempt, dependencies):
         ),
         None,
     )
-    if frozen is None or frozen["sha256"] != doc["map"]["sha256"]:
+    if frozen is None or (not is_xosc and frozen["sha256"] != doc["map"]["sha256"]):
         raise ValidationError("native capture map is outside frozen catalog")
     source = Path(frozen["path"])
-    if source.read_text() != doc["map"]["opendrive"]:
+    if not is_xosc and source.read_text() != doc["map"]["opendrive"]:
         raise ValidationError("native capture map content differs from frozen catalog")
     stage_dir = attempt / "native-input"
     scene_dir = stage_dir / "dynamic_scenario"
@@ -1082,7 +1065,11 @@ def _prepare_carla_native_input(
     if not any(Path(binding["path"]).name == "{}.xodr".format(town) for binding in selected_catalog):
         raise ValidationError("CARLA artifact Town is absent from the frozen map catalog")
     native_root = attempt / "native-input"
+    from .scenic_map_declaration import map_declaration
+    _, relative_levels = map_declaration(Path(artifact_path).read_text(encoding="utf-8"))
     scenario_directory = native_root / "dynamic_scenario"
+    if relative_levels == 2:
+        scenario_directory = scenario_directory / "scenarios"
     map_directory = native_root / "maps"
     scenario_directory.mkdir(parents=True, exist_ok=False)
     map_directory.mkdir(parents=True, exist_ok=False)
@@ -1705,6 +1692,7 @@ def execute_runtime_record(
             ],
             "verification_status": dependencies.get("verification_status"),
             **({"native_carla_files":dependencies["native_carla_files"]} if "native_carla_files" in dependencies else {}),
+            **({"scenic_compile_options":dependencies["scenic_compile_options"]} if "scenic_compile_options" in dependencies else {}),
         }
         _revalidate_normalized_carla_runtime_dependencies(
             normalized_worker_config
@@ -1822,6 +1810,10 @@ def execute_runtime_record(
         native_artifact_path = artifact_path
         carla_map_context = None
         if platform == "carla":
+            is_xosc = artifact_path.suffix == ".json" and read_json(artifact_path).get("artifact_type") == "carla_xosc_bundle_v0.1"
+            has_xosc_backend = any(b["role"] == "openscenario_source" for b in normalized_worker_config["runtime_dependencies"]["source_trees"])
+            if is_xosc != has_xosc_backend:
+                raise ValidationError("CARLA artifact type differs from its registered native backend")
             if artifact_path.suffix == ".json":
                 native_artifact_path, carla_map_context = _prepare_carla_capture_input(artifact_path, attempt, normalized_worker_config["runtime_dependencies"])
             else:
@@ -1861,7 +1853,12 @@ def execute_runtime_record(
             base_request["carla_server_binary"] = dict(
                 normalized_worker_config["platform_context"]["server_binary"]
             )
+            if "scenic_compile_options" in normalized_worker_config["runtime_dependencies"]:
+                base_request["scenic_compile_options"] = normalized_worker_config["runtime_dependencies"]["scenic_compile_options"]
             base_request["carla_map_context"] = carla_map_context
+            trees = {b["role"]: b for b in normalized_worker_config["runtime_dependencies"]["source_trees"]}
+            if "openscenario_source" in trees:
+                base_request["openscenario_context"] = {"source_tree": trees["openscenario_source"], "server_tree": trees["carla_server_distribution"]}
         else:
             base_request["metadrive_token_registry"] = dict(
                 normalized_worker_config["platform_context"]
@@ -2505,7 +2502,7 @@ def validate_runtime_record_consistency(
         ):
             raise ValidationError("CARLA runtime platform binding changed")
         dependencies = worker_config["runtime_dependencies"]
-        if not isinstance(dependencies, Mapping) or set(dependencies)-{"native_carla_files"} != {
+        if not isinstance(dependencies, Mapping) or set(dependencies)-{"native_carla_files", "scenic_compile_options"} != {
             "environment_manifest",
             "python_path_entries",
             "source_trees",
@@ -2549,7 +2546,7 @@ def validate_runtime_record_consistency(
             )
             for binding in dependencies.get("source_trees", [])
         ]
-        if {binding["role"] for binding in trees} != _CARLA_RUNTIME_TREE_ROLES:
+        if not _valid_carla_source_roles({binding["role"] for binding in trees}) or len(trees) != 2:
             raise ValidationError("recorded CARLA runtime source trees are incomplete")
         tree_by_role = {binding["role"]: binding for binding in trees}
         try:
@@ -2680,6 +2677,10 @@ def validate_runtime_record_consistency(
         )
         if "native_carla_files" in worker_config["runtime_dependencies"]:
             common_request_keys.add("native_carla_files")
+        if "scenic_compile_options" in worker_config["runtime_dependencies"]:
+            common_request_keys.add("scenic_compile_options")
+        if any(b["role"] == "openscenario_source" for b in worker_config["runtime_dependencies"]["source_trees"]):
+            common_request_keys.add("openscenario_context")
     else:
         common_request_keys.update(
             {"metadrive_token_registry", "metadrive_runtime_context"}
@@ -2733,6 +2734,19 @@ def validate_runtime_record_consistency(
             return False
         if record["platform"] == "carla":
             if request.get("native_carla_files") != worker_config["runtime_dependencies"].get("native_carla_files"):
+                return False
+            if request.get("scenic_compile_options") != worker_config["runtime_dependencies"].get("scenic_compile_options"):
+                return False
+            trees = {b["role"]: b for b in worker_config["runtime_dependencies"]["source_trees"]}
+            expected_xosc_context = ({"source_tree": trees["openscenario_source"], "server_tree": trees["carla_server_distribution"]} if "openscenario_source" in trees else None)
+            if request.get("openscenario_context") != expected_xosc_context:
+                return False
+            staged_path = Path(str(request.get("artifact_path", "")))
+            try:
+                is_xosc = staged_path.suffix == ".json" and read_json(staged_path).get("artifact_type") == "carla_xosc_bundle_v0.1"
+            except (OSError, ValueError, ValidationError):
+                return False
+            if is_xosc != (expected_xosc_context is not None):
                 return False
             map_context = request.get("carla_map_context")
             if (

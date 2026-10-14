@@ -157,7 +157,7 @@
       "type": "object",
       "required": ["role", "path", "sha256", "bytes", "file_count", "policy"],
       "properties": {
-        "role": {"enum": ["carla_server_distribution", "scenic_editable_source"]},
+        "role": {"enum": ["carla_server_distribution", "scenic_editable_source", "openscenario_source"]},
         "path": {"type": "string", "minLength": 1},
         "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "bytes": {"type": "integer", "minimum": 1},
@@ -208,6 +208,7 @@
             "$ref": "#/definitions/tree_binding"
           }
         },
+        "scenic_compile_options": {"const": {"mode_2d": true, "use_2d_map": true}},
         "map_catalog": {
           "type": "array",
           "minItems": 1,
@@ -250,6 +251,7 @@
           "maxItems": 2,
           "items": {"$ref": "#/definitions/tree_binding"}
         },
+        "scenic_compile_options": {"const": {"mode_2d": true, "use_2d_map": true}},
         "map_catalog": {
           "type": "array",
           "minItems": 1,

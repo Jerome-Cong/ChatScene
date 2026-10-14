@@ -565,6 +565,30 @@ class GenerationTests(unittest.TestCase):
                 self.assertIsNone(response['artifact'])
                 self.assertEqual(self._evidence(response)['finalization']['status'], 'failed')
 
+    def test_malformed_xosc_artifact_preserves_the_complete_failure_grid(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            _, library, roster = self._inputs(root)
+            method, config = self._config(root)
+            method["finalization"]["artifact_type"] = "carla_xosc_bundle_v0.1"
+            write_json(config, method)
+
+            class MalformedXoscAdapter:
+                def generate(self, query_text, workdir):
+                    workdir.mkdir(parents=True)
+                    artifact = workdir / "capture.json"
+                    artifact.write_text(json.dumps({"artifact_type": "carla_xosc_bundle_v0.1", "xosc": "<OpenSCENARIO><Entities>", "ego_route": {}}))
+                    return AdapterOutcome(b"", b"", 0, False, artifact_path=artifact, disposition="generate")
+
+            responses = run_generation(library, roster, config, root / "output", adapter=MalformedXoscAdapter(), development=True)
+            self.assertEqual(len(responses), 5)
+            for response in responses:
+                self.assertEqual(response["terminal_status"], "failed")
+                self.assertIsNone(response["artifact"])
+                evidence = self._evidence(response)
+                self.assertEqual(evidence["finalization"]["status"], "failed")
+                self.assertTrue(Path(evidence["raw_artifact"]["path"]).is_file())
+
     def test_timeout_is_recorded_without_retry(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

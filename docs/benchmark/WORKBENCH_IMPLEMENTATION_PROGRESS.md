@@ -164,3 +164,18 @@ BW-06 补充：前端词典改为只查自身属性，未知 predicate/token 与
 验证：公共 27 项定向检查（1 原生依赖条件跳过，随后在原生环境补跑该项通过）；TTSG 18 项通过；独立复审无代码阻断，真实记录 SDK 字段删除/篡改 14 项拒绝。服务关闭、API 不可用时两个 resume 完成，165 个原始文件内容/mtime 未变，无新 attempt。CARLA 已关闭，未停止 SCTG 训练。
 
 保留门槛：正式 gold、平台/提取器校准、受控读取边界、完整 Python 环境封闭登记、兼容内核 Judge、完整 2D 时间/mask 关联与其余方法验收仍沿用现有规则。旧失败及中断现场保留；回滚使用对应提交前版本与私人备份，不删除历史记录。
+
+
+## 2026-10-15：Chat2scenic / Text2Scenario 公共开发运行接入
+
+状态：本轮开发接入完成，正式评分与最终发布未验收。只覆盖同一公开开发 query 的各 5 次真实调用；全部失败保留，没有生成后语义修补。详见 [公共运行报告](BW10_PUBLIC_BASELINES_RUNTIME_REPORT_2026-10-14.md)。
+
+Chat2scenic：兼容模型显式覆盖五个 agent，原 CPU all-MiniLM 检索与独立 Milvus 快照恢复；官方 Scenic3.0 wheel 已含所需扩展，没有移植。固定 Shapely2.0.7、2D 编译及 CARLA0.9.15。5 次生成完成，3 条编译通过，2 条各通过 5 个 SV seed；NE 分别 300步/30秒与94步/9.4秒，后者达到原生终止条件。2 条初始诊断通过。缺失 egoSpawnPt / None.orientation 等原代码问题保留，不解释为全题库性能。
+
+Text2Scenario：按授权使用公开演示版，真实 GLM-Embedding-3（2048维）替代原嵌入模型，DeepSeek兼容生成；原 notebook/template 仅复制执行。5 次均生成 cyclist 参数后因缺分支 NameError失败，5 条失败及不可运行 runtime 重载通过。原固定样例碰撞、角度字段、官方样例 footprint 失败保留；单车平台 smoke 的5SV及300步/30秒通过仅是运行分支证据，不替代方法输出。
+
+运行边界：CARLA复用服务在前题后出现Signal11，导致下一题超时；同5个产物改用显式逐产物owned服务后完成，所有自建服务已退出，关闭exit=-11仍如实保留。生命周期异常逐题留 infrastructure outcome、保留响应分母，不伪造方法失败；resume不启动服务或执行缺失canonical record，不抹旧清理错误。普通 command仍无文件系统沙箱。
+
+初始观察正常包导入修正旧fixture隔离导入路径；单CPU避免NumPy线程耗尽2GiB。另声明development 20CPU秒/30wall秒及流上限，正式5CPU秒worker不变；不声称正式提取/校准通过。现有wheel未随新接口重建。主42项定向及源仓库3/4项通过，独立复审；原路径/旧schema全量失败不隐去。
+
+两份完整生成链和runtime重载通过；在服务停止且禁止新调用时恢复通过，Chat2scenic36生成/90运行原始文件、Text2Scenario21生成/5运行原始文件内容及mtime不变。原probe、错误预算、服务污染网格、所有工作区均保留。人工gold、正式提取预算/平台校准、受控读取、完整环境封闭登记、兼容内核Judge与最终发布门槛仍待补齐。

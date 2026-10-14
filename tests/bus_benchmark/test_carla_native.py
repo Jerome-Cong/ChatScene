@@ -1,11 +1,13 @@
 import copy
 from contextlib import ExitStack
 import hashlib
+import io
 import itertools
 import json
 import os
 import sys
 import tempfile
+import threading
 import types
 import unittest
 from pathlib import Path
@@ -99,26 +101,50 @@ class NativeCarlaTests(unittest.TestCase):
             parse("[" * 2000 + "0" + "]" * 2000)
 
     def test_process_credential_output_is_suppressed_before_recording(self):
-        sentinel = "test-only-credential-must-not-be-recorded"
-        with ExitStack() as stack:
-            directory = stack.enter_context(tempfile.TemporaryDirectory())
-            stack.enter_context(patch.dict(os.environ, {"OPENAI_API_KEY": sentinel}))
-            result = _run_process(
-                [
-                    sys.executable,
-                    "-c",
-                    'import os,sys; print(os.environ["OPENAI_API_KEY"]); print(os.environ["OPENAI_API_KEY"],file=sys.stderr)',
-                ],
-                Path(directory),
-                5,
-                ["OPENAI_API_KEY"],
-                None,
-                4096,
-                4096,
-            )
-        self.assertIsNotNone(result.error)
-        self.assertNotIn(sentinel.encode(), result.stdout + result.stderr)
-        self.assertNotIn(sentinel, result.error)
+        credentials = {"OPENAI_API_KEY": "test-only-generation-credential",
+                       "EMBEDDING_API_KEY": "test-only-embedding-credential"}
+        for name in credentials:
+            for stream in ("stdout", "stderr"):
+                with self.subTest(name=name, stream=stream), ExitStack() as stack:
+                    directory = stack.enter_context(tempfile.TemporaryDirectory())
+                    stack.enter_context(patch.dict(os.environ, credentials))
+                    result = _run_process(
+                        [sys.executable, "-c", 'import os,sys; print(os.environ[{!r}],file=sys.{})'.format(name, stream)],
+                        Path(directory), 5, list(credentials), None, 4096, 4096,
+                    )
+                self.assertIsNotNone(result.error)
+                for sentinel in credentials.values():
+                    self.assertNotIn(sentinel.encode(), result.stdout + result.stderr)
+                    self.assertNotIn(sentinel, result.error)
+
+    def test_unclosed_stream_suppresses_partial_credential_bytes(self):
+        released = threading.Event()
+        fragment = b"test-only-partial-credential"
+
+        class UnclosedStream:
+            first = True
+
+            def read(self, size):
+                if self.first:
+                    self.first = False
+                    return fragment
+                released.wait(10)
+                return b""
+
+            def close(self):
+                pass
+
+        process = types.SimpleNamespace(stdout=UnclosedStream(), stderr=io.BytesIO(),
+                                        stdin=None, returncode=0, poll=lambda: 0)
+        try:
+            with tempfile.TemporaryDirectory() as directory, patch(
+                "bus_benchmark.adapters.chatscene.subprocess.Popen", return_value=process
+            ), patch("bus_benchmark.adapters.chatscene._terminate_process_group"):
+                result = _run_process([sys.executable], Path(directory), 5, [], None, 4096, 4096)
+            self.assertIn("streams did not close", result.error)
+            self.assertNotIn(fragment, result.stdout + result.stderr)
+        finally:
+            released.set()
 
     def test_installed_sdk_requires_complete_files_inside_registered_environment(self):
         with tempfile.TemporaryDirectory() as directory:

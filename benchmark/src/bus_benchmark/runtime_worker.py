@@ -266,6 +266,9 @@ def _verify_request(request):
             or type(endpoint.get("timeout_seconds")) not in (int, float)
         ):
             raise ValueError("CARLA runtime request lacks the frozen loopback endpoint")
+        is_xosc = path.suffix == ".json" and _strict_json_object_bytes(path.read_bytes()).get("artifact_type") == "carla_xosc_bundle_v0.1"
+        if is_xosc != ("openscenario_context" in request):
+            raise ValueError("CARLA artifact type differs from its registered native backend")
         _verify_carla_server_request(request)
         if "native_carla_files" in request:
             import carla
@@ -318,7 +321,15 @@ def _verify_request(request):
             ):
                 raise ValueError("CARLA source map binding changed or is duplicated")
             source_by_name[source.name] = binding
-        expected_map_directory = path.parent.parent / "maps"
+        if __package__:
+            from .scenic_map_declaration import map_declaration
+        else:
+            from scenic_map_declaration import map_declaration
+        if path.suffix == ".json":
+            relative_levels = 1
+        else:
+            _, relative_levels = map_declaration(path.read_text(encoding="utf-8"))
+        expected_map_directory = path.parents[relative_levels] / "maps"
         staged_names = set()
         for binding in map_context["staged_catalog"]:
             if not isinstance(binding, dict) or set(binding) != {"path", "sha256", "bytes"}:
@@ -420,7 +431,13 @@ def _verify_carla_map(scenario, request):
 def _carla_compile(path, request):
     from scenic.syntax.translator import scenarioFromFile
 
-    scenario = scenarioFromFile(str(path))
+    options = request.get("scenic_compile_options")
+    if options is None:
+        scenario = scenarioFromFile(str(path))
+    else:
+        if options != {"mode_2d": True, "use_2d_map": True}:
+            raise ValueError("unknown Scenic compile options")
+        scenario = scenarioFromFile(str(path), params={"use2DMap": True, "render": 0}, mode2D=True)
     _verify_carla_endpoint(scenario, request)
     static_opendrive = _verify_carla_map(scenario, request)
     return scenario, {
@@ -680,7 +697,10 @@ def fixed_carla_controls(actor, parameters):
 
 def _carla_controller_classes(parameters):
     import carla
-    from scenic.core.dynamics import Behavior
+    try:
+        from scenic.core.dynamics import Behavior
+    except ImportError:
+        from scenic.core.dynamics.behaviors import Behavior
     from scenic.domains.driving.actions import (
         SetBrakeAction,
         SetSteerAction,
@@ -1319,6 +1339,13 @@ def execute(request):
     mode = request["mode"]
     if platform == "carla":
         if path.suffix == ".json":
+            carrier = _strict_json_object_bytes(path.read_bytes())
+            if carrier.get("artifact_type") == "carla_xosc_bundle_v0.1":
+                if __package__:
+                    from . import carla_xosc_worker as xosc
+                else:
+                    import carla_xosc_worker as xosc
+                return xosc.execute(path, request, sys.modules[__name__])
             if __package__:
                 from . import carla_native_worker as native
             else:

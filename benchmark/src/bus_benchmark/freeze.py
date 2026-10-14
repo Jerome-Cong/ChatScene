@@ -743,7 +743,7 @@ def _load_extractor_entrypoints(
     return result
 
 
-def _execute_extractor_once(entrypoint: Mapping[str, Any], value: Any, label: str) -> Any:
+def _execute_extractor_once(entrypoint: Mapping[str, Any], value: Any, label: str, runtime_context=None) -> Any:
     worker = Path(__file__).with_name("extractor_worker.py").resolve()
     command = [
         sys.executable,
@@ -757,7 +757,12 @@ def _execute_extractor_once(entrypoint: Mapping[str, Any], value: Any, label: st
         "LANG": "C.UTF-8",
         "LC_ALL": "C.UTF-8",
         "PYTHONHASHSEED": "0",
+        "HOME": os.environ.get("HOME") or os.path.expanduser("~"),
     }
+    if runtime_context and runtime_context.get("interpreter"):
+        environment["BUS_BENCHMARK_SCENIC_PYTHON"] = runtime_context["interpreter"]
+    if runtime_context and runtime_context.get("scenic_compile_options") == {"mode_2d": True, "use_2d_map": True}:
+        environment["BUS_BENCHMARK_SCENIC_2D"] = "1"
     try:
         with tempfile.TemporaryDirectory(prefix="bus-extractor-") as directory:
             process = subprocess.Popen(
@@ -865,6 +870,22 @@ def load_frozen_extractor_runtime(
             "trusted_dependencies": [registry_dependency],
         },
     }
+    carla_assets = [asset for asset in manifest.get("assets", []) if asset.get("role") == "platform_config_carla"]
+    if len(carla_assets) > 1:
+        raise FreezeError("freeze repeats CARLA platform input context")
+    if carla_assets:
+        config_path = _verify_file_binding(carla_assets[0], "frozen CARLA platform input context")
+        config = read_json(config_path)
+        if config.get("platform") != "carla" or config.get("status") != "frozen":
+            raise FreezeError("CARLA extractor context is not a frozen CARLA platform")
+        dependencies = config.get("runtime_dependencies", {})
+        runtime["carla"]["trusted_dependencies"] = [
+            {"kind": "opendrive", **binding} for binding in dependencies.get("map_catalog", [])
+            if Path(binding.get("path", "")).suffix == ".xodr"
+        ]
+        runtime["carla"]["interpreter"] = config["worker"]["interpreter"]
+        if "scenic_compile_options" in dependencies:
+            runtime["carla"]["scenic_compile_options"] = dependencies["scenic_compile_options"]
     return document, runtime
 
 
@@ -887,8 +908,15 @@ def build_extractor_input(
         raise FreezeError("semantic extractor trusted dependencies are malformed")
     if any(not isinstance(value, Mapping) for value in trusted_dependencies):
         raise FreezeError("semantic extractor trusted dependencies are malformed")
-    if platform == "carla" and trusted_dependencies:
-        raise FreezeError("CARLA extractor cannot receive MetaDrive dependencies")
+    if platform == "carla":
+        for dependency in trusted_dependencies:
+            if set(dependency) != {"kind", "path", "sha256", "bytes"} or dependency.get("kind") != "opendrive":
+                raise FreezeError("CARLA extractor can receive only bound OpenDRIVE dependencies")
+            path = _verify_file_binding(dependency, "trusted CARLA OpenDRIVE map")
+            if path.suffix != ".xodr" or dependency["bytes"] != path.stat().st_size:
+                raise FreezeError("trusted CARLA OpenDRIVE binding is invalid")
+        if len({Path(d["path"]).name for d in trusted_dependencies}) != len(trusted_dependencies):
+            raise FreezeError("CARLA extractor map names are duplicated")
     if platform == "metadrive" and (
         len(trusted_dependencies) != 1
         or trusted_dependencies[0].get("kind")
@@ -903,7 +931,7 @@ def build_extractor_input(
             )
         ]
         if platform == "metadrive"
-        else []
+        else [dict(binding) for binding in trusted_dependencies]
     )
     artifact = response.get("artifact")
     artifact_payload = None
@@ -985,6 +1013,7 @@ def execute_frozen_extractor(
             trusted_dependencies=context.get("trusted_dependencies"),
         ),
         "{} formal".format(platform),
+        runtime_context=context,
     )
     return _validate_extractor_projection(output, "{} formal".format(platform))
 

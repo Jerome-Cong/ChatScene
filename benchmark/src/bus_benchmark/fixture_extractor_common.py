@@ -11,6 +11,8 @@ import math
 import os
 import subprocess
 import sys
+import tempfile
+import hashlib
 from pathlib import Path
 
 
@@ -49,28 +51,51 @@ COMMON_CANDIDATE_EMITTERS = {
 }
 
 
-def _observe(platform, text, token_registry_path=None):
+def _observe(platform, text, token_registry_path=None, map_dependencies=None):
     interpreter = SCENIC_PYTHON if platform == "carla" else METADRIVE_PYTHON
     argv = [interpreter, str(OBSERVER), platform]
     if platform == "metadrive":
         if not token_registry_path:
             raise ValueError("MetaDrive extraction requires one token registry dependency")
         argv.extend(["--token-registry", str(token_registry_path)])
-    process = subprocess.run(
-        argv,
-        input=text.encode("utf-8"),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        timeout=20,
-        check=False,
-        env={
-            "PATH": os.environ.get("PATH", ""),
-            "LANG": "C.UTF-8",
-            "LC_ALL": "C.UTF-8",
-            "MPLCONFIGDIR": "/tmp",
-            "PYTHONHASHSEED": "0",
-        },
-    )
+    scenic_2d = os.environ.get("BUS_BENCHMARK_SCENIC_2D") == "1"
+    if platform == "carla" and scenic_2d:
+        argv.append("--scenic-2d")
+    with tempfile.TemporaryDirectory(prefix="bus-native-map-") as directory:
+        if platform == "carla" and not text.lstrip().startswith("{") and map_dependencies:
+            if __package__:
+                from .scenic_map_declaration import map_declaration
+            else:
+                from scenic_map_declaration import map_declaration
+            town, _ = map_declaration(text)
+            selected = [b for b in map_dependencies if Path(b["path"]).name == town + ".xodr"]
+            if len(selected) != 1:
+                raise ValueError("native observation map is absent or ambiguous in the trusted catalog")
+            binding = selected[0]
+            data = Path(binding["path"]).read_bytes()
+            if len(data) != binding["bytes"] or hashlib.sha256(data).hexdigest() != binding["sha256"]:
+                raise ValueError("native observation map differs from its trusted binding")
+            staged = Path(directory) / (town + ".xodr")
+            staged.write_bytes(data)
+            argv.extend(["--map-path", str(staged)])
+        process = subprocess.run(
+            argv,
+            input=text.encode("utf-8"),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=20,
+            check=False,
+            env={
+                "PATH": os.environ.get("PATH", ""),
+                "HOME": os.environ.get("HOME") or os.path.expanduser("~"),
+                "LANG": "C.UTF-8",
+                "LC_ALL": "C.UTF-8",
+                "MPLCONFIGDIR": "/tmp",
+                "PYTHONHASHSEED": "0",
+                "SDL_VIDEODRIVER": "dummy",
+                "PYGAME_HIDE_SUPPORT_PROMPT": "1",
+            },
+        )
     if process.returncode != 0:
         raise RuntimeError(
             "native {} validation failed: {}".format(
@@ -103,6 +128,7 @@ def _normalize(platform, observation):
                     "width_m": obj["width_m"],
                     "blueprint": obj["blueprint"],
                     "vehicle_model": "",
+                    "motion_observed": obj.get("motion_observed", True),
                 }
             )
     else:
@@ -437,6 +463,8 @@ def _detect_common(platform, tracks, features):
     all_users = [ego] + road_users
     yield_candidates = []
     for subject in all_users:
+        if not subject.get("motion_observed", True):
+            continue
         mode = _yield_mode(subject)
         counterparts = [
             value
@@ -492,7 +520,8 @@ def extract(payload, platform):
             )
         token_registry_path = registries[0].get("path")
     observation = _observe(
-        platform, payload["artifact"]["text"], token_registry_path
+        platform, payload["artifact"]["text"], token_registry_path,
+        [dependency for dependency in dependencies if dependency.get("kind") == "opendrive"] if platform == "carla" else None,
     )
     tracks, features = _normalize(platform, observation)
     return {

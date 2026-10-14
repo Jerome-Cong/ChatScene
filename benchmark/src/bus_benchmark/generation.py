@@ -568,8 +568,8 @@ def _validate_method_config(config: Mapping[str, Any], roster: Mapping[str, Any]
             "ego_length_m": EGO_PROXY_LENGTH_M,
             "ego_width_m": EGO_PROXY_WIDTH_M,
         }
-    if platform == "carla" and isinstance(finalization,Mapping) and finalization.get("artifact_type")=="carla_native_scene_v0.1":
-        expected["artifact_type"]="carla_native_scene_v0.1"
+    if platform == "carla" and isinstance(finalization,Mapping) and finalization.get("artifact_type") in {"carla_native_scene_v0.1", "carla_scenic3_v0.1", "carla_xosc_bundle_v0.1"}:
+        expected["artifact_type"]=finalization["artifact_type"]
     if finalization != expected:
         raise ValidationError("method config finalization policy is not the approved ego proxy")
     if not isinstance(config.get("adapter"), Mapping):
@@ -1374,6 +1374,26 @@ def _finalize_ego_artifact(
     artifact_type=None,
 ) -> EgoFinalization:
     if platform == "carla":
+        if artifact_type == "carla_xosc_bundle_v0.1":
+            from .carla_xosc import finalize, verify, parse, xml_root, ego
+            try:
+                original = parse(raw_bytes)
+                _, before, dimensions = ego(xml_root(original["xosc"]))
+                final_bytes = finalize(raw_bytes)
+                verify(raw_bytes, final_bytes)
+                changes = tuple(name for name, changed in (
+                    ("ego_blueprint", before.get("name") != CARLA_EGO_BLUEPRINT),
+                    ("ego_length", float(dimensions.get("length")) != EGO_PROXY_LENGTH_M),
+                    ("ego_width", float(dimensions.get("width")) != EGO_PROXY_WIDTH_M),
+                ) if changed)
+            except (ValueError, TypeError, KeyError) as exc:
+                raise ValidationError("native XOSC carrier rejected: {}".format(exc)) from exc
+            return EgoFinalization(final_bytes, b"XOSC ego-only normalization; native route and other XML bytes unchanged.\n", changes)
+        if artifact_type == "carla_scenic3_v0.1":
+            from .carla_scenic3 import finalize, verify
+            final_bytes, changes = finalize(raw_bytes)
+            verify(raw_bytes, final_bytes)
+            return EgoFinalization(final_bytes, b"Scenic 3 ego-only normalization; shared MODEL and non-ego fields unchanged.\n", changes)
         if artifact_type == "carla_native_scene_v0.1":
             from .carla_native import finalize, parse
 
@@ -1409,7 +1429,7 @@ def _finalize_ego_artifact(
 
 def _final_artifact_name(platform: str, artifact_type=None) -> str:
     if platform == "carla":
-        return "artifact.final.json" if artifact_type=="carla_native_scene_v0.1" else "artifact.final.scenic"
+        return "artifact.final.json" if artifact_type in {"carla_native_scene_v0.1", "carla_xosc_bundle_v0.1"} else "artifact.final.scenic"
     if platform == "metadrive":
         return "artifact.final.json"
     raise ValidationError("generation platform is invalid")
